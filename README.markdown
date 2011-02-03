@@ -1,5 +1,6 @@
-= Sequencescape Client API =
-== Usage ==
+= Sequencescape Client API
+== Usage
+
 Pretty simple:
 
 * First you need a connection to the server
