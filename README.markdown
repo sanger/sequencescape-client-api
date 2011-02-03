@@ -1,5 +1,8 @@
-= Sequencescape Client API
-== Usage
+Sequencescape Client API
+========================
+
+Usage
+-----
 
 Pretty simple:
 
