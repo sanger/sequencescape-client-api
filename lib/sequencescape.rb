@@ -12,5 +12,8 @@ require 'sequencescape/library_tube'
 require 'sequencescape/sample_tube'
 require 'sequencescape/sample'
 
+require 'sequencescape/plate'
+require 'sequencescape/plate_purpose'
+
 require 'sequencescape/submission'
 require 'sequencescape/submission_template'

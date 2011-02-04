@@ -46,6 +46,8 @@ describe Sequencescape::Api::Associations::HasMany do
           TestAssociationHelper::Foo.new(@api, 'foo2', true)
         ]
       end
+
+      it 'gets reloaded if the record is updated'
     end
 
     context 'normal has_many association' do
@@ -96,6 +98,8 @@ describe Sequencescape::Api::Associations::HasMany do
           })
           subject.all.first.should == TestAssociationHelper::Foo.new(@api, 'foo1', false)
         end
+
+        it 'gets reloaded if the record is updated'
       end
     end
   end
