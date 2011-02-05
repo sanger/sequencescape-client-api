@@ -8,7 +8,7 @@ class Hash
     missing = [ key, *keys ].inject([]) do |missing, next_key|
       missing.tap do 
         value = self[next_key]
-        missing << value if value.send(allowance_method)
+        missing << next_key if value.send(allowance_method)
       end
     end
     yield(missing) unless missing.empty?
