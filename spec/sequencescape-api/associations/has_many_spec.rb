@@ -1,6 +1,11 @@
 require 'spec_helper'
 require 'support/test_association_base'
 
+class Sequencescape::John
+  def initialize(*args)
+  end
+end
+
 describe Sequencescape::Api::Associations::HasMany do
   class TestAssociationHelper < TestAssociationBase
     extend Sequencescape::Api::Associations
@@ -9,6 +14,8 @@ describe Sequencescape::Api::Associations::HasMany do
       has_create_action :kerpow
       has_create_action
     end
+
+    has_many :johns, :disposition => :inline
 
     has_many :bars, :class_name => self::Foo.name, :disposition => :inline
   end
@@ -21,11 +28,21 @@ describe Sequencescape::Api::Associations::HasMany do
   describe '.has_many' do
     subject { @instance }
     
-    it { should respond_to(:foos) }
-    it { should respond_to(:bars) }
+    it { should respond_to(:foos)  }
+    it { should respond_to(:bars)  }
+    it { should respond_to(:johns) }
   end
 
   context 'the association itself' do
+    context 'where the class_name is unspecified' do
+      subject do
+        @instance.attributes = { 'johns' => [ 'john1' ] }
+        @instance.johns
+      end
+
+      its(:first) { should be_a(Sequencescape::John) }
+    end
+
     context 'inline has_many association' do
       subject do
         @instance.attributes = {
@@ -39,6 +56,7 @@ describe Sequencescape::Api::Associations::HasMany do
 
       it { should respond_to(:all)  }
       it { should respond_to(:find) }
+      its(:size) { should == 2 }
 
       its(:to_a) do
         should == [
@@ -100,7 +118,8 @@ describe Sequencescape::Api::Associations::HasMany do
             'objects' => [
               'foo1',
               'foo2'
-            ]
+            ],
+            'size' => 100
           })
           subject.all.first.should == TestAssociationHelper::Foo.new(@api, 'foo1', false)
         end
@@ -121,7 +140,8 @@ describe Sequencescape::Api::Associations::HasMany do
             },
             'objects' => [
               'foo3'
-            ]
+            ],
+            'size' => 100
           })
           @instance.foos.all.first.should == TestAssociationHelper::Foo.new(@api, 'foo3', false)
         end

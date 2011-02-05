@@ -13,14 +13,14 @@ module Sequencescape::Api::Associations::HasMany
 
     def initialize(owner, association, options)
       @owner   = owner
-      @model   = options[:class_name].constantize
+      @model   = (options[:class_name] || "Sequencescape::#{association.to_s.classify}").constantize
       @objects = @owner.attributes_for(association).map(&method(:new))
     end
 
     attr_reader :model
     delegate :api, :to => :@owner
     private :api, :model
-    delegate :each, :first, :last, :empty?, :to => :all
+    delegate :each, :first, :last, :empty?, :size, :to => :all
 
     def find(uuid)
       @objects.detect { |o| o.uuid == uuid }
@@ -36,9 +36,8 @@ module Sequencescape::Api::Associations::HasMany
     private :new
   end
 
-  def has_many(association, options, &block)
+  def has_many(association, options = {}, &block)
     association = association.to_sym
-    ivar        = :"@#{association}"
 
     proxy = Class.new(
       case options[:disposition].try(:to_sym)

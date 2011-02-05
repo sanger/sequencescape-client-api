@@ -11,7 +11,7 @@ module Sequencescape::Api::FinderMethods
     end
 
     def delegate_methods_to_all_in(base)
-      base.delegate :each, :each_page, :first, :last, :empty?, :to_a, :to => :all
+      base.delegate :each, :each_page, :first, :last, :empty?, :to_a, :size, :to => :all
     end
     private :delegate_methods_to_all_in
   end
@@ -39,6 +39,8 @@ class Sequencescape::Api::PageOfResults
 
   attr_reader :api, :actions
   private :api, :actions
+
+  attr_reader :size
 
   def initialize(api, json, &block)
     @api, @ctor = api, block
@@ -91,7 +93,12 @@ class Sequencescape::Api::PageOfResults
   def update_from_json(json)
     json.delete('uuids_to_ids')         # Discard unwanted rubbish
     actions = json.delete('actions')
-    raise Sequencescape::Api::Error, 'No actions for page!'    if actions.blank?
+    raise Sequencescape::Api::Error, 'No actions for page!' if actions.blank?
+
+    size = json.delete('size')
+    raise Sequencescape::Api::Error, 'No size for page!' if size.blank?
+    @size = size.to_i
+
     raise Sequencescape::Api::Error, 'No object json in page!' if json.keys.empty?
     @actions, @objects = OpenStruct.new(actions), json[json.keys.first].map(&@ctor)
   end

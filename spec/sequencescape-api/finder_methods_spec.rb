@@ -41,7 +41,7 @@ describe Sequencescape::Api::FinderMethods do
     it { should == :result_of_page_from_json } 
   end
 
-  [ :each, :each_page, :first, :last, :empty?, :to_a ].each do |delegated|
+  [ :each, :each_page, :first, :last, :empty?, :size, :to_a ].each do |delegated|
     describe "##{delegated}" do
       it 'delegated to the pages from #all' do
         results = double('results')
@@ -89,24 +89,30 @@ describe Sequencescape::Api::PageOfResults do
   end
 
   describe '#initialize' do
-    it 'errors if there are no actions present' do
-      lambda { described_class.new(@api, { 'objects' => [] }) {} }.should raise_error(Sequencescape::Api::Error)
+    def should_error_for_bad_json(json)
+      lambda do
+        described_class.new(@api, json) { }
+      end.should raise_error(Sequencescape::Api::Error)
     end
 
-    it 'errors if the actions are empty' do
-      lambda { described_class.new(@api, { 'actions' => {}, 'objects' => [] }) {} }.should raise_error(Sequencescape::Api::Error)
+    good_json = { 'actions' => { 'read' => 'a' }, 'objects' => [], 'size' => 100 }
+    good_json.keys.each do |attribute|
+      json = good_json.dup.tap { |j| j.delete(attribute) }
+      it "errors when #{attribute.inspect} is missing" do
+        should_error_for_bad_json(json)
+      end
     end
 
-    it 'errors if there are no objects present' do
-      lambda { described_class.new(@api, { 'actions' => { 'read' => 'a' } }) {} }.should raise_error(Sequencescape::Api::Error)
+    it 'errors when the actions are empty' do
+      should_error_for_bad_json(good_json.merge('actions' => {}))
+    end
+
+    it 'errors when the size is blank' do
+      should_error_for_bad_json(good_json.merge('size' => ''))
     end
 
     it 'ignores the presence of uuids_to_ids' do
-      described_class.new(@api, {
-        'actions' => { 'read' => 'a' },
-        'objects' => [],
-        'uuids_to_ids' => false             # Doesn't matter, will just error if used!
-      })
+      described_class.new(@api, good_json.merge('uuids_to_ids' => false))
     end
 
     it 'yields the contents of the object json to the block' do
@@ -114,11 +120,11 @@ describe Sequencescape::Api::PageOfResults do
       expected.should_receive(:yielded).with('json1')
       expected.should_receive(:yielded).with('json2')
 
-      described_class.new(@api, {
-        'actions' => { 'read' => 'a' },
-        'objects' => [ 'json1', 'json2' ],
-        'uuids_to_ids' => false             # Doesn't matter, will just error if used!
-      }, &expected.method(:yielded))
+      described_class.new(
+        @api,
+        good_json.merge('objects' => [ 'json1', 'json2' ]),
+        &expected.method(:yielded)
+      )
     end
   end
 
@@ -140,7 +146,8 @@ describe Sequencescape::Api::PageOfResults do
           },
           'objects' => [
             'json3'
-          ]
+          ],
+          'size' => 100
         })
 
         described_class.new(api, {
@@ -153,7 +160,8 @@ describe Sequencescape::Api::PageOfResults do
           'objects' => [
             'json1',
             'json2'
-          ]
+          ],
+          'size' => 100
         }, &ctor.method(:yielded))
       end
 
@@ -198,7 +206,8 @@ describe Sequencescape::Api::PageOfResults do
           'objects' => [
             'json2',
             'json3'
-          ]
+          ],
+          'size' => 100
         })
 
         described_class.new(api, {
@@ -210,7 +219,8 @@ describe Sequencescape::Api::PageOfResults do
           },
           'objects' => [
             'json1'
-          ]
+          ],
+          'size' => 100
         }, &ctor.method(:yielded))
       end
 
@@ -240,7 +250,8 @@ describe Sequencescape::Api::PageOfResults do
             },
             'objects' => [
               'json3'
-            ]
+            ],
+            'size' => 100
           })
           api.should_receive(:read).with('page1').and_yield({
             'actions' => {
@@ -252,7 +263,8 @@ describe Sequencescape::Api::PageOfResults do
               'json4',
               'json5',
               'json6'
-            ]
+            ],
+            'size' => 100
           })
 
           described_class.new(api, {
@@ -265,7 +277,8 @@ describe Sequencescape::Api::PageOfResults do
             'objects' => [
               'json1',
               'json2'
-            ]
+            ],
+            'size' => 100
           }, &ctor.method(:yielded))
         end
 

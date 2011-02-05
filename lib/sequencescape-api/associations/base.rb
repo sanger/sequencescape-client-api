@@ -1,11 +1,11 @@
 require 'ostruct'
 
 class Sequencescape::Api::Associations::Base
-  def initialize(owner, name, options)
+  def initialize(owner, association, options)
     @owner      = owner
-    @attributes = owner.attributes_for(name)
+    @attributes = owner.attributes_for(association)
     @actions    = OpenStruct.new(@attributes.delete('actions'))
-    @model      = options[:class_name].constantize
+    @model      = (options[:class_name] || "Sequencescape::#{association.to_s.classify}").constantize
   end
 
   attr_reader :actions, :model

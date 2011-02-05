@@ -38,7 +38,7 @@ module Sequencescape::Api::Associations::BelongsTo
     private :object
   end
 
-  def belongs_to(association, options, &block)
+  def belongs_to(association, options = {}, &block)
     association = association.to_sym
 
     line = __LINE__ + 1
