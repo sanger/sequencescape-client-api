@@ -5,8 +5,10 @@ module Sequencescape::Api::Resource::InstanceMethods
     base.class_eval do
       attr_reader :api, :actions, :attributes
       private :api, :actions, :attributes
-      delegate_to_attributes :uuid, :created_at, :updated_at
+      delegate_to_attributes :uuid
       alias_method(:model, :class)
+
+      time_attribute :created_at, :updated_at
     end
   end
 

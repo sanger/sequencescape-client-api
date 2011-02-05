@@ -17,20 +17,21 @@ describe Sequencescape::Api::Resource do
   context 'instance methods' do
     subject do
       @api, @attributes = double('api'), {
-        'actions' => { 'update' => 'update URL' },
-        'name'    => 'Frank',
-        'uuid'    => 'Universally Unique Identifier'
+        'actions'    => { 'update' => 'update URL' },
+        'name'       => 'Frank',
+        'uuid'       => 'Universally Unique Identifier',
+        'created_at' => '05-Feb-2011 15:00',
+        'updated_at' => '05-Feb-2011 15:01'
       }
       TestResourceHelper.new(@api, @attributes)
     end
 
     # Methods that should be present, even if the attribute is missing
-    it          { should respond_to(:uuid)                  }
-    its(:uuid)  { should == 'Universally Unique Identifier' }
-    it          { should respond_to(:created_at)            }
-    it          { should respond_to(:updated_at)            }
-    its(:model) { should == TestResourceHelper              }
-    it          { subject.respond_to?(:update_from_json, true).should be_true }
+    its(:uuid)       { should == 'Universally Unique Identifier' }
+    its(:created_at) { should == Time.parse('05-Feb-2011 15:00') }
+    its(:updated_at) { should == Time.parse('05-Feb-2011 15:01') }
+    its(:model)      { should == TestResourceHelper              }
+    it               { subject.respond_to?(:update_from_json, true).should be_true }
 
     # Attribute methods
     it         { should respond_to(:name) }

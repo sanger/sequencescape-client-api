@@ -19,4 +19,17 @@ module Sequencescape::Api::Resource::ClassMethods
       }, __FILE__, line)
     end
   end
+  private :delegate_to_attributes
+
+  def time_attribute(*names)
+    names.each do |name|
+      line = __LINE__ + 1
+      class_eval(%Q{
+        def #{name}
+          Time.parse(attributes[#{name.to_s.inspect}])
+        end
+      }, __FILE__, line)
+    end
+  end
+  private :time_attribute
 end
