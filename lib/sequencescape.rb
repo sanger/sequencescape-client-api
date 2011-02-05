@@ -1,5 +1,9 @@
 require 'sequencescape-api'
 
+module Sequencescape
+
+end
+
 require 'sequencescape/request'
 require 'sequencescape/pipeline'
 require 'sequencescape/batch'
