@@ -27,4 +27,8 @@ class TestAssociationBase
   def attributes_for(name)
     @attributes[name.to_s]
   end
+
+  def update_attributes!(attributes)
+    @attributes = attributes
+  end
 end

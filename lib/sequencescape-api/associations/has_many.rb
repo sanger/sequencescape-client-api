@@ -52,8 +52,9 @@ module Sequencescape
           proxy.instance_eval(&block) if block_given?
           class_eval do
             define_method(association) do |*args|
-              instance_variable_set(ivar, nil) if !!args.first
-              instance_variable_get(ivar) || instance_variable_set(ivar, proxy.new(self, association, options))
+              associations[association]   = nil if !!args.first
+              associations[association] ||= proxy.new(self, association, options)
+              associations[association]
             end
           end
         end

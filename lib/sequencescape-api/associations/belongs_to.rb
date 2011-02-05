@@ -47,8 +47,9 @@ module Sequencescape
           line = __LINE__ + 1
           class_eval(%Q{
             def #{association}(reload = false)
-              @#{association}   = nil if reload
-              @#{association} ||= AssociationProxy.new(self, #{association.inspect}, #{options.inspect})
+              associations[#{association.inspect}]   = nil if !!reload
+              associations[#{association.inspect}] ||= AssociationProxy.new(self, #{association.inspect}, #{options.inspect})
+              associations[#{association.inspect}]
             end
           }, __FILE__, line)
         end

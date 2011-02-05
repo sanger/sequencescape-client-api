@@ -1,9 +1,3 @@
-module Sequencescape
-  class Api
-    Error = Class.new(StandardError)
-  end
-end
-
 require 'sequencescape-api/core_ext'
 require 'sequencescape-api/resource_model_proxy'
 require 'sequencescape-api/connection_factory'

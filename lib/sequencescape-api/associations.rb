@@ -23,10 +23,28 @@ module Sequencescape
       end
 
       module InstanceMethods
+        def initialize(*args, &block)
+          super
+          @associations = {}
+        end
+
+        attr_reader :associations
+        private :associations
+
         def attributes_for(path)
           path.to_s.split('.').inject(attributes) { |k,v| k.try(:[], v) } or
             raise Sequencescape::Api::JsonError, path.to_s
         end
+
+        def update_attributes!(*args)
+          reset_all_associations
+          super
+        end
+
+        def reset_all_associations
+          @associations.clear
+        end
+        private :reset_all_associations
       end
     end
   end

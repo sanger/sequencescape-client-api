@@ -2,22 +2,40 @@ require 'spec_helper'
 
 describe Sequencescape::Api::ConnectionFactory do
   describe '.create' do
-    it 'errors if no :cookie is set' do
-      lambda { described_class.create(:url => 'foo') }.should raise_error(Sequencescape::Api::Error)
+    def should_error_with_these_options(options)
+      lambda { described_class.create(options) }.should raise_error(Sequencescape::Api::Error)
     end
 
-    it 'errors if no :url is set' do
-      lambda { described_class.create(:cookie => 'foo') }.should raise_error(Sequencescape::Api::Error)
+    required_options = [ :cookie, :url ]
+    required_options.each do |option|
+      # Generate a set of options that will not cause another error, but skip the option we're testing.
+      other_options = Hash[(required_options - [ option ]).map { |o| [ o, 'value' ] }]
+
+      it "errors if no #{option.inspect} is set" do
+        should_error_with_these_options(other_options)
+      end
+
+      it "errors if #{option.inspect} is nil" do
+        should_error_with_these_options(other_options.merge(option => nil))
+      end
+
+      it "errors if #{option.inspect} is blank" do
+        should_error_with_these_options(other_options.merge(option => ''))
+      end
     end
 
-    it 'uses the default_url if it has been set' do
-      described_class.default_url = 'default url'
-      described_class.create(:cookie => 'foo').send(:url).should == 'default url'
-    end
+    context 'default_url has been set' do
+      before(:each) do
+        described_class.default_url = 'default url'
+      end
 
-    it 'the specified URL overrides default_url' do
-      described_class.default_url = 'default url'
-      described_class.create(:cookie => 'foo', :url => 'i want this one').send(:url).should == 'i want this one'
+      it 'uses the default_url if no :url specified' do
+        described_class.create(:cookie => 'foo').send(:url).should == 'default url'
+      end
+
+      it 'the specified URL overrides default_url' do
+        described_class.create(:cookie => 'foo', :url => 'i want this one').send(:url).should == 'i want this one'
+      end
     end
   end
 

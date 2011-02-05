@@ -3,7 +3,7 @@ require 'support/test_association_base'
 
 describe Sequencescape::Api::Associations::HasMany do
   class TestAssociationHelper < TestAssociationBase
-    extend Sequencescape::Api::Associations::HasMany
+    extend Sequencescape::Api::Associations
     has_many :foos, :class_name => self::Foo.name do
       has_create_action :boom, :action => 'blam'
       has_create_action :kerpow
@@ -47,7 +47,13 @@ describe Sequencescape::Api::Associations::HasMany do
         ]
       end
 
-      it 'gets reloaded if the record is updated'
+      it 'gets reloaded if the record is updated' do
+        @instance.update_attributes!('bars' => [ 'foo3', 'foo4' ])
+        @instance.bars.to_a.should == [
+          TestAssociationHelper::Foo.new(@api, 'foo3', true),
+          TestAssociationHelper::Foo.new(@api, 'foo4', true)
+        ]
+      end
     end
 
     context 'normal has_many association' do
@@ -99,7 +105,26 @@ describe Sequencescape::Api::Associations::HasMany do
           subject.all.first.should == TestAssociationHelper::Foo.new(@api, 'foo1', false)
         end
 
-        it 'gets reloaded if the record is updated'
+        it 'gets reloaded if the record is updated' do
+          @instance.update_attributes!(
+            'foos' => {
+              'actions' => { 
+                'read' => 'http://localhost:3000/foos_have_mooved'
+              }
+            }
+          )
+          @api.should_receive(:read).with('http://localhost:3000/foos_have_mooved').and_yield({
+            'actions' => {
+              'first' => 'http://localhost:3000/foos/1',
+              'last'  => 'http://localhost:3000/foos/1',
+              'read'  => 'http://localhost:3000/foos/1'
+            },
+            'objects' => [
+              'foo3'
+            ]
+          })
+          @instance.foos.all.first.should == TestAssociationHelper::Foo.new(@api, 'foo3', false)
+        end
       end
     end
   end

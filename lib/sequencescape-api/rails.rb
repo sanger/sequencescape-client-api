@@ -8,12 +8,19 @@ module Sequencescape
         def self.included(base)
           base.class_eval do
             attr_reader :api
+            private :api
+
             before_filter :configure_api
           end
         end
 
+        def api_class
+          ::Sequencescape::Api
+        end
+        private :api_class
+
         def configure_api
-          @api = ::Sequencescape::Api.new(:cookie => self.cookies['WTSISignOn'])
+          @api = api_class.new(:cookie => cookies['WTSISignOn'])
         end
         private :configure_api
       end
