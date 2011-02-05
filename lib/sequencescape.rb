@@ -4,6 +4,8 @@ module Sequencescape
 
 end
 
+require 'sequencescape/user'
+
 require 'sequencescape/request'
 require 'sequencescape/pipeline'
 require 'sequencescape/batch'

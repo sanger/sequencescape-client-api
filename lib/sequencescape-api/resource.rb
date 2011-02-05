@@ -1,4 +1,5 @@
 require 'sequencescape-api/associations'
+require 'sequencescape-api/composition'
 require 'sequencescape-api/actions'
 
 class Sequencescape::Api::JsonError
@@ -14,5 +15,6 @@ class Sequencescape::Api::Resource
   extend ClassMethods
   include InstanceMethods
   extend Sequencescape::Api::Associations
+  extend Sequencescape::Api::Composition
   extend Sequencescape::Api::Actions
 end
