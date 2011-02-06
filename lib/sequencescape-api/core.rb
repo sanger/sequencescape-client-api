@@ -9,6 +9,7 @@ class Sequencescape::Api
   extend Sequencescape::Api::ConnectionFactory::Helpers
 
   def initialize(options = {})
+    @model_namespace = options.delete(:namespace) || Sequencescape
     @connection = self.class.connection_factory.create(options).tap do |connection|
       connection.root(&method(:initialize_root))
     end
@@ -26,9 +27,20 @@ class Sequencescape::Api
 
   def method_missing(name, *args, &block)
     return super unless @models.keys.include?(name.to_s)
-    ResourceModelProxy.new(self, "Sequencescape::#{name.to_s.classify}".constantize, @models[name.to_s])
+    ResourceModelProxy.new(self, model(name), @models[name.to_s])
   end
   protected :method_missing
+
+  def model_name(name)
+    model(name).name
+  end
+
+  def model(name)
+    @model_namespace.const_get(name.to_s.classify)
+  rescue NameError => missing_constant_in_user_specified_namespace_fallback
+    ::Sequencescape.const_get(name.to_s.classify)
+  end
+  private :model
 
   def initialize_root(json)
     @models = Hash[json.map { |k,v| [ k.to_s.singularize, v['actions'] ] }]

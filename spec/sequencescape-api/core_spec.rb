@@ -1,13 +1,15 @@
 require 'spec_helper'
 
-class Sequencescape::TestModel
-  def self.kicker(*args)
-    args
+module Kick
+  class TestModel
+    def self.kicker(*args)
+      args
+    end
   end
 end
 
 describe Sequencescape::Api do
-  context 'valid initialisation details' do
+  context '#initialize' do
     before(:each) do
       connection = double('connection')
       connection.should_receive(:root).and_yield({
@@ -20,12 +22,15 @@ describe Sequencescape::Api do
       })
 
       Sequencescape::Api.connection_factory = double('connection factory')
-      Sequencescape::Api.connection_factory.should_receive(:create).with('options').and_return(connection)
+      Sequencescape::Api.connection_factory.should_receive(:create).with(:our => 'options').and_return(connection)
     end
 
-    context 'checking initialisation' do
-      subject { described_class.new('options') }
+    it 'passes the options to the connection factory' do
+      described_class.new(:our => 'options')
+    end
 
+    context 'with :namespace' do
+      subject { described_class.new(:namespace => ::Kick, :our => 'options') }
       it { should respond_to(:test_model) }
       it { subject.test_model.kicker.should == [ subject ] }
     end

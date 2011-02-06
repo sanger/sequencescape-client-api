@@ -21,8 +21,10 @@ describe Sequencescape::Api::Composition do
       end
     end
 
-    def initialize(attributes)
-      @attributes = attributes
+    attr_reader :api
+
+    def initialize(api, attributes)
+      @api, @attributes = api, attributes
     end
 
     def attributes_for(name)
@@ -34,10 +36,13 @@ describe Sequencescape::Api::Composition do
   end
 
   before(:each) do
-    @instance = TestComposedOfHelper.new({
-      'thing'     => 'attributes for thing',
-      'something' => 'attributes for something'
-    })
+    @api      = double('api')
+    @instance = TestComposedOfHelper.new(
+      @api, {
+        'thing'     => 'attributes for thing',
+        'something' => 'attributes for something'
+      }
+    )
   end
 
   describe '.composed_of' do
@@ -50,7 +55,16 @@ describe Sequencescape::Api::Composition do
   context 'the composed objects' do
     subject { @instance }
 
-    its(:thing)     { should == TestComposedOfHelper::Thing.new(@instance, 'attributes for thing') }
-    its(:something) { should be_a(Sequencescape::Something) }
+    its(:thing) { should == TestComposedOfHelper::Thing.new(@instance, 'attributes for thing') }
+
+    context do
+      before(:each) do
+        @api.should_receive(:model_name).with(:something).and_return(Sequencescape::Something.name)
+      end
+
+      it 'has a :something' do
+        subject.something.should be_a(Sequencescape::Something)
+      end
+    end
   end
 end

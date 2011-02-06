@@ -35,6 +35,18 @@ describe Sequencescape::Api::Rails::ApplicationController do
 
         subject.api.should == :api_instance
       end
+
+      it 'uses the extra options the application defines' do
+        api_class = double('Sequencescape::Api')
+        api_class.should_receive(:new).with(:cookie => 'cookie', :extra => 'option').and_return(:api_instance)
+        subject.should_receive(:cookies).and_return('WTSISignOn' => 'cookie')
+        subject.should_receive(:api_class).and_return(api_class)
+        subject.should_receive(:extra_options).and_return(:extra => 'option')
+
+        subject.configure_api
+
+        subject.api.should == :api_instance
+      end
     end
   end
 end

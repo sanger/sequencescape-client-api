@@ -13,7 +13,7 @@ module Sequencescape::Api::Associations::HasMany
 
     def initialize(owner, association, options)
       @owner   = owner
-      @model   = (options[:class_name] || "Sequencescape::#{association.to_s.classify}").constantize
+      @model   = (options[:class_name] || api.model_name(association)).constantize
       @objects = @owner.attributes_for(association).map(&method(:new))
     end
 

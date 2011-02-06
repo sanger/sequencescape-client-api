@@ -18,9 +18,14 @@ module Sequencescape::Api::Rails
     private :api_class
 
     def configure_api
-      @api = api_class.new(:cookie => cookies['WTSISignOn'])
+      @api = api_class.new({ :cookie => cookies['WTSISignOn'] }.merge(extra_options))
     end
     private :configure_api
+
+    def extra_options
+      { }
+    end
+    private :extra_options
   end
 
   # Including this module into your Rails model indicates that the model is associated with
@@ -31,9 +36,15 @@ module Sequencescape::Api::Rails
   module Resourced
     def self.included(base)
       base.class_eval do
+        attr_protected :remote_resource, :uuid
         validates_presence_of :uuid, :allow_blank => false
         before_save :save_remote_resource
       end
+    end
+
+    def remote_resource=(resource)
+      @remote_resource = resource
+      self[:uuid] = @remote_resource.uuid
     end
 
     def uuid
@@ -49,6 +60,7 @@ module Sequencescape::Api::Rails
     def save_remote_resource
       return true if @remote_resource.nil?
       return true unless @remote_resource.can_save?
+      self[:uuid] = @remote_resource
       @remote_resource.save
     end
     private :save_remote_resource

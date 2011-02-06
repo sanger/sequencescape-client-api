@@ -35,6 +35,10 @@ describe Sequencescape::Api::Associations::HasMany do
 
   context 'the association itself' do
     context 'where the class_name is unspecified' do
+      before(:each) do
+        @api.should_receive(:model_name).with(:johns).and_return(Sequencescape::John.name)
+      end
+
       subject do
         @instance.attributes = { 'johns' => [ 'john1' ] }
         @instance.johns

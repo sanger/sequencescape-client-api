@@ -5,7 +5,7 @@ class Sequencescape::Api::Associations::Base
     @owner      = owner
     @attributes = owner.attributes_for(association)
     @actions    = OpenStruct.new(@attributes.delete('actions'))
-    @model      = (options[:class_name] || "Sequencescape::#{association.to_s.classify}").constantize
+    @model      = (options[:class_name] || api.model_name(association)).constantize
   end
 
   attr_reader :actions, :model
