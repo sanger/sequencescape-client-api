@@ -1,8 +1,53 @@
 Sequencescape Client API
 ========================
 
-Usage
------
+Usage within a Rails application
+--------------------------------
+NOTE: You must be using Rails 3.x for this gem to work.
+
+In your Gemfile write: 
+
+    gem 'sequencescape-client-api', :git => 'https://github.com/sanger/sequencescape-client-api.git', :require => 'sequencescape'
+
+In your app/controllers/application.rb write:
+
+    class ApplicationController < ActionController::base
+      include ::Sequencescape::Api::Rails::ApplicationController
+      ::Sequencescape::Api::ConnectionFactory.default_url = 'http://server:port/api/1/'
+    end
+
+If you need to set more options on the initial API construction simply define a method called `extra_options` in your ApplicationController and return a hash containing them (symbol keys please).
+
+In your model controller you can now do:
+
+    class SubmissionsController < ApplicationController
+      def index
+        @submissions = api.submission.all
+      end
+    end
+
+Extending the basic models
+--------------------------
+By default the Sequencescape::Api class will lookup model classes from the Sequencescape namespace.  If you need more than just this default behaviour, for example you need to add extra information contained within a DB, then you need to extend these classes.  As an example, imagine that you wanted to add a message to every batch that was returned from the server; you could do:
+
+    class MySpecific::Batch < Sequencescape::Batch
+      def message_details
+        @message_details = Message.find_by_uuid(self.uuid) || Message.new(:uuid => self.uuid)
+      end
+    end
+
+Then, in your ApplicationController you would define:
+
+    class ApplicationController
+      def extra_options
+        { :namespace => MySpecific }
+      end
+    end
+
+You only need to extend the classes you are interested in: all others will be picked up from the namespace.
+
+Usage from the console
+----------------------
 
 Pretty simple:
 
@@ -19,24 +64,10 @@ In code:
 
 Or something like that!
 
-You can control the 'namespace' that the API uses for class lookups using the `:namespace` option and passing the module/class.  For instance,
-by default the code looks in the Sequencescape module, which would be:
-
-    api = Sequencescape::Api.new(:namespace => Sequencescape)
-
-If you're in a Rails environment then:
-
-    class ApplicationController < ActionController::Base
-      include Sequencescape::Api::Rails::ApplicationController
-    end
-
-Every request will then get it's own API instance available through `api` based on the browser cookie sent.
-
-You can add extra options to the initialisation of the API by defining the `extra_options` method and returning a hash.
-
+Adding more models
+------------------
 If you want to declare a model that can be instantiated then:
 
-* It must exist in the Sequencescape namespace (sorry, limitation for the moment)
 * It should extend Sequencescape::Api::Resource
 * And you can use has_many and belongs_to like you would on an ActiveRecord model
 
