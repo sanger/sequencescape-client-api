@@ -26,26 +26,6 @@ In your model controller you can now do:
       end
     end
 
-Extending the basic models
---------------------------
-By default the Sequencescape::Api class will lookup model classes from the Sequencescape namespace.  If you need more than just this default behaviour, for example you need to add extra information contained within a DB, then you need to extend these classes.  As an example, imagine that you wanted to add a message to every batch that was returned from the server; you could do:
-
-    class MySpecific::Batch < Sequencescape::Batch
-      def message_details
-        @message_details = Message.find_by_uuid(self.uuid) || Message.new(:uuid => self.uuid)
-      end
-    end
-
-Then, in your ApplicationController you would define:
-
-    class ApplicationController
-      def extra_options
-        { :namespace => MySpecific }
-      end
-    end
-
-You only need to extend the classes you are interested in: all others will be picked up from the namespace.
-
 Usage from the console
 ----------------------
 
@@ -63,6 +43,26 @@ In code:
     first_submission.requests.all == last_submission.requests.all
 
 Or something like that!
+
+Extending the basic models
+--------------------------
+By default the Sequencescape::Api class will lookup model classes from the Sequencescape namespace.  If you need more than just this default behaviour, for example you need to add extra information contained within a DB, then you need to extend these classes.  As an example, imagine that you wanted to add a message to every batch that was returned from the server; you could do:
+
+    class MySpecific::Batch < Sequencescape::Batch
+      def message_details
+        @message_details = Message.find_by_uuid(self.uuid) || Message.new(:uuid => self.uuid)
+      end
+    end
+
+You then only need to pass the `:namespace => MySpecific` option to the API initializer; in a Rails environment you'd do:
+
+    class ApplicationController
+      def extra_options
+        { :namespace => MySpecific }
+      end
+    end
+
+You only need to extend the classes you are interested in: all others will be picked up from the namespace.
 
 Adding more models
 ------------------
