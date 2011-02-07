@@ -19,6 +19,11 @@ In code:
 
 Or something like that!
 
+You can control the 'namespace' that the API uses for class lookups using the `:namespace` option and passing the module/class.  For instance,
+by default the code looks in the Sequencescape module, which would be:
+
+    api = Sequencescape::Api.new(:namespace => Sequencescape)
+
 If you're in a Rails environment then:
 
     class ApplicationController < ActionController::Base
@@ -26,6 +31,8 @@ If you're in a Rails environment then:
     end
 
 Every request will then get it's own API instance available through `api` based on the browser cookie sent.
+
+You can add extra options to the initialisation of the API by defining the `extra_options` method and returning a hash.
 
 If you want to declare a model that can be instantiated then:
 
