@@ -88,6 +88,10 @@ describe Sequencescape::Api::PageOfResults do
     described_class.included_modules.should include(Enumerable)
   end
 
+  before(:each) do
+    @api = double('api')
+  end
+
   describe '#initialize' do
     def should_error_for_bad_json(json)
       lambda do
@@ -95,40 +99,63 @@ describe Sequencescape::Api::PageOfResults do
       end.should raise_error(Sequencescape::Api::Error)
     end
 
-    good_json = { 'actions' => { 'read' => 'a' }, 'objects' => [], 'size' => 100 }
-    good_json.keys.each do |attribute|
-      json = good_json.dup.tap { |j| j.delete(attribute) }
-      it "errors when #{attribute.inspect} is missing" do
-        should_error_for_bad_json(json)
+    shared_examples_for 'initialization behaviour' do |options_to_check|
+      good_json = { 'actions' => { 'read' => 'a' }, 'objects' => [], 'size' => 100 }
+      (good_json.keys - options_to_check).map(&good_json.method(:delete))
+      options_to_check.each do |attribute|
+        json = good_json.dup.tap { |j| j.delete(attribute) }
+        it "errors when #{attribute.inspect} is missing" do
+          should_error_for_bad_json(json)
+        end
+      end
+
+      it 'errors when the actions are empty' do
+        should_error_for_bad_json(good_json.merge('actions' => {}))
+      end
+
+      it 'errors when the size is blank' do
+        should_error_for_bad_json(good_json.merge('size' => ''))
+      end if options_to_check.include?('size')
+
+      it 'ignores the presence of uuids_to_ids' do
+        described_class.new(@api, good_json.merge('uuids_to_ids' => false))
+      end
+
+      it 'yields the contents of the object json to the block' do
+        expected = double('yield helper')
+        expected.should_receive(:yielded).with('json1')
+        expected.should_receive(:yielded).with('json2')
+
+        described_class.new(
+          @api,
+          good_json.merge('objects' => [ 'json1', 'json2' ]),
+          &expected.method(:yielded)
+        )
       end
     end
 
-    it 'errors when the actions are empty' do
-      should_error_for_bad_json(good_json.merge('actions' => {}))
+    context 'version 1 API' do
+      before(:each) do
+        @api.stub_chain('capabilities.size_in_pages?').and_return(false)
+      end
+
+      it_should_behave_like('initialization behaviour', [ 'actions', 'objects' ])
     end
 
-    it 'errors when the size is blank' do
-      should_error_for_bad_json(good_json.merge('size' => ''))
-    end
+    context 'version 2 API' do
+      before(:each) do
+        @api.stub_chain('capabilities.size_in_pages?').and_return(true)
+      end
 
-    it 'ignores the presence of uuids_to_ids' do
-      described_class.new(@api, good_json.merge('uuids_to_ids' => false))
-    end
-
-    it 'yields the contents of the object json to the block' do
-      expected = double('yield helper')
-      expected.should_receive(:yielded).with('json1')
-      expected.should_receive(:yielded).with('json2')
-
-      described_class.new(
-        @api,
-        good_json.merge('objects' => [ 'json1', 'json2' ]),
-        &expected.method(:yielded)
-      )
+      it_should_behave_like('initialization behaviour', [ 'actions', 'objects', 'size' ])
     end
   end
 
   context 'once initialised successfully' do
+    before(:each) do
+      @api.stub_chain('capabilities.size_in_pages?').and_return(true)
+    end
+
     context 'multiple pages' do
       subject do
         ctor = double('ctor')
@@ -136,8 +163,7 @@ describe Sequencescape::Api::PageOfResults do
         ctor.should_receive(:yielded).with('json2').and_return('b')
         ctor.should_receive(:yielded).with('json3').and_return('c')
 
-        api = double('api')
-        api.should_receive(:read).with('page2').and_yield({
+        @api.should_receive(:read).with('page2').and_yield({
           'actions' => {
             'first'    => 'page1',
             'last'     => 'page2',
@@ -150,7 +176,7 @@ describe Sequencescape::Api::PageOfResults do
           'size' => 100
         })
 
-        described_class.new(api, {
+        described_class.new(@api, {
           'actions' => {
             'first' => 'page1',
             'last'  => 'page2',
@@ -195,8 +221,7 @@ describe Sequencescape::Api::PageOfResults do
         ctor.should_receive(:yielded).with('json2').and_return('b')
         ctor.should_receive(:yielded).with('json3').and_return('c')
 
-        api = double('api')
-        api.should_receive(:read).with('page3').and_yield({
+        @api.should_receive(:read).with('page3').and_yield({
           'actions' => {
             'first'    => 'page1',
             'last'     => 'page3',
@@ -210,7 +235,7 @@ describe Sequencescape::Api::PageOfResults do
           'size' => 100
         })
 
-        described_class.new(api, {
+        described_class.new(@api, {
           'actions' => {
             'first' => 'page1',
             'last'  => 'page3',
@@ -240,8 +265,7 @@ describe Sequencescape::Api::PageOfResults do
           ctor.should_receive(:yielded).with('json5').and_return('e')
           ctor.should_receive(:yielded).with('json6').and_return('f')
 
-          api = double('api')
-          api.should_receive(:read).with('page2').and_yield({
+          @api.should_receive(:read).with('page2').and_yield({
             'actions' => {
               'first'    => 'page1',
               'last'     => 'page2',
@@ -253,7 +277,7 @@ describe Sequencescape::Api::PageOfResults do
             ],
             'size' => 100
           })
-          api.should_receive(:read).with('page1').and_yield({
+          @api.should_receive(:read).with('page1').and_yield({
             'actions' => {
               'first'    => 'page1',
               'last'     => 'page1',
@@ -267,7 +291,7 @@ describe Sequencescape::Api::PageOfResults do
             'size' => 100
           })
 
-          described_class.new(api, {
+          described_class.new(@api, {
             'actions' => {
               'first' => 'page1',
               'last'  => 'page2',

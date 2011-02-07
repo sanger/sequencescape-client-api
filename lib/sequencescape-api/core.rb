@@ -1,6 +1,7 @@
 require 'sequencescape-api/core_ext'
 require 'sequencescape-api/resource_model_proxy'
 require 'sequencescape-api/connection_factory'
+require 'sequencescape-api/capabilities'
 
 require 'active_support'
 require 'active_support/core_ext/class/inheritable_attributes'
@@ -15,6 +16,7 @@ class Sequencescape::Api
     end
   end
 
+  attr_reader :capabilities
   delegate :read, :create, :update, :to => :@connection
 
   def read_uuid(uuid, &block)
@@ -43,7 +45,8 @@ class Sequencescape::Api
   private :model
 
   def initialize_root(json)
-    @models = Hash[json.map { |k,v| [ k.to_s.singularize, v['actions'] ] }]
+    @capabilities = Sequencescape::Api.const_get("Version#{json.delete('version') || 1}").new
+    @models       = Hash[json.map { |k,v| [ k.to_s.singularize, v['actions'] ] }]
   end
   private :initialize_root
 

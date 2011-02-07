@@ -95,9 +95,11 @@ class Sequencescape::Api::PageOfResults
     actions = json.delete('actions')
     raise Sequencescape::Api::Error, 'No actions for page!' if actions.blank?
 
-    size = json.delete('size')
-    raise Sequencescape::Api::Error, 'No size for page!' if size.blank?
-    @size = size.to_i
+    if api.capabilities.size_in_pages?
+      size = json.delete('size')
+      raise Sequencescape::Api::Error, 'No size for page!' if size.blank?
+      @size = size.to_i
+    end
 
     raise Sequencescape::Api::Error, 'No object json in page!' if json.keys.empty?
     @actions, @objects = OpenStruct.new(actions), json[json.keys.first].map(&@ctor)

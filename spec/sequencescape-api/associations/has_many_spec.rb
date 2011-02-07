@@ -34,6 +34,10 @@ describe Sequencescape::Api::Associations::HasMany do
   end
 
   context 'the association itself' do
+    before(:each) do
+      @api.stub_chain('capabilities.size_in_pages?').and_return(true)
+    end
+
     context 'where the class_name is unspecified' do
       before(:each) do
         @api.should_receive(:model_name).with(:johns).and_return(Sequencescape::John.name)
