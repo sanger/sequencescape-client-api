@@ -28,8 +28,9 @@ module Sequencescape::Api::Rails
     end
     private :api_connection_options
 
-    def sequencescape_api_error_handler
-      raise StandardError, "There is an issue with the API connection to Sequencescape"
+    def sequencescape_api_error_handler(exception)
+      Rails.logger.error(exception, exception.backtrace)
+      raise StandardError, "There is an issue with the API connection to Sequencescape (#{exception.message})"
     end
     private :sequencescape_api_error_handler
   end
