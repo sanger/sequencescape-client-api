@@ -134,7 +134,7 @@ describe Sequencescape::Api::PageOfResults do
       end
     end
 
-    context 'version 1 API' do
+    context 'revision 1 API' do
       before(:each) do
         @api.stub_chain('capabilities.size_in_pages?').and_return(false)
       end
@@ -142,7 +142,7 @@ describe Sequencescape::Api::PageOfResults do
       it_should_behave_like('initialization behaviour', [ 'actions', 'objects' ])
     end
 
-    context 'version 2 API' do
+    context 'revision 2 API' do
       before(:each) do
         @api.stub_chain('capabilities.size_in_pages?').and_return(true)
       end

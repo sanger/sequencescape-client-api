@@ -8,6 +8,7 @@ describe Sequencescape::Api::Rails::ApplicationController do
       object.class.should_receive(:before_filter).with(:configure_api)
       object.class.should_receive(:attr_reader).with(:api)
       object.class.should_receive(:private).with(:api)
+      object.class.should_receive(:rescue_from).with(::Sequencescape::Api::Error, :with => :sequencescape_api_error_handler)
       object.class.send(:include, described_class)
     end
   end
@@ -15,7 +16,8 @@ describe Sequencescape::Api::Rails::ApplicationController do
   context 'once included' do
     subject do
       Class.new.new.tap do |object|
-        object.class.should_receive(:before_filter).with(any_args)
+        object.class.stub(:before_filter).with(any_args)
+        object.class.stub(:rescue_from).with(any_args)
         object.class.send(:include, described_class)
 
         object.class.class_eval do
@@ -41,7 +43,7 @@ describe Sequencescape::Api::Rails::ApplicationController do
         api_class.should_receive(:new).with(:cookie => 'cookie', :extra => 'option').and_return(:api_instance)
         subject.should_receive(:cookies).and_return('WTSISignOn' => 'cookie')
         subject.should_receive(:api_class).and_return(api_class)
-        subject.should_receive(:extra_options).and_return(:extra => 'option')
+        subject.should_receive(:api_connection_options).and_return(:extra => 'option')
 
         subject.configure_api
 

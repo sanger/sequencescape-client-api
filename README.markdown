@@ -16,7 +16,7 @@ In your app/controllers/application.rb write:
       ::Sequencescape::Api::ConnectionFactory.default_url = 'http://server:port/api/1/'
     end
 
-If you need to set more options on the initial API construction simply define a method called `extra_options` in your ApplicationController and return a hash containing them (symbol keys please).
+If you need to set more options on the initial API construction simply define a method called `api_connection_options` in your ApplicationController and return a hash containing them (symbol keys please).
 
 In your model controller you can now do:
 
@@ -25,6 +25,16 @@ In your model controller you can now do:
         @submissions = api.submission.all
       end
     end
+
+If you want to handle the errors from the API then you should override `sequencescape_api_error_handler` in your controller:
+
+    class ApplicationController < ActionController::Base
+      def sequencescape_api_error_handler
+
+      end
+    end
+
+It's just a standard rescue_from handler.
 
 Usage from the console
 ----------------------
@@ -57,7 +67,7 @@ By default the Sequencescape::Api class will lookup model classes from the Seque
 You then only need to pass the `:namespace => MySpecific` option to the API initializer; in a Rails environment you'd do:
 
     class ApplicationController
-      def extra_options
+      def api_connection_options
         { :namespace => MySpecific }
       end
     end

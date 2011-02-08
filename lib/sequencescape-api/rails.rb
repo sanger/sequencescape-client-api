@@ -9,6 +9,7 @@ module Sequencescape::Api::Rails
         private :api
 
         before_filter :configure_api
+        rescue_from(::Sequencescape::Api::Error, :with => :sequencescape_api_error_handler)
       end
     end
 
@@ -18,14 +19,19 @@ module Sequencescape::Api::Rails
     private :api_class
 
     def configure_api
-      @api = api_class.new({ :cookie => cookies['WTSISignOn'] }.merge(extra_options))
+      @api = api_class.new({ :cookie => cookies['WTSISignOn'] }.merge(api_connection_options))
     end
     private :configure_api
 
-    def extra_options
+    def api_connection_options
       { }
     end
-    private :extra_options
+    private :api_connection_options
+
+    def sequencescape_api_error_handler
+      raise StandardError, "There is an issue with the API connection to Sequencescape"
+    end
+    private :sequencescape_api_error_handler
   end
 
   # Including this module into your Rails model indicates that the model is associated with

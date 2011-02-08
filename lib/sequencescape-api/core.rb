@@ -45,7 +45,7 @@ class Sequencescape::Api
   private :model
 
   def initialize_root(json)
-    @capabilities = Sequencescape::Api.const_get("Version#{json.delete('version') || 1}").new
+    @capabilities = Sequencescape::Api.const_get("Version#{json.delete('revision') || 1}").new
     @models       = Hash[json.map { |k,v| [ k.to_s.singularize, v['actions'] ] }]
   end
   private :initialize_root
