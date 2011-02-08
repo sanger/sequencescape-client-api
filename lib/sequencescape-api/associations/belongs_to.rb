@@ -48,6 +48,10 @@ module Sequencescape::Api::Associations::BelongsTo
         associations[#{association.inspect}] ||= AssociationProxy.new(self, #{association.inspect}, #{options.inspect})
         associations[#{association.inspect}]
       end
+
+      def #{association}?
+        attributes_for?(#{association.inspect})
+      end
     }, __FILE__, line)
   end
 end

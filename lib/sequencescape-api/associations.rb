@@ -23,9 +23,17 @@ module Sequencescape::Api::Associations
     private :associations
 
     def attributes_for(path)
-      path.to_s.split('.').inject(attributes) { |k,v| k.try(:[], v) } or
-        raise Sequencescape::Api::JsonError, path.to_s
+      attributes_from_path(path) or raise Sequencescape::Api::JsonError, path.to_s
     end
+
+    def attributes_for?(path)
+      !!attributes_from_path(path)
+    end
+
+    def attributes_from_path(path)
+      path.to_s.split('.').inject(attributes) { |k,v| k.try(:[], v) }
+    end
+    private :attributes_from_path
 
     def update_attributes!(*args)
       reset_all_associations

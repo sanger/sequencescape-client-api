@@ -46,12 +46,20 @@ module Sequencescape::Api::Associations::HasMany
       end
     )
     proxy.instance_eval(&block) if block_given?
-    class_eval do
-      define_method(association) do |*args|
-        associations[association]   = nil if !!args.first
-        associations[association] ||= proxy.new(self, association, options)
-        associations[association]
+
+    const_set(:"#{association.to_s.classify}HasManyProxy", proxy)
+
+    line = __LINE__ + 1
+    class_eval(%Q{
+      def #{association}(reload = false)
+        associations[#{association.inspect}]   = nil if reload
+        associations[#{association.inspect}] ||= #{association.to_s.classify}HasManyProxy.new(self, #{association.inspect}, #{options.inspect})
+        associations[#{association.inspect}]
       end
-    end
+
+      def #{association}?
+        attributes_for?(#{association.inspect})
+      end
+    }, __FILE__, line)
   end
 end
