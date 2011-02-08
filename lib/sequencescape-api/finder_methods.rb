@@ -1,19 +1,23 @@
 require 'ostruct'
 
 module Sequencescape::Api::FinderMethods
+  module Delegation
+    def self.included(base)
+      base.with_options(:to => :all) do |all|
+        all.delegate :each, :first, :last, :empty?, :to_a, :size
+        all.delegate :each_page, :first_page, :last_page
+      end
+    end
+  end
+
   class << self
     def extended(base)
-      delegate_methods_to_all_in(base.singleton_class)
+      base.singleton_class.send(:include, Delegation)
     end
 
     def included(base)
-      delegate_methods_to_all_in(base)
+      base.send(:include, Delegation)
     end
-
-    def delegate_methods_to_all_in(base)
-      base.delegate :each, :each_page, :first, :last, :empty?, :to_a, :size, :to => :all
-    end
-    private :delegate_methods_to_all_in
   end
 
   def find(uuid)
@@ -48,6 +52,8 @@ class Sequencescape::Api::PageOfResults
   end
 
   def empty?
+    return @size.zero? if api.capabilities.size_in_pages?
+
     first_page
     @objects.empty?
   end
@@ -83,12 +89,14 @@ class Sequencescape::Api::PageOfResults
     line = __LINE__ + 1
     class_eval(%Q{
       def #{page}_page
-        return if actions.read == actions.#{page}
-        api.read(actions.#{page}, &method(:update_from_json))
+        self.tap do
+          api.read(actions.#{page}, &method(:update_from_json)) unless actions.read == actions.#{page}
+          yield(@objects.dup) if block_given?
+        end
       end
-      private :#{page}_page
     }, __FILE__, line)
   end
+  private :last_page, :next_page
 
   def update_from_json(json)
     json.delete('uuids_to_ids')         # Discard unwanted rubbish

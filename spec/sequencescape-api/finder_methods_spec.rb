@@ -41,7 +41,13 @@ describe Sequencescape::Api::FinderMethods do
     it { should == :result_of_page_from_json } 
   end
 
-  [ :each, :each_page, :first, :last, :empty?, :size, :to_a ].each do |delegated|
+  [ 
+    # Enumerable methods
+    :each, :first, :last, :empty?, :size, :to_a,
+
+    # Paging methods
+    :each_page, :first_page, :last_page
+  ].each do |delegated|
     describe "##{delegated}" do
       it 'delegated to the pages from #all' do
         results = double('results')
@@ -92,68 +98,150 @@ describe Sequencescape::Api::PageOfResults do
     @api = double('api')
   end
 
-  describe '#initialize' do
+  shared_examples_for 'initialization behaviour' do |options_to_check|
     def should_error_for_bad_json(json)
       lambda do
         described_class.new(@api, json) { }
       end.should raise_error(Sequencescape::Api::Error)
     end
 
-    shared_examples_for 'initialization behaviour' do |options_to_check|
-      good_json = { 'actions' => { 'read' => 'a' }, 'objects' => [], 'size' => 100 }
-      (good_json.keys - options_to_check).map(&good_json.method(:delete))
-      options_to_check.each do |attribute|
-        json = good_json.dup.tap { |j| j.delete(attribute) }
-        it "errors when #{attribute.inspect} is missing" do
-          should_error_for_bad_json(json)
-        end
-      end
-
-      it 'errors when the actions are empty' do
-        should_error_for_bad_json(good_json.merge('actions' => {}))
-      end
-
-      it 'errors when the size is blank' do
-        should_error_for_bad_json(good_json.merge('size' => ''))
-      end if options_to_check.include?('size')
-
-      it 'ignores the presence of uuids_to_ids' do
-        described_class.new(@api, good_json.merge('uuids_to_ids' => false))
-      end
-
-      it 'yields the contents of the object json to the block' do
-        expected = double('yield helper')
-        expected.should_receive(:yielded).with('json1')
-        expected.should_receive(:yielded).with('json2')
-
-        described_class.new(
-          @api,
-          good_json.merge('objects' => [ 'json1', 'json2' ]),
-          &expected.method(:yielded)
-        )
+    good_json = { 'actions' => { 'read' => 'a' }, 'objects' => [], 'size' => 100 }
+    (good_json.keys - options_to_check).map(&good_json.method(:delete))
+    options_to_check.each do |attribute|
+      json = good_json.dup.tap { |j| j.delete(attribute) }
+      it "errors when #{attribute.inspect} is missing" do
+        should_error_for_bad_json(json)
       end
     end
 
-    context 'revision 1 API' do
-      before(:each) do
-        @api.stub_chain('capabilities.size_in_pages?').and_return(false)
-      end
-
-      it_should_behave_like('initialization behaviour', [ 'actions', 'objects' ])
+    it 'errors when the actions are empty' do
+      should_error_for_bad_json(good_json.merge('actions' => {}))
     end
 
-    context 'revision 2 API' do
-      before(:each) do
-        @api.stub_chain('capabilities.size_in_pages?').and_return(true)
-      end
+    it 'errors when the size is blank' do
+      should_error_for_bad_json(good_json.merge('size' => ''))
+    end if options_to_check.include?('size')
 
-      it_should_behave_like('initialization behaviour', [ 'actions', 'objects', 'size' ])
+    it 'ignores the presence of uuids_to_ids' do
+      described_class.new(@api, good_json.merge('uuids_to_ids' => false))
+    end
+
+    it 'yields the contents of the object json to the block' do
+      expected = double('yield helper')
+      expected.should_receive(:yielded).with('json1')
+      expected.should_receive(:yielded).with('json2')
+
+      described_class.new(
+        @api,
+        good_json.merge('objects' => [ 'json1', 'json2' ]),
+        &expected.method(:yielded)
+      )
     end
   end
 
-  context 'once initialised successfully' do
+  def construct_page(json)
+    ctor = double('ctor')
+    ctor.stub(:yielded).with(any_args).and_return('object')
+
+    page = described_class.new(@api, {
+      'actions' => {
+        'read'     => 'first',
+        'first'    => 'first',
+        'last'     => 'last',
+        'next'     => 'next',
+        'previous' => 'previous'
+      }
+    }.merge(json), &ctor.method(:yielded))
+  end
+
+  context 'API revision 1' do
+    before(:each) do
+      @api.stub_chain('capabilities.size_in_pages?').and_return(false)
+    end
+
+    describe '#initialize' do
+      it_should_behave_like('initialization behaviour', [ 'actions', 'objects' ])
+    end
+
+    describe '#empty?' do
+      it 'is not empty with objects' do
+        construct_page('objects' => [ 'json1', 'json2' ]).should_not be_empty
+      end
+
+      it 'is empty with no objects' do
+        construct_page('objects' => []).should be_empty
+      end
+    end
+  end
+
+  context 'API revision 2' do
     before(:each) do
       @api.stub_chain('capabilities.size_in_pages?').and_return(true)
+    end
+
+    describe '#initialize' do
+      it_should_behave_like('initialization behaviour', [ 'actions', 'objects', 'size' ])
+    end
+
+    describe '#empty?' do
+      it 'is not empty with a size > 0' do
+        construct_page('size' => 2, 'objects' => []).should_not be_empty
+      end
+
+      it 'is empty with a size == 0' do
+        construct_page('size' => 0, 'objects' => [ 'json1', 'json2' ]).should be_empty
+      end
+    end
+
+    shared_examples_for 'single paging method' do |page|
+      before(:each) do
+        # The JSON should be parsed for each element
+        @ctor = double('ctor')
+        @ctor.should_receive(:yielded).with('json1').and_return('a')
+        @ctor.should_receive(:yielded).with('json2').and_return('b')
+        @ctor.should_receive(:yielded).with('json3').and_return('c')
+        @ctor.should_receive(:yielded).with('json4').and_return('d')
+
+        # There should be a read for the page
+        @api.should_receive(:read).with(page).and_yield({
+          'actions' => {
+            'first'    => 'first after read',
+            'last'     => 'last after read',
+            'next'     => 'next after read',
+            'previous' => 'previous after read'
+          },
+          'objects' => [ 'json3', 'json4' ],
+          'size' => 2
+        })
+      end
+
+      subject do
+        described_class.new(@api, {
+          'actions' => {
+            'first'    => 'first',
+            'last'     => 'last',
+            'next'     => 'next',
+            'previous' => 'previous'
+          },
+          'objects' => [ 'json1', 'json2' ],
+          'size' => 2
+        }, &@ctor.method(:yielded))
+      end
+
+      it 'yields the objects for the page' do
+        expected = double('expectation')
+        expected.should_receive(:yielded).with('c', 'd')  # RSpec mock seems to use *args!
+
+        subject.send(:"#{page}_page", &expected.method(:yielded))
+      end
+    end
+
+    describe '#first_page' do
+      it_should_behave_like('single paging method', 'first')
+    end
+
+    describe '#last_page' do
+      it_should_behave_like('single paging method', 'last')
     end
 
     context 'multiple pages' do

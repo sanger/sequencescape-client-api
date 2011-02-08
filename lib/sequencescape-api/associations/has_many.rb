@@ -10,6 +10,7 @@ module Sequencescape::Api::Associations::HasMany
 
   class InlineAssociationProxy 
     include Enumerable
+    include ::Sequencescape::Api::FinderMethods::Delegation
 
     def initialize(owner, association, options)
       @owner   = owner
@@ -20,7 +21,6 @@ module Sequencescape::Api::Associations::HasMany
     attr_reader :model
     delegate :api, :to => :@owner
     private :api, :model
-    delegate :each, :first, :last, :empty?, :size, :to => :all
 
     def find(uuid)
       @objects.detect { |o| o.uuid == uuid }
