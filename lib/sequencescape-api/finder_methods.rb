@@ -22,7 +22,7 @@ module Sequencescape::Api::FinderMethods
 
   def find(uuid)
     api.read_uuid(uuid) do |json|
-      self.new(json, true)
+      new(json, true)
     end
   end
 
