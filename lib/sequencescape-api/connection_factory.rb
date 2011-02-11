@@ -1,6 +1,6 @@
 require 'uri'
 require 'net/http'
-require 'active_support/json'
+require 'yajl'
 
 # PINCHED FROM https://gist.github.com/736721
 BEGIN {
@@ -62,28 +62,18 @@ class Sequencescape::Api::ConnectionFactory
   end
 
   def read(url, &block)
-    uri = URI.parse(url)
-    Net::HTTP.start(uri.host, uri.port) do |connection|
-      request = Net::HTTP::Get.new(uri.path, headers)
-
-      response = connection.request(request)
+    perform(:get, url) do |response|
       case response
-      when Net::HTTPSuccess then yield(ActiveSupport::JSON.decode(response.body))
+      when Net::HTTPSuccess then yield(parse_json_from(response))
       else                       raise ServerError, response.body
       end
     end
   end
 
   def create(url, body = nil, &block)
-    uri = URI.parse(url)
-    Net::HTTP.start(uri.host, uri.port) do |connection|
-      request              = Net::HTTP::Post.new(uri.path, headers)
-      request.content_type = 'application/json'
-      request.body         = (body || {}).to_json
-
-      response = connection.request(request)
+    perform(:post, url, body || {}) do |response|
       case response
-      when Net::HTTPCreated then yield(ActiveSupport::JSON.decode(response.body))
+      when Net::HTTPCreated then yield(parse_json_from(response))
       when Net::HTTPSuccess then raise ServerError, 'server gave success but not created'
       else                       raise ServerError, response.body
       end
@@ -91,19 +81,31 @@ class Sequencescape::Api::ConnectionFactory
   end
 
   def update(url, body = nil, &block)
-    uri = URI.parse(url)
-    Net::HTTP.start(uri.host, uri.port) do |connection|
-      request              = Net::HTTP::Put.new(uri.path, headers)
-      request.content_type = 'application/json'
-      request.body         = (body || {}).to_json
-
-      response = connection.request(request)
+    perform(:put, url, body || {}) do |response|
       case response
-      when Net::HTTPSuccess then yield(ActiveSupport::JSON.decode(response.body))
+      when Net::HTTPSuccess then yield(parse_json_from(response))
       else                       raise ServerError, response.body
       end
     end
   end
+
+  def perform(http_verb, url, body = nil, &block)
+    uri = URI.parse(url)
+    Net::HTTP.start(uri.host, uri.port) do |connection|
+      request              = Net::HTTP.const_get(http_verb.to_s.classify).new(uri.path, headers)
+      unless body.nil?
+        request.content_type = 'application/json'
+        request.body         = body.to_json
+      end
+      yield(connection.request(request))
+    end
+  end
+  private :perform
+
+  def parse_json_from(response)
+    Yajl::Parser.new.parse(StringIO.new(response.body))
+  end
+  private :parse_json_from
 
   def headers
     { 'Accept' => 'application/json', 'Cookie' => "WTSISignOn=#{cookie}" }.tap do |standard|
