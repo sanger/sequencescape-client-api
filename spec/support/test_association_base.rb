@@ -19,6 +19,11 @@ class TestAssociationBase
       json = @wrapped ? @json.fetch('foo', {}) : @json
       (args.empty? and json.key?(name.to_s)) ? json[name.to_s] : super
     end
+
+    def respond_to?(name, include_private = false)
+      json = @wrapped ? @json.fetch('foo', {}) : @json
+      super || json.key?(name.to_s)
+    end
   end
 
   attr_accessor :attributes

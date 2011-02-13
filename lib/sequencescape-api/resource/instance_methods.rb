@@ -37,9 +37,7 @@ module Sequencescape::Api::Resource::InstanceMethods
   end
 
   def method_missing(name, *args, &block)
-    return super unless attributes.key?(name.to_s)
-    return super unless args.empty?
-    attributes[name.to_s]
+    (args.empty? and attributes.key?(name.to_s)) ? attributes[name.to_s] : super
   end
   protected :method_missing
 

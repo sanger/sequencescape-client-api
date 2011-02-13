@@ -7,10 +7,6 @@ describe Sequencescape::Api::Associations::BelongsTo do
       def loaded
         'yep, loaded!'
       end
-
-      def name
-        'from the resource'
-      end
     end
 
     extend Sequencescape::Api::Associations::BelongsTo
@@ -30,7 +26,7 @@ describe Sequencescape::Api::Associations::BelongsTo do
   context 'the association itself' do
     subject do
       @instance.attributes = {
-        'foo' => { 
+        'foo' => {
           'actions' => {
             'read' => 'http://localhost:3000/foo/UUID'
           },
@@ -41,6 +37,7 @@ describe Sequencescape::Api::Associations::BelongsTo do
     end
 
     context 'check that early attributes are used' do
+      it { $stderr.puts subject.instance_variable_get(:@object).respond_to?(:name).inspect }
       it          { should respond_to(:name) }
       its('name') { should == 'early loaded name' }
     end

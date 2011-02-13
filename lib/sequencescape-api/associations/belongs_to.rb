@@ -11,25 +11,14 @@ module Sequencescape::Api::Associations::BelongsTo
       case
       when super                                      then true # One of our methods ...
       when @object.respond_to?(name, include_private) then true # ... eager loaded object method ...
-      when !is_object_loaded? && is_attribute?(name)  then true # ... or an early attribute and no object ...
       else object.respond_to?(name, include_private)            # ... or force the object load and check
       end
     end
 
     def method_missing(name, *args, &block)
-      return @attributes[name.to_s] if !is_object_loaded? and is_attribute?(name) and args.empty?
+      return @object.send(name, *args, &block) if @object.respond_to?(name, true)
       object.send(name, *args, &block)
     end
-
-    def is_attribute?(name)
-      @attributes.key?(name.to_s)
-    end
-    private :is_attribute?
-
-    def is_object_loaded?
-      @loaded
-    end
-    private :is_object_loaded?
 
     def object
       @object   = nil unless @loaded
