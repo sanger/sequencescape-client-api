@@ -51,14 +51,13 @@ describe Sequencescape::Api::Associations::BelongsTo do
           'foo' => {
             'actions' => {
               'read'  => 'http://localhost:3000/foos/UUID'
-            }
+            },
+            'check' => 'definitely going to try'
           }
         })
-
-        subject.loaded.should == 'yep, loaded!'
       end
 
-      its('name') { should == 'from the resource' }
+      its('check') { should == 'definitely going to try' }
     end
   end
 end

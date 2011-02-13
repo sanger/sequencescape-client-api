@@ -14,6 +14,11 @@ class TestAssociationBase
     def self.json_root
       'foo'
     end
+
+    def method_missing(name, *args, &block)
+      json = @wrapped ? @json.fetch('foo', {}) : @json
+      (args.empty? and json.key?(name.to_s)) ? json[name.to_s] : super
+    end
   end
 
   attr_accessor :attributes

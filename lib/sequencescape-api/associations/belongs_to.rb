@@ -2,11 +2,17 @@ require 'sequencescape-api/associations/base'
 
 module Sequencescape::Api::Associations::BelongsTo
   class AssociationProxy < Sequencescape::Api::Associations::Base
+    def initialize(*args, &block)
+      super
+      @object, @loaded = new(@attributes, false), false
+    end
+
     def respond_to?(name, include_private = false)
       case
-      when super                                     then true # One of our methods ...
-      when !is_object_loaded? && is_attribute?(name) then true # ... or an early attribute and no object ...
-      else is_object_method?(name, include_private)            # ... or force the object load and check
+      when super                                      then true # One of our methods ...
+      when @object.respond_to?(name, include_private) then true # ... eager loaded object method ...
+      when !is_object_loaded? && is_attribute?(name)  then true # ... or an early attribute and no object ...
+      else object.respond_to?(name, include_private)            # ... or force the object load and check
       end
     end
 
@@ -20,20 +26,17 @@ module Sequencescape::Api::Associations::BelongsTo
     end
     private :is_attribute?
 
-    def is_object_method?(name, include_private)
-      object.respond_to?(name, include_private)
-    end
-    private :is_object_method?
-
     def is_object_loaded?
-      not @object.nil?
+      @loaded
     end
     private :is_object_loaded?
 
     def object
+      @object   = nil unless @loaded
       @object ||= api.read(actions.read) do |json|
-        new(json, true)
+        new(json, true).tap { @loaded = true }
       end
+      @object
     end
     private :object
 
