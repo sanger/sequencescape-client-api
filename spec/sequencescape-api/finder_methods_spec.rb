@@ -230,7 +230,7 @@ describe Sequencescape::Api::PageOfResults do
 
       it 'yields the objects for the page' do
         expected = double('expectation')
-        expected.should_receive(:yielded).with('c', 'd')  # RSpec mock seems to use *args!
+        expected.should_receive(:yielded).with([ 'c', 'd' ])
 
         subject.send(:"#{page}_page", &expected.method(:yielded))
       end

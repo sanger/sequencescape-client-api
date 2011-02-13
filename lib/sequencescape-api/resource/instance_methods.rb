@@ -8,8 +8,15 @@ module Sequencescape::Api::Resource::InstanceMethods
       delegate_to_attributes :uuid
       alias_method(:model, :class)
 
+      delegate :hash, :to => :uuid
+
       time_attribute :created_at, :updated_at
     end
+  end
+
+  def eql?(object_or_proxy)
+    return false unless object_or_proxy.respond_to?(:uuid)
+    self.uuid.eql?(object_or_proxy.uuid)
   end
 
   def initialize(api, json = nil, wrapped = false)

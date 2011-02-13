@@ -37,6 +37,24 @@ describe Sequencescape::Api::Resource do
     it         { should respond_to(:name) }
     its(:name) { should == 'Frank' }
 
+    describe '#eql?' do
+      it 'is equal to itself!' do
+        subject.should be_eql(subject)
+      end
+
+      it 'is equal when UUIDs are equal' do
+        subject.should be_eql(Object.new.tap { |o| def o.uuid ; 'Universally Unique Identifier' ; end })
+      end
+
+      it 'is not equal when the UUIDs are different' do
+        subject.should_not be_eql(Object.new.tap { |o| def o.uuid ; 'Not the same!' ; end })
+      end
+
+      it 'is not equal otherwise' do
+        subject.should_not be_eql(Object.new)
+      end
+    end
+
     describe '#as_json' do
       it 'returns the UUID' do
         subject.send(:as_json).should == subject.uuid

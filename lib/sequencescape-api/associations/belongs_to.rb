@@ -36,6 +36,12 @@ module Sequencescape::Api::Associations::BelongsTo
       end
     end
     private :object
+
+    delegate :hash, :to => :@object
+    def eql?(proxy_or_object)
+      proxy_or_object = proxy_or_object.instance_variable_get(:@object) if proxy_or_object.is_a?(self.class)
+      @object.eql?(proxy_or_object)
+    end
   end
 
   def belongs_to(association, options = {}, &block)
