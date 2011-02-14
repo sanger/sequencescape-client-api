@@ -7,8 +7,8 @@ module Sequencescape::Api::Actions
       def #{name}(attributes = nil, *args)
         attributes ||= {}
         new(attributes, false).tap do |object|
-          object.send(:_run_#{action}_callbacks) do
-            api.create(actions.#{action}, { model.json_root => attributes }) do |json|
+          object.send(:_run_create_callbacks) do
+            api.create(actions.#{options[:action] || :create}, { model.json_root => attributes }) do |json|
               object.send(:update_from_json, json, true)
             end
           end
