@@ -24,6 +24,14 @@ class TestAssociationBase
       json = @wrapped ? @json.fetch('foo', {}) : @json
       super || json.key?(name.to_s)
     end
+
+    def _run_create_callbacks
+      yield
+    end
+
+    def update_from_json(attributes, wrapped)
+      @json, @wrapped = attributes, wrapped
+    end
   end
 
   attr_accessor :attributes

@@ -37,6 +37,7 @@ module Sequencescape::Api::Resource::InstanceMethods
   end
 
   def method_missing(name, *args, &block)
+    return yield if name.to_s =~ /^_run_.+_callbacks$/
     (args.empty? and attributes.key?(name.to_s)) ? attributes[name.to_s] : super
   end
   protected :method_missing

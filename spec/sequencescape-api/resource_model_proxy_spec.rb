@@ -14,8 +14,8 @@ describe Sequencescape::Api::ResourceModelProxy do
 
     context 'methods delegated to the model' do
       it 'delegates to the model if the method is not in the proxy' do
-        @model.should_receive(:respond_to?).with(:foo, false).and_return(:result)
-        subject.respond_to?(:foo).should == :result
+        @model.should_receive(:respond_to?).with(:foo, false).and_return(true)
+        subject.respond_to?(:foo).should be_true
       end
 
       it 'delegates the new method to the model' do
@@ -43,9 +43,13 @@ describe Sequencescape::Api::ResourceModelProxy do
     it 'sends the parameters API wrapped in the appropriate root' do
       @model.should_receive(:json_root).and_return('root')
       @api.should_receive(:create).with('create URL', { 'root' => { 'a' => 1, 'b' => 2 } }).and_yield('json')
-      @model.should_receive(:new).with(@api, 'json', true).and_return(:final_object)
 
-      subject.create!('a' => 1, 'b' => 2).should == :final_object
+      object = double('created object')
+      object.should_receive(:_run_create_callbacks).and_yield
+      object.should_receive(:update_from_json).with('json', true)
+      @model.should_receive(:new).with(@api, { 'a' => 1, 'b' => 2 }, false).and_return(object)
+
+      subject.create!('a' => 1, 'b' => 2).should == object
     end
   end
 end

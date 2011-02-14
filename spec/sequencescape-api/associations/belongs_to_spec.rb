@@ -37,7 +37,6 @@ describe Sequencescape::Api::Associations::BelongsTo do
     end
 
     context 'check that early attributes are used' do
-      it { $stderr.puts subject.instance_variable_get(:@object).respond_to?(:name).inspect }
       it          { should respond_to(:name) }
       its('name') { should == 'early loaded name' }
     end

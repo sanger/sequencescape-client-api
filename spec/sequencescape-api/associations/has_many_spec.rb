@@ -8,6 +8,16 @@ end
 
 describe Sequencescape::Api::Associations::HasMany do
   class TestAssociationHelper < TestAssociationBase
+    class Foo < TestAssociationBase::Foo
+      def self.callback_runner(*names)
+        names.each do |name|
+          class_eval(%Q{def _run_#{name}_callbacks ; yield ; end})
+        end
+      end
+
+      callback_runner :blam
+    end
+
     extend Sequencescape::Api::Associations
     has_many :foos, :class_name => self::Foo.name do
       has_create_action :boom, :action => 'blam'
@@ -108,9 +118,9 @@ describe Sequencescape::Api::Associations::HasMany do
           it { should respond_to(method) }
 
           it 'calls the API to create using the correct URL' do
-            @api.should_receive(:create).with(url, { 'foo' => 'go' }).and_yield('json')
+            @api.should_receive(:create).with(url, { 'foo' => { 'key' => 'go' } }).and_yield('json')
 
-            subject.send(method, 'go').should == TestAssociationHelper::Foo.new(@api, 'json', true)
+            subject.send(method, 'key' => 'go').should == TestAssociationHelper::Foo.new(@api, 'json', true)
           end
         end
       end

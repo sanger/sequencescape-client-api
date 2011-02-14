@@ -1,11 +1,17 @@
 module Sequencescape::Api::Actions
   def has_create_action(name = :create!, options = {})
+    action = options[:action] || :create
+
     line = __LINE__ + 1
     class_eval(%Q{
-      def #{name}(body = nil, *args)
-        body ||= {}
-        api.create(actions.#{options[:action] || :create}, { model.json_root => body }, *args) do |json|
-          new(json, true)
+      def #{name}(attributes = nil, *args)
+        attributes ||= {}
+        new(attributes, false).tap do |object|
+          object.send(:_run_#{action}_callbacks) do
+            api.create(actions.#{action}, { model.json_root => attributes }) do |json|
+              object.send(:update_from_json, json, true)
+            end
+          end
         end
       end
     }, __FILE__, line)
