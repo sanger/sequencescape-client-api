@@ -20,6 +20,7 @@ require 'sequencescape/sample'
 
 require 'sequencescape/plate'
 require 'sequencescape/plate_purpose'
+require 'sequencescape/well'
 
 require 'sequencescape/submission'
 require 'sequencescape/submission_template'
