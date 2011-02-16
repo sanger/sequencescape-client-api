@@ -78,16 +78,16 @@ describe Sequencescape::Api::Associations::HasMany do
 
       its(:to_a) do
         should == [
-          TestAssociationHelper::Foo.new(@api, 'foo1', true),
-          TestAssociationHelper::Foo.new(@api, 'foo2', true)
+          TestAssociationHelper::Foo.new(@api, 'foo1', false),
+          TestAssociationHelper::Foo.new(@api, 'foo2', false)
         ]
       end
 
       it 'gets reloaded if the record is updated' do
         @instance.update_attributes!('bars' => [ 'foo3', 'foo4' ])
         @instance.bars.to_a.should == [
-          TestAssociationHelper::Foo.new(@api, 'foo3', true),
-          TestAssociationHelper::Foo.new(@api, 'foo4', true)
+          TestAssociationHelper::Foo.new(@api, 'foo3', false),
+          TestAssociationHelper::Foo.new(@api, 'foo4', false)
         ]
       end
     end

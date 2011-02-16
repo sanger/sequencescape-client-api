@@ -31,7 +31,7 @@ module Sequencescape::Api::Associations::HasMany
     end
 
     def new(json, &block)
-      model.new(api, json, true, &block)
+      model.new(api, json, false, &block)
     end
     private :new
   end

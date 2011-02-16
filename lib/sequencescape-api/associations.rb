@@ -1,9 +1,3 @@
-class Sequencescape::Api::JsonError < Sequencescape::Api::Error
-  def initialize(path)
-    super("The JSON is invalid in #{path.inspect}")
-  end
-end
-
 module Sequencescape::Api::Associations
   def self.extended(base)
     base.class_eval do
@@ -23,7 +17,7 @@ module Sequencescape::Api::Associations
     private :associations
 
     def attributes_for(path)
-      attributes_from_path(path) or raise Sequencescape::Api::JsonError, path.to_s
+      attributes_from_path(path) or raise Sequencescape::Api::JsonError.new(path.to_s, self)
     end
 
     def attributes_for?(path)

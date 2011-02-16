@@ -2,9 +2,9 @@ require 'sequencescape-api/associations'
 require 'sequencescape-api/composition'
 require 'sequencescape-api/actions'
 
-class Sequencescape::Api::JsonError
-  def initialize(path)
-    super("Cannot find the JSON attributes for #{path.inspect}")
+class Sequencescape::Api::JsonError < Sequencescape::Api::Error
+  def initialize(path, object)
+    super("Cannot find the JSON attributes for #{path.inspect} in #{object.inspect}")
   end
 end
 
