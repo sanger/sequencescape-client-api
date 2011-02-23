@@ -40,7 +40,8 @@ class Sequencescape::Api
   def model(name)
     @model_namespace.const_get(name.to_s.classify)
   rescue NameError => missing_constant_in_user_specified_namespace_fallback
-    ::Sequencescape.const_get(name.to_s.classify)
+    raise if @model_namespace == ::Sequencescape
+    @model_namespace.const_set(name.to_s.classify, ::Sequencescape.const_get(name.to_s.classify))
   end
   private :model
 

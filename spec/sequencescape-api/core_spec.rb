@@ -34,5 +34,15 @@ describe Sequencescape::Api do
       it { should respond_to(:test_model) }
       it { subject.test_model.kicker.should == [ subject ] }
     end
+
+    context 'with Sequencescape as the namespace' do
+      subject { described_class.new(:namespace => ::Sequencescape, :our => 'options') }
+
+      describe '#model' do
+        it 'raises NameError if the constant is missing' do
+          lambda { subject.send(:model, 'MissingConstantReallyNotThere') }.should raise_error(NameError)
+        end
+      end
+    end
   end
 end
