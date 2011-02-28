@@ -1,5 +1,32 @@
 require 'spec_helper'
 
+describe Sequencescape::Api::FinderMethods::FindByUuidHandler do
+  before(:each) do
+    @owner = double('owner')
+  end
+
+  subject { described_class.new(@owner) }
+
+  describe '#success' do
+    it 'creates through the owner' do
+      @owner.should_receive(:new).with('json', true).and_return(:result)
+      subject.success('json').should == :result
+    end
+  end
+end
+
+describe Sequencescape::Api::FinderMethods::AllHandler do
+  before(:each) do
+    @owner = double('owner')
+  end
+
+  subject { described_class.new(@owner) }
+
+  describe '#success' do
+    it 'creates a page of results'
+  end
+end
+
 describe Sequencescape::Api::FinderMethods do
   class FinderTestHelper
     extend Sequencescape::Api::FinderMethods
@@ -18,27 +45,18 @@ describe Sequencescape::Api::FinderMethods do
   end
 
   describe '#find' do
-    before(:each) do
-      FinderTestHelper.api.should_receive(:read_uuid).with('UUID').and_yield('json')
+    it 'delegates handling to the appropriate handler' do
+      FinderTestHelper.api.should_receive(:read_uuid).with('UUID', instance_of(described_class::FindByUuidHandler))
+      FinderTestHelper.find('UUID')
     end
-
-    subject { FinderTestHelper.find('UUID') }
-
-    its(:api)     { should == FinderTestHelper.api }
-    its(:json)    { should == 'json' }
-    its(:wrapped) { should be_true }
   end
 
   describe '#all' do
-    before(:each) do
+    it 'delegates handling to the appropriate handler' do
       FinderTestHelper.stub_chain('actions.read').and_return('read action URL')
-      FinderTestHelper.api.should_receive(:read).with('read action URL').and_yield('json')
-      FinderTestHelper.should_receive(:page_from_json).with('json').and_return(:result_of_page_from_json)
+      FinderTestHelper.api.should_receive(:read).with('read action URL', instance_of(described_class::AllHandler))
+      FinderTestHelper.all
     end
-
-    subject { FinderTestHelper.all }
-
-    it { should == :result_of_page_from_json } 
   end
 
   [ 
@@ -63,10 +81,13 @@ end
 describe Sequencescape::Api do
   before(:each) do
     @connection = double('connection')
+    def @connection.root(handler)
+      pseudo_root(&handler.method(:success))
+    end
+    @connection.should_receive(:pseudo_root).and_yield({})
+
     described_class.connection_factory = double('connection factory')
     described_class.connection_factory.stub(:create).with(any_args).and_return(@connection)
-
-    @connection.should_receive(:root).and_yield({})
   end
 
   subject { described_class.new(:url => 'http://localhost:3000/', :cookie => 'testing') }
@@ -83,8 +104,8 @@ describe Sequencescape::Api do
   describe '#read_uuid' do
     it 'delegates to read with the URL for the UUID' do
       @connection.should_receive(:url_for_uuid).with('UUID').and_return('URL')
-      @connection.should_receive(:read).with('URL').and_yield(:result)
-      subject.read_uuid('UUID') { |json| json.should == :result }
+      @connection.should_receive(:read).with('URL', :handler)
+      subject.read_uuid('UUID', :handler)
     end
   end
 end
@@ -96,6 +117,9 @@ describe Sequencescape::Api::PageOfResults do
 
   before(:each) do
     @api = double('api')
+    def @api.read(url, handler)
+      pseudo_read(url, &handler.method(:success))
+    end
   end
 
   shared_examples_for 'initialization behaviour' do |options_to_check|
@@ -203,7 +227,7 @@ describe Sequencescape::Api::PageOfResults do
         @ctor.should_receive(:yielded).with('json4').and_return('d')
 
         # There should be a read for the page
-        @api.should_receive(:read).with(page).and_yield({
+        @api.should_receive(:pseudo_read).with(page).and_yield({
           'actions' => {
             'first'    => 'first after read',
             'last'     => 'last after read',
@@ -251,7 +275,7 @@ describe Sequencescape::Api::PageOfResults do
         ctor.should_receive(:yielded).with('json2').and_return('b')
         ctor.should_receive(:yielded).with('json3').and_return('c')
 
-        @api.should_receive(:read).with('page2').and_yield({
+        @api.should_receive(:pseudo_read).with('page2').and_yield({
           'actions' => {
             'first'    => 'page1',
             'last'     => 'page2',
@@ -309,7 +333,7 @@ describe Sequencescape::Api::PageOfResults do
         ctor.should_receive(:yielded).with('json2').and_return('b')
         ctor.should_receive(:yielded).with('json3').and_return('c')
 
-        @api.should_receive(:read).with('page3').and_yield({
+        @api.should_receive(:pseudo_read).with('page3').and_yield({
           'actions' => {
             'first'    => 'page1',
             'last'     => 'page3',
@@ -353,7 +377,7 @@ describe Sequencescape::Api::PageOfResults do
           ctor.should_receive(:yielded).with('json5').and_return('e')
           ctor.should_receive(:yielded).with('json6').and_return('f')
 
-          @api.should_receive(:read).with('page2').and_yield({
+          @api.should_receive(:pseudo_read).with('page2').and_yield({
             'actions' => {
               'first'    => 'page1',
               'last'     => 'page2',
@@ -365,7 +389,7 @@ describe Sequencescape::Api::PageOfResults do
             ],
             'size' => 100
           })
-          @api.should_receive(:read).with('page1').and_yield({
+          @api.should_receive(:pseudo_read).with('page1').and_yield({
             'actions' => {
               'first'    => 'page1',
               'last'     => 'page1',

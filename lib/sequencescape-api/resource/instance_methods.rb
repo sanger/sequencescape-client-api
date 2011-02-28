@@ -26,9 +26,11 @@ module Sequencescape::Api::Resource::InstanceMethods
 
   def update_attributes!(attributes)
     self.tap do
-      api.update(actions.update, { json_root => attributes }) do |json|
-        update_from_json(json, true)
-      end
+      api.update(
+        actions.update,
+        { json_root => attributes },
+        Sequencescape::Api::ModifyingHandler.new(self)
+      )
     end
   end
 

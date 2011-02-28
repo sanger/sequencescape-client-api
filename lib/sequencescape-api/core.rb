@@ -10,17 +10,17 @@ class Sequencescape::Api
   extend Sequencescape::Api::ConnectionFactory::Helpers
 
   def initialize(options = {})
-    @model_namespace = options.delete(:namespace) || Sequencescape
+    @models, @model_namespace = {}, options.delete(:namespace) || Sequencescape
     @connection = self.class.connection_factory.create(options).tap do |connection|
-      connection.root(&method(:initialize_root))
+      connection.root(self)
     end
   end
 
   attr_reader :capabilities
   delegate :read, :create, :update, :to => :@connection
 
-  def read_uuid(uuid, &block)
-    read(@connection.url_for_uuid(uuid), &block)
+  def read_uuid(uuid, handler)
+    read(@connection.url_for_uuid(uuid), handler)
   end
 
   def respond_to?(name, include_private = false)
@@ -45,11 +45,10 @@ class Sequencescape::Api
   end
   private :model
 
-  def initialize_root(json)
+  def success(json)
     @capabilities = Sequencescape::Api.const_get("Version#{json.delete('revision') || 1}").new
     @models       = Hash[json.map { |k,v| [ k.to_s.singularize, v['actions'] ] }]
   end
-  private :initialize_root
 
   def inspect
     "#<Sequencescape::Api @connection=#{@connection.inspect}>"

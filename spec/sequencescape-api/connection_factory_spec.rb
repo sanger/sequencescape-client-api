@@ -53,9 +53,79 @@ describe Sequencescape::Api::ConnectionFactory do
 
       describe '#root' do
         it 'reads the JSON from the root URL' do
-          subject.should_receive(:read).with('http://localhost:3000/').and_yield(:json_from_root_url)
-          subject.root { |json| json.should == :json_from_root_url }
+          handler = double('handler')
+          subject.should_receive(:read).with('http://localhost:3000/', handler)
+          subject.root(handler)
         end
+      end
+    end
+
+    shared_examples_for 'modifies resource' do |method, action|
+      it "does an HTTP #{action.to_s.upcase} with the parameters as JSON to the URL specified" do
+        stub_request(action.to_sym, 'http://localhost:3000/action').with(
+          :headers => {
+            'Cookie' => 'WTSISignOn=testing',
+            'Accept' => 'application/json'
+          }.merge(headers),
+          :body => %Q{JSON!}
+        ).to_return(
+          :status  => 201,
+          :headers => { 'Content-Type' => 'application/json' },
+          :body    => %Q{{ "b" : 2 }}
+        )
+
+        expected = double('expected')
+        expected.should_receive(:success).with({ 'b' => 2 })
+
+        body = double('body')
+        body.should_receive(:to_json).and_return('JSON!')
+
+        subject.send(method, 'http://localhost:3000/action', body, expected)
+      end
+
+      it 'errors if the content is not JSON' do
+        stub_request(action.to_sym, 'http://localhost:3000/action').with(
+          :headers => {
+            'Cookie' => 'WTSISignOn=testing',
+            'Accept' => 'application/json'
+          }.merge(headers),
+          :body => %Q{JSON!}
+        ).to_return(
+          :status  => 201,
+          :headers => { 'Content-Type' => 'text/html' },
+          :body    => %Q{{ "b" : 2 }}
+        )
+
+        expected = double('expected')
+
+        body = double('body')
+        body.should_receive(:to_json).and_return('JSON!')
+
+        lambda do
+          subject.send(method, 'http://localhost:3000/action', body, expected)
+        end.should raise_error(described_class::Actions::ServerError)
+      end
+
+      it 'handles unprocessable entities as failures' do
+        stub_request(action.to_sym, 'http://localhost:3000/action').with(
+          :headers => {
+            'Cookie' => 'WTSISignOn=testing',
+            'Accept' => 'application/json'
+          }.merge(headers),
+          :body => %Q{JSON!}
+        ).to_return(
+          :status  => 422,
+          :headers => { 'Content-Type' => 'application/json' },
+          :body    => %Q{{ "b" : 2 }}
+        )
+
+        expected = double('expected')
+        expected.should_receive(:failure).with({ 'b' => 2 })
+
+        body = double('body')
+        body.should_receive(:to_json).and_return('JSON!')
+
+        subject.send(method, 'http://localhost:3000/action', body, expected)
       end
     end
 
@@ -74,58 +144,36 @@ describe Sequencescape::Api::ConnectionFactory do
           )
 
           expected = double('expected')
-          expected.should_receive(:yielded).with({ 'a' => 1 })
+          expected.should_receive(:success).with({ 'a' => 1 })
 
-          subject.read('http://localhost:3000/', &expected.method(:yielded))
+          subject.read('http://localhost:3000/', expected)
+        end
+
+        it 'errors if the content is not JSON' do
+          stub_request(:get, 'http://localhost:3000/').with(
+            :headers => {
+              'Cookie' => 'WTSISignOn=testing',
+              'Accept' => 'application/json'
+            }.merge(headers)
+          ).to_return(
+            :status  => 200,
+            :headers => { 'Content-Type' => 'text/html' }
+          )
+
+          expected = double('expected')
+
+          lambda do
+            subject.read('http://localhost:3000/', expected)
+          end.should raise_error(described_class::Actions::ServerError)
         end
       end
 
       describe '#create' do
-        it 'does an HTTP POST with the parameters as JSON to the URL specified' do
-          stub_request(:post, 'http://localhost:3000/create').with(
-            :headers => {
-              'Cookie' => 'WTSISignOn=testing',
-              'Accept' => 'application/json'
-            }.merge(headers),
-            :body => %Q{JSON!}
-          ).to_return(
-            :status  => 201,
-            :headers => { 'Content-Type' => 'application/json' },
-            :body    => %Q{{ "b" : 2 }}
-          )
-
-          expected = double('expected')
-          expected.should_receive(:yielded).with({ 'b' => 2 })
-
-          body = double('body')
-          body.should_receive(:to_json).and_return('JSON!')
-
-          subject.create('http://localhost:3000/create', body, &expected.method(:yielded))
-        end
+        it_behaves_like('modifies resource', :create, :post)
       end
 
       describe '#update' do
-        it 'does an HTTP PUT with the parameters as JSON to the URL specified' do
-          stub_request(:put, 'http://localhost:3000/update').with(
-            :headers => {
-              'Cookie' => 'WTSISignOn=testing',
-              'Accept' => 'application/json'
-            }.merge(headers),
-            :body => %Q{JSON!}
-          ).to_return(
-            :status  => 200,
-            :headers => { 'Content-Type' => 'application/json' },
-            :body    => %Q{{ "b" : 2 }}
-          )
-
-          expected = double('expected')
-          expected.should_receive(:yielded).with({ 'b' => 2 })
-
-          body = double('body')
-          body.should_receive(:to_json).and_return('JSON!')
-
-          subject.update('http://localhost:3000/update', body, &expected.method(:yielded))
-        end
+        it_behaves_like('modifies resource', :update, :put)
       end
     end
 

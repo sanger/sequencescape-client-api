@@ -20,22 +20,39 @@ module Sequencescape::Api::FinderMethods
     end
   end
 
-  def find(uuid)
-    api.read_uuid(uuid) do |json|
+  class FindByUuidHandler
+    def initialize(owner)
+      @owner = owner
+    end
+
+    delegate :new, :to => :@owner
+    private :new
+
+    def success(json)
       new(json, true)
     end
   end
 
-  def all
-    api.read(actions.read) do |json|
-      page_from_json(json)
+  def find(uuid)
+    api.read_uuid(uuid, FindByUuidHandler.new(self))
+  end
+
+  class AllHandler
+    def initialize(owner)
+      @owner = owner
+    end
+
+    delegate :api, :new, :to => :@owner
+    private :api, :new
+
+    def success(json)
+      ::Sequencescape::Api::PageOfResults.new(api, json, &method(:new))
     end
   end
 
-  def page_from_json(json)
-    ::Sequencescape::Api::PageOfResults.new(api, json) { |*args| new(*args) }
+  def all
+    api.read(actions.read, AllHandler.new(self))
   end
-  private :page_from_json
 end
 
 class Sequencescape::Api::PageOfResults
@@ -85,12 +102,25 @@ class Sequencescape::Api::PageOfResults
   end
   private :walk_pages
 
+  class UpdateHandler
+    def initialize(owner)
+      @owner = owner
+    end
+    
+    delegate :update_from_json, :to => :@owner
+    private :update_from_json
+
+    def success(json)
+      update_from_json(json)
+    end
+  end
+
   [ :first, :last, :previous, :next ].each do |page|
     line = __LINE__ + 1
     class_eval(%Q{
       def #{page}_page
         self.tap do
-          api.read(actions.#{page}, &method(:update_from_json)) unless actions.read == actions.#{page}
+          api.read(actions.#{page}, UpdateHandler.new(self)) unless actions.read == actions.#{page}
           yield(@objects.dup) if block_given?
         end
       end

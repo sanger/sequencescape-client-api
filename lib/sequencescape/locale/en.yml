@@ -1,0 +1,182 @@
+en:
+  activemodel:
+    models:
+      sequencescape:
+        asset: "Asset"
+        asset_group: "Asset group"
+        batch: "Batch"
+        library_tube: "Library tube"
+        pipeline: "Pipeline"
+        plate: "Plate"
+        plate_purpose: "Plate purpose"
+        project: "Project"
+        sample: "Sample"
+        sample_tube: "Sample tube"
+        study: "Study"
+        submission: "Submission"
+        submission_template: "Submission template"
+        well: "Well"
+
+    attributes:
+      sequencescape:
+        api:
+          resource:
+            uuid: "UUID"
+
+        asset: &asset
+          name: "Name"
+          qc_state: "QC state"
+          barcode_prefix: "Barcode prefix"
+          barcode: "Barcode"
+          two_dimensional_barcode: "2D Barcode"
+
+        asset_group:
+          name: "Name"
+          study:
+            name: "Study name"
+
+        batch:
+          state: "State"
+          production_state: "Production state"
+          qc_state: "QC state"
+          barcode: "Barcode"
+          requests: "Requests"
+          user:
+            login: "User login"
+
+        library_tube:
+          <<: *asset
+          closed: "Closed"
+          concentration: "Concentration"
+          volume: "Volume"
+          scanned_in_date: "Date scanned into the lab"
+
+          sample:
+            name: "Sample name"
+
+          source_request:
+            <<: *request_options
+
+          tag:
+            uuid: "UUID"
+            expected_sequence: "Expected sequence"
+
+            group:
+              uuid: "UUID"
+              name: "Name"
+
+        pipeline:
+          name: "Name"
+
+        plate:
+          <<: *asset
+          size: "Size"
+          wells: "Wells"
+
+          plate_purpose:
+            name: "Plate purpose name"
+
+        plate_purpose:
+          name: "Name"
+
+        project:
+          name: "Name"
+          approved: "Approval status"
+          state: "State"
+
+          project_manager: "Project manager"
+          cost_code: "Cost code"
+          funding_comments: "Funding comments"
+          collaborators: "Collaborators"
+          external_funding_source: "External funding source"
+          budget_division: "Budget division"
+          budget_cost_centre: "Budget cost centre"
+          funding_model: "Funding model"
+
+          roles: "Roles"
+
+        request:
+          request_options: &request_options
+            read_length: "Read length"
+            library_type: "Library type"
+            fragment_size_required:
+              from: "Fragment size (from)"
+              to: "Fragment size (to)"
+
+        sample:
+          name: "Name"
+          sanger_id: "Sanger sample identifier"
+          control: "Control sample"
+
+          organism: "Organism"
+          cohort: "Cohort"
+          country_of_origin: "Country of origin"
+          geographical_region: "Geographical region"
+          ethnicity: "Ethnicity"
+          volume: "Volume"
+          supplier_plate_id: "Supplier plate identifier"
+          mother: "Mother"
+          father: "Father"
+          replicate: "Replicate"
+          gc_content: "GC content level"
+          gender: "Gender"
+          dna_source: "DNA source"
+          public_name: "Public name"
+          common_name: "Common name"
+          strain_att: "Strain"
+          taxon_id: "Taxon identifier"
+          ebi_accession_number: "ENA accession number"
+          description: "Description"
+          sra_hold: "Sample visibility"
+          reference_genome: "Reference genome"
+
+        sample_tube:
+          <<: *asset
+          closed: "Closed"
+          concentration: "Concentration"
+          volume: "Volume"
+          scanned_in_date: "Date scanned into lab"
+
+          sample:
+            name: "Sample name"
+
+        study:
+          name: "Name"
+          ethically_approved: "Ethical approval status"
+          state: "State"
+          abbreviation: "Abbreviation"
+
+          type: "Type of study"
+          sac_sponsor: "Faculty sponsor"
+          reference_genome: "Reference genome"
+          accession_number: "ENA accession number"
+          description: "Description"
+          abstract: "Abstract"
+
+          contaminated_human_dna: "Contaminated with human DNA"
+          contains_human_dna: "Contains human DNA"
+          data_release_sort_of_study: "Type of study"
+          data_release_strategy: "Release strategy"
+
+        submission:
+          state: "State"
+
+          # TODO: Wonder how you can deal with nesting of 'name' in these
+          study: "Study"
+          project: "Project"
+          asset_group: "Asset group"
+
+          assets: "Asset UUIDs"
+
+          request_types: "Request types"
+
+          request_options:
+            <<: *request_options
+            number_of_lanes: "Number of lanes"
+
+        submission_template:
+          name: "Name"
+
+        well:
+          location: "Location on plate"
+

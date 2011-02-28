@@ -42,11 +42,14 @@ describe Sequencescape::Api::ResourceModelProxy do
   describe '#create!' do
     it 'sends the parameters API wrapped in the appropriate root' do
       @model.should_receive(:json_root).and_return('root')
-      @api.should_receive(:create).with('create URL', { 'root' => { 'a' => 1, 'b' => 2 } }).and_yield('json')
+      @api.should_receive(:create).with(
+        'create URL',
+        { 'root' => { 'a' => 1, 'b' => 2 } },
+        instance_of(Sequencescape::Api::ModifyingHandler)
+      )
 
       object = double('created object')
       object.should_receive(:_run_create_callbacks).and_yield
-      object.should_receive(:update_from_json).with('json', true)
       @model.should_receive(:new).with(@api, { 'a' => 1, 'b' => 2 }, false).and_return(object)
 
       subject.create!('a' => 1, 'b' => 2).should == object
@@ -57,10 +60,13 @@ end
 describe Sequencescape::Api do
   before(:each) do
     @connection = double('connection')
+    def @connection.root(handler)
+      pseudo_root(&handler.method(:success))
+    end
+    @connection.should_receive(:pseudo_root).and_yield({})
+
     described_class.connection_factory = double('connection factory')
     described_class.connection_factory.stub(:create).with(any_args).and_return(@connection)
-
-    @connection.should_receive(:root).and_yield({})
   end
 
   subject { described_class.new(:url => 'http://localhost:3000/', :cookie => 'testing') }

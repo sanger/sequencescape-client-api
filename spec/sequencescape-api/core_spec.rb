@@ -12,7 +12,11 @@ describe Sequencescape::Api do
   context '#initialize' do
     before(:each) do
       connection = double('connection')
-      connection.should_receive(:root).and_yield({
+      def connection.root(handler)
+        pseudo_root(&handler.method(:success))
+      end
+
+      connection.should_receive(:pseudo_root).and_yield({
         'test_models' => {
           'actions' => {
             'create' => 'http://localhost:3000/create',
