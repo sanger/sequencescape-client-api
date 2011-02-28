@@ -5,6 +5,7 @@ class Sequencescape::Batch < ::Sequencescape::Api::Resource
   has_many    :requests, :disposition => :inline
   composed_of :user
 
+  has_update_action :start!,    :action => 'start'
   has_update_action :complete!, :action => 'complete'
-  has_update_action :release!, :action => 'release'
+  has_update_action :release!,  :action => 'release'
 end
