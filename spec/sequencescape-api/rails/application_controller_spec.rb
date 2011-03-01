@@ -8,7 +8,9 @@ describe Sequencescape::Api::Rails::ApplicationController do
       object.class.should_receive(:before_filter).with(:configure_api)
       object.class.should_receive(:attr_reader).with(:api)
       object.class.should_receive(:private).with(:api)
+
       object.class.should_receive(:rescue_from).with(::Sequencescape::Api::Error, :with => :sequencescape_api_error_handler)
+      object.class.should_receive(:rescue_from).with(::Sequencescape::Api::UnauthenticatedError, :with => :sequencescape_api_unauthenticated_handler)
       object.class.send(:include, described_class)
     end
   end
