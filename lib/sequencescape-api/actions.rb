@@ -40,6 +40,8 @@ module Sequencescape::Api::Actions
       def #{name}(attributes = nil)
         attributes ||= {}
         new(attributes, false).tap do |object|
+          object.send(:run_validations!) or raise Sequencescape::Api::ResourceInvalid, object
+
           object.send(:_run_create_callbacks) do
             api.create(
               actions.#{options[:action] || :create},

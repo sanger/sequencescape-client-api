@@ -5,16 +5,16 @@ require 'active_model/translation'
 require 'active_model/deprecated_error_methods'
 require 'active_model/errors'
 
+# Uh, ok, so why do I have to include these when I've kind of said I want everything!?!!
+require 'active_model/validator'
+require 'active_model/validations'
+
 module Sequencescape::Api::Resource::ErrorHandling
   def self.included(base)
     base.class_eval do
       extend ActiveModel::Translation
-      attr_reader :errors
+      include ActiveModel::Validations
+      include ActiveModel::Validations::Callbacks
     end
-  end
-
-  def initialize(*args, &block)
-    super
-    @errors = ActiveModel::Errors.new(self)
   end
 end

@@ -1,0 +1,7 @@
+en:
+  activemodel:
+    attributes:
+      sequencescape:
+        api:
+          resource:
+            uuid: "UUID"

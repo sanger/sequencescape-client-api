@@ -19,10 +19,6 @@ en:
 
     attributes:
       sequencescape:
-        api:
-          resource:
-            uuid: "UUID"
-
         asset: &asset
           name: "Name"
           qc_state: "QC state"

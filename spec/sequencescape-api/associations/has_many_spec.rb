@@ -16,6 +16,11 @@ describe Sequencescape::Api::Associations::HasMany do
       end
 
       callback_runner :blam
+
+      def run_validations!
+        # TODO: hack for the moment, need to test this
+        true
+      end
     end
 
     extend Sequencescape::Api::Associations

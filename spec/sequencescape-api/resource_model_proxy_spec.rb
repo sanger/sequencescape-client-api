@@ -49,10 +49,21 @@ describe Sequencescape::Api::ResourceModelProxy do
       )
 
       object = double('created object')
+      object.should_receive(:run_validations!).and_return(true)
       object.should_receive(:_run_create_callbacks).and_yield
       @model.should_receive(:new).with(@api, { 'a' => 1, 'b' => 2 }, false).and_return(object)
 
       subject.create!('a' => 1, 'b' => 2).should == object
+    end
+
+    it 'raises an exception if there is a problem with validation' do
+      object = double('created object')
+      object.should_receive(:run_validations!).and_return(false)
+      @model.should_receive(:new).with(@api, { 'a' => 1, 'b' => 2 }, false).and_return(object)
+
+      lambda do
+        subject.create!('a' => 1, 'b' => 2)
+      end.should raise_error(Sequencescape::Api::ResourceInvalid)
     end
   end
 end

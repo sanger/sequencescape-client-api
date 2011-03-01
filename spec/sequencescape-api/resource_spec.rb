@@ -12,6 +12,12 @@ describe Sequencescape::Api::Resource do
 
     it { should respond_to(:has_create_action) }
     it { should respond_to(:has_update_action) }
+
+    describe '#human_attribute_name("uuid")' do
+      it 'is UUID, not Uuid' do
+        subject.human_attribute_name(:uuid).should == 'UUID'
+      end
+    end
   end
 
   context 'instance methods' do

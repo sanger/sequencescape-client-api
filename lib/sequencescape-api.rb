@@ -10,3 +10,6 @@ require 'sequencescape-api/errors'
 require 'sequencescape-api/core'
 require 'sequencescape-api/resource'
 require 'sequencescape-api/rails'
+
+# Ensure that the I18n stuff has been properly configured
+I18n.config.load_path << File.expand_path(File.join(File.dirname(__FILE__), %w{sequencescape-api locale en.yml}))
