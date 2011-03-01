@@ -9,7 +9,10 @@ module Sequencescape::Api::Rails
         private :api
 
         before_filter :configure_api
-        rescue_from(::Sequencescape::Api::Error, :with => :sequencescape_api_error_handler)
+
+        # Order is important here: later ones override earlier.
+        rescue_from(::Sequencescape::Api::Error,                :with => :sequencescape_api_error_handler)
+        rescue_from(::Sequencescape::Api::UnauthenticatedError, :with => :sequencescape_api_unauthenticated_handler)
       end
     end
 
@@ -33,6 +36,12 @@ module Sequencescape::Api::Rails
       raise StandardError, "There is an issue with the API connection to Sequencescape (#{exception.message})"
     end
     private :sequencescape_api_error_handler
+
+    def sequencescape_api_unauthenticated_handler(exception)
+      Rails.logger.error(exception, exception.backtrace)
+      raise StandardError, "You are not authenticated; please visit the WTSI login page"
+    end
+    private :sequencescape_api_unauthenticated_handler
   end
 
   # Including this module into your Rails model indicates that the model is associated with

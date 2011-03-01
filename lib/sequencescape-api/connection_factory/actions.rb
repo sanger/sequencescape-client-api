@@ -37,8 +37,10 @@ module Sequencescape::Api::ConnectionFactory::Actions
   def read(url, handler)
     perform(:get, url) do |response|
       case response
-      when Net::HTTPSuccess then handler.success(parse_json_from(response))
-      else                       raise ServerError, response.body
+      when Net::HTTPSuccess      then handler.success(parse_json_from(response))
+      when Net::HTTPUnauthorized then handler.unauthenticated(parse_json_from(response))
+      when Net::HTTPNotFound     then handler.missing(parse_json_from(response))
+      else                            raise ServerError, response.body
       end
     end
   end
@@ -48,7 +50,9 @@ module Sequencescape::Api::ConnectionFactory::Actions
       case response
       when Net::HTTPCreated             then handler.success(parse_json_from(response))
       when Net::HTTPSuccess             then handler.success(parse_json_from(response)) # TODO: should be error!
+      when Net::HTTPUnauthorized        then handler.unauthenticated(parse_json_from(response))
       when Net::HTTPUnprocessableEntity then handler.failure(parse_json_from(response))
+      when Net::HTTPNotFound            then handler.missing(parse_json_from(response))
       else                                   raise ServerError, response.body
       end
     end
@@ -58,8 +62,10 @@ module Sequencescape::Api::ConnectionFactory::Actions
     perform(:put, url, body || {}) do |response|
       case response
       when Net::HTTPSuccess             then handler.success(parse_json_from(response))
+      when Net::HTTPUnauthorized        then handler.unauthenticated(parse_json_from(response))
       when Net::HTTPUnprocessableEntity then handler.failure(parse_json_from(response))
-      else                              raise ServerError, response.body
+      when Net::HTTPNotFound            then handler.missing(parse_json_from(response))
+      else                                   raise ServerError, response.body
       end
     end
   end

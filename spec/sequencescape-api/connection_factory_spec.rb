@@ -60,29 +60,7 @@ describe Sequencescape::Api::ConnectionFactory do
       end
     end
 
-    shared_examples_for 'modifies resource' do |method, action|
-      it "does an HTTP #{action.to_s.upcase} with the parameters as JSON to the URL specified" do
-        stub_request(action.to_sym, 'http://localhost:3000/action').with(
-          :headers => {
-            'Cookie' => 'WTSISignOn=testing',
-            'Accept' => 'application/json'
-          }.merge(headers),
-          :body => %Q{JSON!}
-        ).to_return(
-          :status  => 201,
-          :headers => { 'Content-Type' => 'application/json' },
-          :body    => %Q{{ "b" : 2 }}
-        )
-
-        expected = double('expected')
-        expected.should_receive(:success).with({ 'b' => 2 })
-
-        body = double('body')
-        body.should_receive(:to_json).and_return('JSON!')
-
-        subject.send(method, 'http://localhost:3000/action', body, expected)
-      end
-
+    shared_examples_for 'modifies resource' do |method, action, success_code|
       it 'errors if the content is not JSON' do
         stub_request(action.to_sym, 'http://localhost:3000/action').with(
           :headers => {
@@ -106,47 +84,60 @@ describe Sequencescape::Api::ConnectionFactory do
         end.should raise_error(described_class::Actions::ServerError)
       end
 
-      it 'handles unprocessable entities as failures' do
-        stub_request(action.to_sym, 'http://localhost:3000/action').with(
-          :headers => {
-            'Cookie' => 'WTSISignOn=testing',
-            'Accept' => 'application/json'
-          }.merge(headers),
-          :body => %Q{JSON!}
-        ).to_return(
-          :status  => 422,
-          :headers => { 'Content-Type' => 'application/json' },
-          :body    => %Q{{ "b" : 2 }}
-        )
+      {
+        success_code => :success,
+        401          => :unauthenticated,
+        404          => :missing,
+        422          => :failure
+      }.each do |status, handler_method|
+        it "handles HTTP status code #{status} by calling #{handler_method}" do
+          stub_request(action.to_sym, 'http://localhost:3000/action').with(
+            :headers => {
+              'Cookie' => 'WTSISignOn=testing',
+              'Accept' => 'application/json'
+            }.merge(headers),
+            :body => %Q{JSON!}
+          ).to_return(
+            :status  => status,
+            :headers => { 'Content-Type' => 'application/json' },
+            :body    => %Q{{ "b" : 2 }}
+          )
 
-        expected = double('expected')
-        expected.should_receive(:failure).with({ 'b' => 2 })
+          expected = double('expected')
+          expected.should_receive(handler_method).with({ 'b' => 2 })
 
-        body = double('body')
-        body.should_receive(:to_json).and_return('JSON!')
+          body = double('body')
+          body.should_receive(:to_json).and_return('JSON!')
 
-        subject.send(method, 'http://localhost:3000/action', body, expected)
+          subject.send(method, 'http://localhost:3000/action', body, expected)
+        end
       end
     end
 
     shared_examples_for 'it creates, reads and updates' do
       describe '#read' do
-        it 'does an HTTP GET for the URL specified' do
-          stub_request(:get, 'http://localhost:3000/').with(
-            :headers => {
-              'Cookie' => 'WTSISignOn=testing',
-              'Accept' => 'application/json'
-            }.merge(headers)
-          ).to_return(
-            :status  => 200,
-            :headers => { 'Content-Type' => 'application/json' },
-            :body    => %Q{{ "a" : 1 }}
-          )
+        {
+          200 => :success,
+          401 => :unauthenticated,
+          404 => :missing
+        }.each do |status, handler_method|
+          it "handles HTTP status code #{status} by calling #{handler_method}" do
+            stub_request(:get, 'http://localhost:3000/').with(
+              :headers => {
+                'Cookie' => 'WTSISignOn=testing',
+                'Accept' => 'application/json'
+              }.merge(headers)
+            ).to_return(
+              :status  => status,
+              :headers => { 'Content-Type' => 'application/json' },
+              :body    => %Q{{ "a" : 1 }}
+            )
 
-          expected = double('expected')
-          expected.should_receive(:success).with({ 'a' => 1 })
+            expected = double('expected')
+            expected.should_receive(handler_method).with({ 'a' => 1 })
 
-          subject.read('http://localhost:3000/', expected)
+            subject.read('http://localhost:3000/', expected)
+          end
         end
 
         it 'errors if the content is not JSON' do
@@ -169,11 +160,11 @@ describe Sequencescape::Api::ConnectionFactory do
       end
 
       describe '#create' do
-        it_behaves_like('modifies resource', :create, :post)
+        it_behaves_like('modifies resource', :create, :post, 201)
       end
 
       describe '#update' do
-        it_behaves_like('modifies resource', :update, :put)
+        it_behaves_like('modifies resource', :update, :put, 200)
       end
     end
 

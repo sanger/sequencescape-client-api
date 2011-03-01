@@ -45,6 +45,8 @@ class Sequencescape::Api
   end
   private :model
 
+  include BasicErrorHandling
+
   def success(json)
     @capabilities = Sequencescape::Api.const_get("Version#{json.delete('revision') || 1}").new
     @models       = Hash[json.map { |k,v| [ k.to_s.singularize, v['actions'] ] }]

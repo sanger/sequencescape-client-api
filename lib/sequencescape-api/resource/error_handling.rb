@@ -5,17 +5,6 @@ require 'active_model/translation'
 require 'active_model/deprecated_error_methods'
 require 'active_model/errors'
 
-class Sequencescape::Api
-  class ResourceInvalid < Error
-    def initialize(resource)
-      super('Resource is reported as invalid by the server')
-      @resource = resource
-    end
-
-    attr_reader :resource
-  end
-end
-
 module Sequencescape::Api::Resource::ErrorHandling
   def self.included(base)
     base.class_eval do

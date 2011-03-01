@@ -21,6 +21,8 @@ module Sequencescape::Api::FinderMethods
   end
 
   class FindByUuidHandler
+    include Sequencescape::Api::BasicErrorHandling
+
     def initialize(owner)
       @owner = owner
     end
@@ -38,6 +40,8 @@ module Sequencescape::Api::FinderMethods
   end
 
   class AllHandler
+    include Sequencescape::Api::BasicErrorHandling
+
     def initialize(owner)
       @owner = owner
     end
@@ -103,6 +107,8 @@ class Sequencescape::Api::PageOfResults
   private :walk_pages
 
   class UpdateHandler
+    include Sequencescape::Api::BasicErrorHandling
+
     def initialize(owner)
       @owner = owner
     end

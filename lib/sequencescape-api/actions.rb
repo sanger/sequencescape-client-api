@@ -1,4 +1,6 @@
 class Sequencescape::Api::ModifyingHandler
+  include Sequencescape::Api::BasicErrorHandling
+
   def initialize(owner)
     @owner = owner
   end

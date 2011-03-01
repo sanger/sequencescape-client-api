@@ -6,12 +6,7 @@ require 'active_support/core_ext/object/try'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/inflections'
 
-module Sequencescape
-  class Api
-    Error = Class.new(StandardError)
-  end
-end
-
+require 'sequencescape-api/errors'
 require 'sequencescape-api/core'
 require 'sequencescape-api/resource'
 require 'sequencescape-api/rails'
