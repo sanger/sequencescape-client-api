@@ -1,0 +1,82 @@
+class Sequencescape::Api::ModifyingHandler
+  include Sequencescape::Api::BasicErrorHandling
+
+  def initialize(owner)
+    @owner = owner
+  end
+
+  delegate :update_from_json, :to => :@owner
+  private :update_from_json
+
+  def error(field_and_errors_pair)
+    field, errors = field_and_errors_pair
+    Array(errors).each { |error| @owner.errors.add(field, error) }
+  end
+  private :error
+
+  def object_error(message)
+    @owner.errors.add(:base, message)
+  end
+  private :object_error
+
+  def success(json)
+    update_from_json(json, true)
+  end
+
+  def failure(json)
+    Array(json.fetch('content', [])).map(&method(:error))
+    Array(json.fetch('general', [])).map(&method(:object_error))
+
+    raise Sequencescape::Api::ResourceInvalid, @owner
+  end
+end
+
+module Sequencescape::Api::Resource::Modifications
+  def initialize(api, json = nil, wrapped = false)
+    super
+    update_from_json(json, wrapped)
+  end
+
+  def update_attributes!(attributes)
+    update_from_json(attributes, false)
+    modify!(:action => :update)
+  end
+
+  def save!(options = nil)
+    modify!({ :action => :create }.reverse_merge(options || {}))
+  end
+
+  def modify!(options)
+    action    = options[:action]
+    http_verb = options[:http_verb] || options[:action]
+    url       = options[:url] || actions.send(action)
+
+    self.tap do
+      run_validations! or raise Sequencescape::Api::ResourceInvalid, self
+
+      api.send(
+        http_verb,
+        url,
+        { json_root => attributes },
+        Sequencescape::Api::ModifyingHandler.new(self)
+      )
+    end
+  end
+  private :modify!
+
+  def update_from_json(json, wrapped = false)
+    actions_before_update = @actions
+
+    @attributes = (wrapped ? unwrapped_json(json) : json) || {}
+    @uuid       = @attributes.delete('uuid') || @uuid
+
+    # We're kind of in a situation where an update of the attributes could be coming from the API
+    # or from the client code.  We know that the API will always include 'actions' so we can assume that
+    # if it's set then that's what we should use, or we should use the previous actions.
+    #
+    # TODO: This isn't ideal as it's open to abuse but we can live with it for the moment.
+    actions_from_attributes = @attributes.delete('actions')
+    @actions = actions_from_attributes.nil? ? actions_before_update : OpenStruct.new(actions_from_attributes)
+  end
+  private :update_from_json
+end

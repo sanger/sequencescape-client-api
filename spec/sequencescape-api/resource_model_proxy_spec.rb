@@ -40,30 +40,20 @@ describe Sequencescape::Api::ResourceModelProxy do
   end
 
   describe '#create!' do
-    it 'sends the parameters API wrapped in the appropriate root' do
-      @model.should_receive(:json_root).and_return('root')
-      @api.should_receive(:create).with(
-        'create URL',
-        { 'root' => 'attributes from model' },
-        instance_of(Sequencescape::Api::ModifyingHandler)
-      )
-
+    it 'builds and then saves a resource' do
       object = double('created object')
-      object.should_receive(:run_validations!).and_return(true)
-      object.should_receive(:attributes).and_return('attributes from model')
+      object.should_receive(:save!)
       @model.should_receive(:new).with(@api, { 'a' => 1, 'b' => 2 }, false).and_return(object)
 
       subject.create!('a' => 1, 'b' => 2).should == object
     end
 
-    it 'raises an exception if there is a problem with validation' do
+    it 'handles nil attributes as empty' do
       object = double('created object')
-      object.should_receive(:run_validations!).and_return(false)
-      @model.should_receive(:new).with(@api, { 'a' => 1, 'b' => 2 }, false).and_return(object)
+      object.should_receive(:save!)
+      @model.should_receive(:new).with(@api, { }, false).and_return(object)
 
-      lambda do
-        subject.create!('a' => 1, 'b' => 2)
-      end.should raise_error(Sequencescape::Api::ResourceInvalid)
+      subject.create!(nil).should == object
     end
   end
 end

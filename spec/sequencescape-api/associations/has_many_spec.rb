@@ -9,17 +9,12 @@ end
 describe Sequencescape::Api::Associations::HasMany do
   class TestAssociationHelper < TestAssociationBase
     class Foo < TestAssociationBase::Foo
-      def self.callback_runner(*names)
-        names.each do |name|
-          class_eval(%Q{def _run_#{name}_callbacks ; yield ; end})
-        end
-      end
+      attr_reader :save_details
 
-      callback_runner :blam
-
-      def run_validations!
-        # TODO: hack for the moment, need to test this
-        true
+      # TODO: hack for the moment, need to test this
+      def save!(*args)
+        @save_details = args
+        self
       end
     end
 
@@ -116,20 +111,16 @@ describe Sequencescape::Api::Associations::HasMany do
 
       context 'described actions' do
         {
-          :boom    => 'explodes in your face',
-          :kerpow  => 'creation URL',
-          :create! => 'creation URL'
+          :boom    => "explodes in your face",
+          :kerpow  => "creation URL",
+          :create! => "creation URL"
         }.each do |method, url|
-          it { should respond_to(method) }
+          describe "##{method}" do
+            it { should respond_to(method) }
 
-          it 'calls the API to create using the correct URL' do
-            @api.should_receive(:create).with(
-              url,
-              { 'foo' => { 'key' => 'go' } },
-              instance_of(::Sequencescape::Api::ModifyingHandler)
-            )
-
-            subject.send(method, 'key' => 'go')
+            it 'calls the API to create using the correct URL' do
+              subject.send(method, 'key' => 'go').save_details.should == [ { :url => url } ]
+            end
           end
         end
       end

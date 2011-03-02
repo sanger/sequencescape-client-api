@@ -98,11 +98,11 @@ describe Sequencescape::Api::Resource do
       it 'performs an API update, updating the attributes with the response' do
         @api.should_receive(:update).with(
           'update URL',
-          { 'test_resource_helper' => 'attributes' },
+          { 'test_resource_helper' => { 'a' => 1 } },
           instance_of(Sequencescape::Api::ModifyingHandler)
         )
 
-        subject.update_attributes!('attributes')
+        subject.update_attributes!({ 'a' => 1 })
       end
     end
   end
