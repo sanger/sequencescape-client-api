@@ -44,6 +44,25 @@ describe Sequencescape::Api::Resource do
     it         { should respond_to(:name) }
     its(:name) { should == 'Frank' }
 
+    # ActiveModel stuff
+    context 'ActiveModel support' do
+      its(:to_key)     { should == [ 'Universally Unique Identifier' ] }
+      its(:to_param)   { should == 'Universally Unique Identifier' }
+      its(:to_model)   { should == subject }
+
+      describe '#persisted?' do
+        it 'is true if the UUID is not present' do
+          @attributes['uuid'] = 'UUID is set'
+          subject.should be_persisted
+        end
+
+        it 'is false if the UUID is not present' do
+          @attributes.delete('uuid')
+          subject.should_not be_persisted
+        end
+      end
+    end
+
     describe '#eql?' do
       it 'is equal to itself!' do
         subject.should be_eql(subject)

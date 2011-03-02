@@ -13,10 +13,12 @@ class Sequencescape::Api::Resource
   require 'sequencescape-api/resource/class_methods'
   require 'sequencescape-api/resource/callbacks'
   require 'sequencescape-api/resource/error_handling'
+  require 'sequencescape-api/resource/active_model'
 
   extend ClassMethods
   include InstanceMethods
   include ErrorHandling
+  include ActiveModel
   extend Callbacks
   extend Sequencescape::Api::Associations
   extend Sequencescape::Api::Composition
