@@ -44,12 +44,13 @@ describe Sequencescape::Api::ResourceModelProxy do
       @model.should_receive(:json_root).and_return('root')
       @api.should_receive(:create).with(
         'create URL',
-        { 'root' => { 'a' => 1, 'b' => 2 } },
+        { 'root' => 'attributes from model' },
         instance_of(Sequencescape::Api::ModifyingHandler)
       )
 
       object = double('created object')
       object.should_receive(:run_validations!).and_return(true)
+      object.should_receive(:attributes).and_return('attributes from model')
       @model.should_receive(:new).with(@api, { 'a' => 1, 'b' => 2 }, false).and_return(object)
 
       subject.create!('a' => 1, 'b' => 2).should == object

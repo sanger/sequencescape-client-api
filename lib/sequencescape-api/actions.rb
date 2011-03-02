@@ -40,11 +40,12 @@ module Sequencescape::Api::Actions
       def #{name}(attributes = nil)
         attributes ||= {}
         new(attributes, false).tap do |object|
+          # TODO: Refactor this into object and callback here
           object.send(:run_validations!) or raise Sequencescape::Api::ResourceInvalid, object
 
           api.create(
             actions.#{options[:action] || :create},
-            { model.json_root => attributes },
+            { model.json_root => object.send(:attributes) },
             Sequencescape::Api::ModifyingHandler.new(object)
           )
         end

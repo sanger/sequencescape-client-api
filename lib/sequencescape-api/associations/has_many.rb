@@ -15,7 +15,7 @@ module Sequencescape::Api::Associations::HasMany
     def initialize(owner, association, options)
       @owner   = owner
       @model   = (options[:class_name] || api.model_name(association)).constantize
-      @objects = @owner.attributes_for(association).map(&method(:new))
+      @objects = @owner.attributes_for(association, []).map(&method(:new))
     end
 
     attr_reader :model
@@ -31,6 +31,8 @@ module Sequencescape::Api::Associations::HasMany
     end
 
     def new(json, &block)
+      # TODO: Kind of a dirty hack to get inline UUIDs working
+      json = { 'actions' => { }, 'uuid' => json } if json =~ /^[a-f\d]{8}(?:-[a-f\d]{4}){3}-[a-f\d]{12}$/
       model.new(api, json, false, &block)
     end
     private :new

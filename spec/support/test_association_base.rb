@@ -2,6 +2,7 @@ class TestAssociationBase
   class Foo
     FIELDS = [ :api, :json, :wrapped ]
     attr_reader :api, :json, :wrapped
+    alias_method(:attributes, :json)
 
     def initialize(api, json, wrapped = false)
       @api, @json, @wrapped = api, json, wrapped

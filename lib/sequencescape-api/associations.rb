@@ -16,16 +16,17 @@ module Sequencescape::Api::Associations
     attr_reader :associations
     private :associations
 
-    def attributes_for(path)
-      attributes_from_path(path) or raise Sequencescape::Api::JsonError.new(path.to_s, self)
+    def attributes_for(path, default_value_if_missing = nil)
+      attributes_from_path(path, default_value_if_missing) or
+        raise Sequencescape::Api::JsonError.new(path.to_s, self)
     end
 
     def attributes_for?(path)
       !!attributes_from_path(path)
     end
 
-    def attributes_from_path(path)
-      path.to_s.split('.').inject(attributes) { |k,v| k.try(:[], v) }
+    def attributes_from_path(path, default_value_if_missing = nil)
+      path.to_s.split('.').inject(attributes) { |k,v| k.try(:[], v) } || default_value_if_missing
     end
     private :attributes_from_path
 
