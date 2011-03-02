@@ -50,7 +50,6 @@ describe Sequencescape::Api::ResourceModelProxy do
 
       object = double('created object')
       object.should_receive(:run_validations!).and_return(true)
-      object.should_receive(:_run_create_callbacks).and_yield
       @model.should_receive(:new).with(@api, { 'a' => 1, 'b' => 2 }, false).and_return(object)
 
       subject.create!('a' => 1, 'b' => 2).should == object

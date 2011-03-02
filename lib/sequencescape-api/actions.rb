@@ -42,13 +42,11 @@ module Sequencescape::Api::Actions
         new(attributes, false).tap do |object|
           object.send(:run_validations!) or raise Sequencescape::Api::ResourceInvalid, object
 
-          object.send(:_run_create_callbacks) do
-            api.create(
-              actions.#{options[:action] || :create},
-              { model.json_root => attributes },
-              Sequencescape::Api::ModifyingHandler.new(object)
-            )
-          end
+          api.create(
+            actions.#{options[:action] || :create},
+            { model.json_root => attributes },
+            Sequencescape::Api::ModifyingHandler.new(object)
+          )
         end
       end
     }, __FILE__, line)
