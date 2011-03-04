@@ -27,6 +27,8 @@ require 'sequencescape/asset_audit'
 require 'sequencescape/submission'
 require 'sequencescape/submission_template'
 
+require 'sequencescape/search'
+
 # Ensure that the I18n stuff has been properly configured
 I18n.config.load_path << File.expand_path(File.join(File.dirname(__FILE__), %w{sequencescape locale en.yml}))
 

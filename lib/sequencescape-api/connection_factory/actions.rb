@@ -40,6 +40,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
       when Net::HTTPSuccess      then handler.success(parse_json_from(response))
       when Net::HTTPUnauthorized then handler.unauthenticated(parse_json_from(response))
       when Net::HTTPNotFound     then handler.missing(parse_json_from(response))
+      when Net::HTTPRedirection  then handle_redirect(response, handler)
       else                            raise ServerError, response.body
       end
     end
@@ -53,6 +54,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
       when Net::HTTPUnauthorized        then handler.unauthenticated(parse_json_from(response))
       when Net::HTTPUnprocessableEntity then handler.failure(parse_json_from(response))
       when Net::HTTPNotFound            then handler.missing(parse_json_from(response))
+      when Net::HTTPRedirection         then handle_redirect(response, handler)
       else                                   raise ServerError, response.body
       end
     end
@@ -65,10 +67,18 @@ module Sequencescape::Api::ConnectionFactory::Actions
       when Net::HTTPUnauthorized        then handler.unauthenticated(parse_json_from(response))
       when Net::HTTPUnprocessableEntity then handler.failure(parse_json_from(response))
       when Net::HTTPNotFound            then handler.missing(parse_json_from(response))
+      when Net::HTTPRedirection         then handle_redirect(response, handler)
       else                                   raise ServerError, response.body
       end
     end
   end
+
+  def handle_redirect(response, handler)
+    handler.redirection(parse_json_from(response)) do |read_handler|
+      read(response['Location'], read_handler)
+    end
+  end
+  private :handle_redirect
 
   def perform(http_verb, url, body = nil, &block)
     uri = URI.parse(url)
@@ -76,7 +86,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
       request = Net::HTTP.const_get(http_verb.to_s.classify).new(uri.path, headers)
       unless body.nil?
         request.content_type = 'application/json'
-        request.body         = body.to_json
+        request.body         = Yajl::Encoder.encode(body)
       end
       yield(connection.request(request))
     end
@@ -85,7 +95,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
 
   def parse_json_from(response)
     raise ServerError, 'server returned non-JSON content' unless response.content_type == 'application/json'
-    Yajl::Parser.new.parse(StringIO.new(response.body))
+    Yajl::Parser.parse(StringIO.new(response.body))
   end
   private :parse_json_from
 
