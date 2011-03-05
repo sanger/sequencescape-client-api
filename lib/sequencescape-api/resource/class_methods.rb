@@ -16,8 +16,15 @@ module Sequencescape::Api::Resource::ClassMethods
         def #{name}
           attributes[#{name.to_s.inspect}]
         end
+
+        def #{name}=(value)
+          #{name}_will_change! unless #{name} == value
+          attributes[#{name.to_s.inspect}] = value
+        end
       }, __FILE__, line)
     end
+
+    define_attribute_methods(names)
   end
   private :delegate_to_attributes
 
@@ -26,10 +33,18 @@ module Sequencescape::Api::Resource::ClassMethods
       line = __LINE__ + 1
       class_eval(%Q{
         def #{name}
-          Time.parse(attributes[#{name.to_s.inspect}])
+          attributes[#{name.to_s.inspect}]
+        end
+
+        def #{name}=(value)
+          value = value.is_a?(Time) ? value : Time.parse(value.to_s)
+          #{name}_will_change! unless #{name} == value
+          attributes[#{name.to_s.inspect}] = value
         end
       }, __FILE__, line)
     end
+
+    define_attribute_methods(names)
   end
   private :time_attribute
 end

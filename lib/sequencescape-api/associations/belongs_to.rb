@@ -20,14 +20,34 @@ module Sequencescape::Api::Associations::BelongsTo
       object.send(name, *args, &block)
     end
 
+    class LoadHandler
+      include Sequencescape::Api::BasicErrorHandling
+
+      def initialize(owner)
+        @owner = owner
+      end
+
+      delegate :new, :loaded, :to => :@owner
+      private :new, :loaded
+
+      def success(json)
+        new(json, true).tap { loaded = true }
+      end
+    end
+
+    attr_writer :loaded
+    private :loaded=
+
     def object
       @object   = nil unless @loaded
-      @object ||= api.read(actions.read) do |json|
-        new(json, true).tap { @loaded = true }
-      end
+      @object ||= api.read(actions.read, LoadHandler.new(self))
       @object
     end
     private :object
+
+    def as_json(options = nil)
+      @object.as_json({ :root => false, :uuid => false }.reverse_merge(options || {}))
+    end
 
     delegate :hash, :to => :@object
     def eql?(proxy_or_object)
@@ -39,17 +59,11 @@ module Sequencescape::Api::Associations::BelongsTo
   def belongs_to(association, options = {}, &block)
     association = association.to_sym
 
-    line = __LINE__ + 1
-    class_eval(%Q{
-      def #{association}(reload = false)
-        associations[#{association.inspect}]   = nil if !!reload
-        associations[#{association.inspect}] ||= AssociationProxy.new(self, #{association.inspect}, #{options.inspect})
-        associations[#{association.inspect}]
-      end
+    proxy = Class.new(AssociationProxy)
+    proxy.association = association
+    proxy.options     = options
+    proxy.instance_eval(&block) if block_given?
 
-      def #{association}?
-        attributes_for?(#{association.inspect})
-      end
-    }, __FILE__, line)
+    association_methods(association, :belongs_to, proxy)
   end
 end

@@ -7,10 +7,34 @@ module Sequencescape::Api::Associations
     end
   end
 
+  def association_methods(association, type, proxy)
+    proxy_class_name = [ association, type, 'proxy'].join('_').classify
+    const_set(proxy_class_name.to_sym, proxy)
+
+    line = __LINE__ + 1
+    class_eval(%Q{
+      def #{association}(reload = false)
+        associations[#{association.inspect}]   = nil if !!reload
+        associations[#{association.inspect}] ||= #{proxy_class_name}.new(self)
+        associations[#{association.inspect}]
+      end
+
+      def #{association}=(json)
+        associations[#{association.inspect}] = #{proxy_class_name}.new(self, json)
+      end
+      private #{association.inspect}=
+
+      def #{association}?
+        attributes_for?(#{association.inspect})
+      end
+    }, __FILE__, line)
+  end
+  private :association_methods
+
   module InstanceMethods
     def initialize(*args, &block)
-      super
       @associations = {}
+      super
     end
 
     attr_reader :associations
@@ -29,16 +53,6 @@ module Sequencescape::Api::Associations
       path.to_s.split('.').inject(attributes) { |k,v| k.try(:[], v) } || default_value_if_missing
     end
     private :attributes_from_path
-
-    def update_attributes!(*args)
-      reset_all_associations
-      super
-    end
-
-    def reset_all_associations
-      @associations.clear
-    end
-    private :reset_all_associations
   end
 end
 

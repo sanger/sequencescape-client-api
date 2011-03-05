@@ -67,7 +67,7 @@ describe Sequencescape::Api::ConnectionFactory do
             'Cookie' => 'WTSISignOn=testing',
             'Accept' => 'application/json'
           }.merge(headers),
-          :body => %Q{JSON!}
+          :body => %Q{"JSON!"}
         ).to_return(
           :status  => 201,
           :headers => { 'Content-Type' => 'text/html' },
@@ -77,7 +77,7 @@ describe Sequencescape::Api::ConnectionFactory do
         expected = double('expected')
 
         body = double('body')
-        body.should_receive(:to_json).and_return('JSON!')
+        body.should_receive(:as_json).with(:action => method, :root => true).and_return('JSON!')
 
         lambda do
           subject.send(method, 'http://localhost:3000/action', body, expected)
@@ -86,6 +86,8 @@ describe Sequencescape::Api::ConnectionFactory do
 
       {
         success_code => :success,
+        300          => :redirection,
+        301          => :redirection,
         401          => :unauthenticated,
         404          => :missing,
         422          => :failure
@@ -96,7 +98,7 @@ describe Sequencescape::Api::ConnectionFactory do
               'Cookie' => 'WTSISignOn=testing',
               'Accept' => 'application/json'
             }.merge(headers),
-            :body => %Q{JSON!}
+            :body => %Q{"JSON!"}
           ).to_return(
             :status  => status,
             :headers => { 'Content-Type' => 'application/json' },
@@ -107,7 +109,7 @@ describe Sequencescape::Api::ConnectionFactory do
           expected.should_receive(handler_method).with({ 'b' => 2 })
 
           body = double('body')
-          body.should_receive(:to_json).and_return('JSON!')
+          body.should_receive(:as_json).with(:action => method, :root => true).and_return('JSON!')
 
           subject.send(method, 'http://localhost:3000/action', body, expected)
         end
@@ -118,6 +120,8 @@ describe Sequencescape::Api::ConnectionFactory do
       describe '#read' do
         {
           200 => :success,
+          300 => :redirection,
+          301 => :redirection,
           401 => :unauthenticated,
           404 => :missing
         }.each do |status, handler_method|

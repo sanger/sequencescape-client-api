@@ -1,4 +1,6 @@
 class TestAssociationBase
+  extend Sequencescape::Api::Associations
+
   class Foo
     FIELDS = [ :api, :json, :wrapped ]
     attr_reader :api, :json, :wrapped
@@ -40,11 +42,12 @@ class TestAssociationBase
   private :api
 
   def initialize(api)
+    super
     @api, @attributes = api, {}
   end
 
-  def attributes_for(name)
-    @attributes[name.to_s]
+  def attributes_for(name, default = nil)
+    @attributes.fetch(name.to_s, default)
   end
 
   def update_attributes!(attributes)

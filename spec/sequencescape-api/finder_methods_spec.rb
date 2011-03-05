@@ -28,6 +28,8 @@ describe Sequencescape::Api::FinderMethods::AllHandler do
 end
 
 describe Sequencescape::Api::FinderMethods do
+  include Sequencescape::ConnectionSupport
+
   class FinderTestHelper
     extend Sequencescape::Api::FinderMethods
 
@@ -46,7 +48,7 @@ describe Sequencescape::Api::FinderMethods do
 
   describe '#find' do
     it 'delegates handling to the appropriate handler' do
-      FinderTestHelper.api.should_receive(:read_uuid).with('UUID', instance_of(described_class::FindByUuidHandler))
+      FinderTestHelper.api.should_receive(:read_uuid).with('UUID', is_a_connection_handler)
       FinderTestHelper.find('UUID')
     end
   end
@@ -54,7 +56,7 @@ describe Sequencescape::Api::FinderMethods do
   describe '#all' do
     it 'delegates handling to the appropriate handler' do
       FinderTestHelper.stub_chain('actions.read').and_return('read action URL')
-      FinderTestHelper.api.should_receive(:read).with('read action URL', instance_of(described_class::AllHandler))
+      FinderTestHelper.api.should_receive(:read).with('read action URL', is_a_connection_handler)
       FinderTestHelper.all
     end
   end

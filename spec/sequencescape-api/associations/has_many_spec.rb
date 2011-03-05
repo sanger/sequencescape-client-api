@@ -7,6 +7,8 @@ class Sequencescape::John
 end
 
 describe Sequencescape::Api::Associations::HasMany do
+  include Sequencescape::ConnectionSupport
+
   class TestAssociationHelper < TestAssociationBase
     class Foo < TestAssociationBase::Foo
       attr_reader :save_details
@@ -127,7 +129,7 @@ describe Sequencescape::Api::Associations::HasMany do
 
       context 'accessing the association' do
         it 'builds the association on demand' do
-          @api.should_receive(:read).with('http://localhost:3000/foos', instance_of(::Sequencescape::Api::FinderMethods::AllHandler))
+          @api.should_receive(:read).with('http://localhost:3000/foos', is_a_connection_handler)
           subject.all
         end
 
@@ -140,7 +142,7 @@ describe Sequencescape::Api::Associations::HasMany do
             }
           )
 
-          @api.should_receive(:read).with('http://localhost:3000/foos_have_mooved', instance_of(::Sequencescape::Api::FinderMethods::AllHandler))
+          @api.should_receive(:read).with('http://localhost:3000/foos_have_mooved', is_a_connection_handler)
           @instance.foos.all
         end
       end
@@ -149,13 +151,17 @@ describe Sequencescape::Api::Associations::HasMany do
 end
 
 describe Sequencescape::Api::Resource do
+  class Resource < Sequencescape::Api::Resource
+    delegate_to_attributes :bar, :root
+  end
+
   describe '#attributes_for' do
     before(:each) do
       @api = double('api')
     end
 
     subject do 
-      Sequencescape::Api::Resource.new(@api, { 
+      Resource.new(@api, { 
         'bar' => 'element',
         'root' => { 'leaf' => "blowin' in the wind" }
       })

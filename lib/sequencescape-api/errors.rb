@@ -29,6 +29,10 @@ module Sequencescape
       def missing(json)
         raise Sequencescape::Api::ResourceNotFound, json
       end
+
+      def redirection(json, &block)
+        yield(self)
+      end
     end
   end
 end

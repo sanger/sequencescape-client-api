@@ -1,8 +1,10 @@
 require 'spec_helper'
 
 describe Sequencescape::Api::Resource do
-  class TestResourceHelper < described_class
+  include Sequencescape::ConnectionSupport
 
+  class TestResourceHelper < described_class
+    attr_accessor :name
   end
 
   context 'class methods' do
@@ -96,13 +98,9 @@ describe Sequencescape::Api::Resource do
 
     describe '#update_attributes!' do
       it 'performs an API update, updating the attributes with the response' do
-        @api.should_receive(:update).with(
-          'update URL',
-          { 'test_resource_helper' => { 'a' => 1 } },
-          instance_of(Sequencescape::Api::ModifyingHandler)
-        )
+        @api.should_receive(:update).with('update URL', subject, is_a_connection_handler)
 
-        subject.update_attributes!({ 'a' => 1 })
+        subject.update_attributes!({ 'name' => 'foo' })
       end
     end
   end

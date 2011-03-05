@@ -2,6 +2,8 @@ require 'spec_helper'
 require 'support/test_association_base'
 
 describe Sequencescape::Api::Associations::BelongsTo do
+  include Sequencescape::ConnectionSupport
+
   class TestAssociationHelper < TestAssociationBase
     class Foo < TestAssociationBase::Foo
       def loaded
@@ -42,18 +44,12 @@ describe Sequencescape::Api::Associations::BelongsTo do
     end
 
     context 'accessing the association' do
-      before(:each) do
-        @api.should_receive(:read).with('http://localhost:3000/foo/UUID').and_yield({
-          'foo' => {
-            'actions' => {
-              'read'  => 'http://localhost:3000/foos/UUID'
-            },
-            'check' => 'definitely going to try'
-          }
-        })
-      end
+      it 'reads and processes the JSON' do
+        @api.should_receive(:read).with('http://localhost:3000/foo/UUID', is_a_connection_handler)
 
-      its('check') { should == 'definitely going to try' }
+        # 'check' isn't implemented, but we need it to trigger the retrieval of the object!
+        lambda { subject.check }.should raise_error(NameError)
+      end
     end
   end
 end

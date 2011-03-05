@@ -35,6 +35,7 @@ module Sequencescape::Api::Resource::Modifications
   def initialize(api, json = nil, wrapped = false)
     super
     update_from_json(json, wrapped)
+    changed_attributes.clear
   end
 
   def update_attributes!(attributes)
@@ -43,7 +44,8 @@ module Sequencescape::Api::Resource::Modifications
   end
 
   def save!(options = nil)
-    modify!({ :action => :create }.reverse_merge(options || {}))
+    action = persisted? ? :update : :create
+    modify!({ :action => action }.reverse_merge(options || {}))
   end
 
   def modify!(options)
@@ -57,7 +59,7 @@ module Sequencescape::Api::Resource::Modifications
       api.send(
         http_verb,
         url,
-        { json_root => attributes },
+        self,
         Sequencescape::Api::ModifyingHandler.new(self)
       )
     end
@@ -65,18 +67,30 @@ module Sequencescape::Api::Resource::Modifications
   private :modify!
 
   def update_from_json(json, wrapped = false)
-    actions_before_update = @actions
+    unwrapped = (wrapped ? unwrapped_json(json) : json) || {}
+    unwrapped.map(&method(:update_attribute))
+  end
+  private :update_from_json
 
-    @attributes = (wrapped ? unwrapped_json(json) : json) || {}
-    @uuid       = @attributes.delete('uuid') || @uuid
+  def update_attribute(name_and_value_pair)
+    name, value = name_and_value_pair
+    case name
+    when 'actions' then update_actions(value)
+    when 'uuid'    then @uuid = (value || @uuid)
+    else                send(:"#{name}=", value)
+    end
+  end
+  private :update_attribute
+
+  def update_actions(actions_from_attributes)
+    actions_before_update = @actions
 
     # We're kind of in a situation where an update of the attributes could be coming from the API
     # or from the client code.  We know that the API will always include 'actions' so we can assume that
     # if it's set then that's what we should use, or we should use the previous actions.
     #
     # TODO: This isn't ideal as it's open to abuse but we can live with it for the moment.
-    actions_from_attributes = @attributes.delete('actions')
     @actions = actions_from_attributes.nil? ? actions_before_update : OpenStruct.new(actions_from_attributes)
   end
-  private :update_from_json
+  private :update_actions
 end

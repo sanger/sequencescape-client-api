@@ -47,7 +47,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
 
   def create(url, body, handler)
-    perform(:post, url, body || {}) do |response|
+    perform(:post, url, jsonify(body, :action => :create)) do |response|
       case response
       when Net::HTTPCreated             then handler.success(parse_json_from(response))
       when Net::HTTPSuccess             then handler.success(parse_json_from(response)) # TODO: should be error!
@@ -61,7 +61,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
 
   def update(url, body, handler)
-    perform(:put, url, body || {}) do |response|
+    perform(:put, url, jsonify(body, :action => :update)) do |response|
       case response
       when Net::HTTPSuccess             then handler.success(parse_json_from(response))
       when Net::HTTPUnauthorized        then handler.unauthenticated(parse_json_from(response))
@@ -86,12 +86,18 @@ module Sequencescape::Api::ConnectionFactory::Actions
       request = Net::HTTP.const_get(http_verb.to_s.classify).new(uri.path, headers)
       unless body.nil?
         request.content_type = 'application/json'
+        #request.body         = body.to_json
         request.body         = Yajl::Encoder.encode(body)
       end
       yield(connection.request(request))
     end
   end
   private :perform
+
+  def jsonify(body, options)
+    body.nil? ? {} : body.as_json(options.merge(:root => true))
+  end
+  private :jsonify
 
   def parse_json_from(response)
     raise ServerError, 'server returned non-JSON content' unless response.content_type == 'application/json'
