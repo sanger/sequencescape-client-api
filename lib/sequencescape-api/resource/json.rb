@@ -1,4 +1,20 @@
 module Sequencescape::Api::Resource::Json
+  def self.included(base)
+    base.class_eval do
+      extend ClassMethods
+    end
+  end
+
+  module ClassMethods
+    def self.extended(base)
+      base.delegate :json_root, :to => 'self.class'
+    end
+
+    def json_root
+      self.name.demodulize.underscore
+    end
+  end
+
   def as_json(options = nil)
     options = { :action => :create, :root => true }.merge(options || {})
     send(:"as_json_for_#{options[:action]}", options)
@@ -45,7 +61,7 @@ module Sequencescape::Api::Resource::Json
   def attributes_for_json(options)
     # TODO: created_at, updated_at need to be hidden
     return attributes if options[:force]
-    Hash[changes.map { |k,(_, v)| [ k.to_s, v] }]
+    Hash[changes.keys.map { |k| [ k.to_s, send(k) ] }]
   end
   private :attributes_for_json
 

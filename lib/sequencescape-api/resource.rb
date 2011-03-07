@@ -11,13 +11,13 @@ end
 class Sequencescape::Api::Resource
   require 'sequencescape-api/resource/instance_methods'
   require 'sequencescape-api/resource/modifications'
-  require 'sequencescape-api/resource/class_methods'
+  require 'sequencescape-api/resource/attributes'
   require 'sequencescape-api/resource/error_handling'
   require 'sequencescape-api/resource/active_model'
   require 'sequencescape-api/resource/json'
 
   include ActiveModel
-  extend ClassMethods
+  extend Attributes
   include InstanceMethods
   include Modifications
   include ErrorHandling

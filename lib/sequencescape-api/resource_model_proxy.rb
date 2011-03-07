@@ -28,7 +28,8 @@ class Sequencescape::Api::ResourceModelProxy
   end
 
   def method_missing(name, *args, &block)
-    model.send(name, api, *args, &block)
+    args.unshift(api) unless [ :nil? ].include?(name.to_sym)
+    model.send(name, *args, &block)
   end
   protected :method_missing
 

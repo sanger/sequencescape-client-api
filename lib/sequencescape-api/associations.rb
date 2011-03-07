@@ -33,7 +33,7 @@ module Sequencescape::Api::Associations
 
   module InstanceMethods
     def initialize(*args, &block)
-      @associations = {}
+      @associations, @errors = {}, nil
       super
     end
 

@@ -74,7 +74,7 @@ module Sequencescape::Api::Resource::Modifications
 
   def update_attribute(name_and_value_pair)
     name, value = name_and_value_pair
-    case name
+    case name.to_s
     when 'actions' then update_actions(value)
     when 'uuid'    then @uuid = (value || @uuid)
     else                send(:"#{name}=", value)

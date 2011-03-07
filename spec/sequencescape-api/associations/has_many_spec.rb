@@ -152,7 +152,7 @@ end
 
 describe Sequencescape::Api::Resource do
   class Resource < Sequencescape::Api::Resource
-    delegate_to_attributes :bar, :root
+    attribute_accessor :bar, :root
   end
 
   describe '#attributes_for' do
