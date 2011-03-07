@@ -2,6 +2,8 @@ require 'sequencescape-api/associations/base'
 
 module Sequencescape::Api::Associations::BelongsTo
   class AssociationProxy < Sequencescape::Api::Associations::Base
+    write_inheritable_attribute(:default_attributes_if_missing, {})
+
     def initialize(*args, &block)
       super
       @object, @loaded = new(@attributes, false), false

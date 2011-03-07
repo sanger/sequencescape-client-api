@@ -4,6 +4,10 @@ require 'sequencescape-api/actions'
 
 module Sequencescape::Api::Associations::HasMany
   module JsonBehaviour
+    def self.included(base)
+      base.write_inheritable_attribute(:default_attributes_if_missing, [])
+    end
+
     def as_json(options = nil)
       options = { :root => false, :uuid => true }.reverse_merge(options || {})
       all.map { |o| o.as_json(options) }.compact
@@ -19,8 +23,8 @@ module Sequencescape::Api::Associations::HasMany
   class InlineAssociationProxy 
     include Enumerable
     include ::Sequencescape::Api::FinderMethods::Delegation
-    include ::Sequencescape::Api::Associations::HasMany::JsonBehaviour
     include ::Sequencescape::Api::Associations::Base::InstanceMethods
+    include ::Sequencescape::Api::Associations::HasMany::JsonBehaviour
 
     def initialize(owner, json = nil)
       super

@@ -2,6 +2,7 @@ module Sequencescape::Api::Associations::Base::InstanceMethods
   def self.included(base)
     base.class_eval do
       class_inheritable_accessor :association, :options
+      class_inheritable_reader :default_attributes_if_missing
 
       attr_reader :model
       delegate :api, :to => :@owner
@@ -11,7 +12,7 @@ module Sequencescape::Api::Associations::Base::InstanceMethods
 
   def initialize(owner, json = nil)
     @owner      = owner
-    @attributes = json.nil? ? owner.attributes_for(association) : attributes_from(json)
+    @attributes = json.nil? ? owner.attributes_for(association, default_attributes_if_missing) : attributes_from(json)
     @model      = (options[:class_name] || api.model_name(association)).constantize
   end
 
