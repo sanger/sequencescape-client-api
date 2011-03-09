@@ -9,5 +9,6 @@ class Sequencescape::Request < ::Sequencescape::Api::Resource
   belongs_to :source_asset, :class_name => 'Sequencescape::Asset'
   belongs_to :target_asset, :class_name => 'Sequencescape::Asset'
 
-  attribute_accessor :state
+  attribute_accessor :type, :state, :fragment_size
+  validates_inclusion_of :state, :in => %w{pending started failed passed cancelled blocked hold}
 end

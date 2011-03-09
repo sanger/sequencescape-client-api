@@ -1,3 +1,6 @@
+require 'active_model/deprecated_error_methods'
+require 'active_model/errors'
+
 module Sequencescape::Api::Associations
   def self.extended(base)
     base.class_eval do
@@ -53,6 +56,43 @@ module Sequencescape::Api::Associations
       path.to_s.split('.').inject(attributes) { |k,v| k.try(:[], v) } || default_value_if_missing
     end
     private :attributes_from_path
+
+    def run_validations!
+      our_result, their_result = super, @associations.values.all?(&:run_validations!)
+      our_result and their_result
+    end
+
+    class CompositeErrors < ::ActiveModel::Errors
+      def [](field)
+        association, *subfield = field.to_s.split('.')
+        errors_from_association = associations[association.to_sym].try(:errors).try(:[], subfield.join('.')) 
+        errors_from_association.blank? ? super : errors_from_association
+      end
+
+      def full_messages
+        super.concat(association_errors.map(&:full_messages)).flatten
+      end
+
+      def empty?
+        super and association_errors.all?(&:empty?)
+      end
+
+      def clear
+        association_errors.map(&:clear)
+        super 
+      end
+
+      delegate :associations, :to => :@base
+
+      def association_errors
+        associations.values.map(&:errors)
+      end
+      private :association_errors
+    end
+
+    def errors
+      @errors ||= CompositeErrors.new(self)
+    end
   end
 end
 

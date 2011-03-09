@@ -176,3 +176,15 @@ en:
         well:
           location: "Location on plate"
 
+    errors:
+      models:
+        sequencescape:
+          request:
+            attributes:
+              state:
+                inclusion: "is not a valid state"
+
+          study:
+            attributes:
+              name:
+                blank: "can't be blank"

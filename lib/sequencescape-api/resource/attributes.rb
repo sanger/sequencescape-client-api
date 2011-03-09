@@ -20,7 +20,7 @@ module Sequencescape::Api::Resource::Attributes
         end
       }, __FILE__, line)
     end
-    define_attribute_methods(names)
+    extend_attribute_methods(names)
   end
   private :attribute_reader
 
@@ -36,7 +36,7 @@ module Sequencescape::Api::Resource::Attributes
         end
       }, __FILE__, line)
     end
-    define_attribute_methods(names)
+    extend_attribute_methods(names)
   end
   private :attribute_writer
 

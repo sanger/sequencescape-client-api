@@ -9,7 +9,7 @@ class Sequencescape::Batch < ::Sequencescape::Api::Resource
   has_update_action :complete!, :action => 'complete'
   has_update_action :release!,  :action => 'release'
 
-  attribute_accessor :state
+  attribute_accessor :state, :production_state, :qc_state, :barcode
 
   def self.state_method(name)
     class_eval(%Q{def #{name}? ; state == #{name.to_s.inspect} ; end})
@@ -19,4 +19,6 @@ class Sequencescape::Batch < ::Sequencescape::Api::Resource
   state_method(:started)
   state_method(:completed)
   state_method(:released)
+
+  validates_presence_of :requests, :allow_blank => false
 end

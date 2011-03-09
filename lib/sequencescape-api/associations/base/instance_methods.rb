@@ -29,7 +29,7 @@ module Sequencescape::Api::Associations::Base::InstanceMethods
   # 4. Finally it could actually be the JSON!
   def attributes_from(json)
     case
-    when json.is_a?(String)                                 then { uuid: json }
+    when json.is_a?(String)                                 then { uuid: json, uuid_only: true }
     when json.is_a?(Hash)                                   then json
     when json.respond_to?(:map)                             then json.map(&method(:attributes_from))
     when json.is_a?(Sequencescape::Api::Resource)           then json.as_json(:force => true, :action => :update, :root => false, :uuid => true)

@@ -15,6 +15,28 @@ module Sequencescape::Api::Resource::ErrorHandling
       extend ActiveModel::Translation
       include ActiveModel::Validations
       include ActiveModel::Validations::Callbacks
+      include TurnOffValidationOfUuidOnlyRecords
     end
+  end
+
+  #--
+  # A bit of a fiddle this but any records that are UUID only are typically coming from the user
+  # having selected a load.  If this has happened then there is no data and so none of the 
+  # validations should be run.
+  #++
+  module TurnOffValidationOfUuidOnlyRecords
+    def run_validations!
+      uuid_only? ? true : super
+    end
+
+    def uuid_only=(value)
+      @uuid_only = value
+    end
+    private :uuid_only=
+
+    def uuid_only?
+      @uuid_only
+    end
+    private :uuid_only?
   end
 end
