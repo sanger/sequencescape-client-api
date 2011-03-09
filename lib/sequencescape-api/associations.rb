@@ -23,7 +23,12 @@ module Sequencescape::Api::Associations
       end
 
       def #{association}=(json)
-        associations[#{association.inspect}] = #{proxy_class_name}.new(self, json)
+        association = associations[#{association.inspect}]
+        if association.proxy_present?
+          association.send(:update_from_json, json)
+        else
+          associations[#{association.inspect}] = #{proxy_class_name}.new(self, json)
+        end
       end
       private #{association.inspect}=
 

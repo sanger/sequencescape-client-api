@@ -231,8 +231,9 @@ describe Sequencescape::Batch do
     end
 
     context '#update_attributes!' do
-      it 'requires accepts_nested_attributes_for'
-      it 'only sends the deltas for the requests'
+      it 'handles UUID-JSON hash updates like a form would generate' do
+        @batch.update_attributes!(:requests => { @batch.requests.first.uuid => { :target_asset => { :barcode => 12345678 } } })
+      end
     end
   end
 
@@ -245,30 +246,54 @@ describe Sequencescape::Batch do
     end
 
     context 'with invalid information' do
-      before(:each) do
-        @batch.requests.first.state = 'not a valid state!'
-        @batch.requests.first.study.name = ''
-        @batch.run_validations!
-      end
+      context 'on multiple elements of a has_many' do
+        before(:each) do
+          @batch.requests.first.state = 'not a valid state!'
+          @batch.requests.last.state  = 'is not either!'
+          @batch.run_validations!
+        end
 
-      context '#valid?' do
-        it 'is invalid if any of the associations are invalid' do
-          @batch.should_not be_valid
+        context '#errors' do
+          context 'on first' do
+            it 'has error message' do
+              @batch.requests.first.errors.full_messages.should == [ 'State is not a valid state' ]
+            end
+          end
+
+          context 'on last' do
+            it 'has error message' do
+              @batch.requests.last.errors.full_messages.should == [ 'State is not a valid state' ]
+            end
+          end
         end
       end
 
-      context '#errors' do
-        it 'includes the errors of has_many associations' do
-          @batch.errors['requests.state'].should == [ 'is not a valid state' ]
+      context 'on one element of a has_many' do
+        before(:each) do
+          @batch.requests.first.state = 'not a valid state!'
+          @batch.requests.first.study.name = ''
+          @batch.run_validations!
         end
 
-        it 'includes the errors of belongs_to associations' do
-          @batch.errors['requests.study.name'].should == [ "can't be blank" ]
+        context '#valid?' do
+          it 'is invalid if any of the associations are invalid' do
+            @batch.should_not be_valid
+          end
         end
 
-        context '#full_messages' do
-          it 'returns all of the full messages' do
-            @batch.errors.full_messages.should == ["State is not a valid state", "Name can't be blank"]
+        context '#errors' do
+          it 'includes the errors of has_many associations' do
+            @batch.errors['requests.state'].should == [ 'is not a valid state' ]
+          end
+
+          it 'includes the errors of belongs_to associations' do
+            @batch.errors['requests.study.name'].should == [ "can't be blank" ]
+          end
+
+          context '#full_messages' do
+            it 'returns all of the full messages' do
+              @batch.errors.full_messages.should == ["State is not a valid state", "Name can't be blank"]
+            end
           end
         end
       end

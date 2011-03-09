@@ -38,4 +38,14 @@ module Sequencescape::Api::Associations::Base::InstanceMethods
     end
   end
   private :attributes_from
+
+  def proxy_present?
+    true
+  end
+end
+
+class NilClass
+  def proxy_present?
+    false
+  end
 end
