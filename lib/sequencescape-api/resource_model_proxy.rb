@@ -27,8 +27,10 @@ class Sequencescape::Api::ResourceModelProxy
     model.respond_to?(name, include_private)
   end
 
+  METHODS_THAT_DO_NOT_NEED_API = [ :nil?, :inspect ]
+
   def method_missing(name, *args, &block)
-    args.unshift(api) unless [ :nil? ].include?(name.to_sym)
+    args.unshift(api) unless METHODS_THAT_DO_NOT_NEED_API.include?(name.to_sym)
     model.send(name, *args, &block)
   end
   protected :method_missing

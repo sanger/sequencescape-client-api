@@ -1,9 +1,5 @@
 class Sequencescape::User
-  def initialize(owner, attributes)
-    @owner, @attributes = owner, attributes
-  end
+  include Sequencescape::Api::Composition::Target
 
-  def login
-    @attributes['login']
-  end
+  attribute_accessor :login
 end

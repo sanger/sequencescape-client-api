@@ -1,4 +1,26 @@
 module Sequencescape::Api::Composition
+  module Target
+    def self.included(base)
+      base.class_eval do
+        include Sequencescape::Api::Resource::ActiveModel
+        extend Sequencescape::Api::Resource::Attributes
+        extend Sequencescape::Api::Composition
+      end
+    end
+
+    def initialize(owner, attributes)
+      @owner, @attributes = owner, attributes
+    end
+
+    attr_reader :attributes
+    private :attributes
+
+    def attributes_for(name)
+      attributes[name]
+    end
+    private :attributes_for
+  end
+
   def composed_of(name, options = {})
     composed_class_code = options[:class_name] || "api.model_name(#{name.inspect}).constantize"
 

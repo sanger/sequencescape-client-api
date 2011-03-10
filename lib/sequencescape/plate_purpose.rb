@@ -15,4 +15,6 @@ class Sequencescape::PlatePurpose < ::Sequencescape::Api::Resource
   has_many :plates do
     include Sequencescape::PlatePurpose::PlateCreation
   end
+
+  attribute_accessor :name
 end

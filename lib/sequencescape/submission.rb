@@ -6,4 +6,10 @@ class Sequencescape::Submission < ::Sequencescape::Api::Resource
   has_many   :requests
 
   has_update_action :submit!, :action => 'submit', :verb => :create
+
+  attribute_accessor :state
+  attribute_accessor :asset_group_name
+  attribute_accessor :assets
+  attribute_accessor :request_types
+  attribute_accessor :request_options
 end

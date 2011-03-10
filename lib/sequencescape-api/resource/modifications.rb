@@ -75,10 +75,11 @@ module Sequencescape::Api::Resource::Modifications
 
   def update_attribute(name_and_value_pair)
     name, value = name_and_value_pair
-    case name.to_s
-    when 'actions' then update_actions(value)
-    when 'uuid'    then @uuid = (value || @uuid)
-    else                send(:"#{name}=", value)
+    case
+    when name.to_s == 'actions'                     then update_actions(value)
+    when name.to_s == 'uuid'                        then @uuid = (value || @uuid)
+    when respond_to?(:"#{name}=", :include_private) then send(:"#{name}=", value)
+    else # TODO: Maybe we need debug logging in here at some point!
     end
   end
   private :update_attribute
