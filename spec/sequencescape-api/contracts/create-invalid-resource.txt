@@ -1,0 +1,10 @@
+POST /model_c/create HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Cookie: WTSISignOn=single-sign-on-cookie
+
+{
+  "model_c": {
+    "attribute_validated_at_server": "please error"
+  }
+}

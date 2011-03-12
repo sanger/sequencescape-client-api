@@ -33,17 +33,18 @@ class Sequencescape::Api
   end
   protected :method_missing
 
-  def model_name(name)
-    model(name).name
-  end
-
   def model(name)
-    @model_namespace.const_get(name.to_s.classify)
+    parts = name.to_s.split('::').map(&:classify)
+    raise StandardError, "#{name.inspect} is rooted and that is not supported" if parts.first.blank?
+    parts.inject(@model_namespace) { |context, part| context.const_get(part) }
   rescue NameError => missing_constant_in_user_specified_namespace_fallback
     raise if @model_namespace == ::Sequencescape
-    @model_namespace.const_set(name.to_s.classify, ::Sequencescape.const_get(name.to_s.classify))
+
+    parts.inject([ ::Sequencescape, @model_namespace ]) do |(source, dest), part|
+      const_from_source = source.const_get(part)
+      [ const_from_source, dest.const_set(part, const_from_source) ]
+    end.last
   end
-  private :model
 
   include BasicErrorHandling
 

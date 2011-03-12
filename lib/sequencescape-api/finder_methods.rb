@@ -92,6 +92,11 @@ class Sequencescape::Api::PageOfResults
     end
   end
 
+  def first
+    first_page
+    @objects.first
+  end
+
   def last
     last_page
     @objects.last

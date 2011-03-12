@@ -10,17 +10,15 @@ module Sequencescape::Api::Associations::BelongsTo
     end
 
     def respond_to?(name, include_private = false)
-      case
-      when super                                      then true # One of our methods ...
-      when @object.respond_to?(name, include_private) then true # ... eager loaded object method ...
-      else object.respond_to?(name, include_private)            # ... or force the object load and check
-      end
+      # One of our methods, or an eager loaded attribute, or the object needs to be loaded & checked
+      super or @object.eager_loaded_attribute?(name) or object.respond_to?(name, include_private)
     end
 
     def method_missing(name, *args, &block)
-      return @object.send(name, *args, &block) if @object.respond_to?(name, true)
-      object.send(name, *args, &block)
+      target = @object.eager_loaded_attribute?(name) ? @object : object
+      target.send(name, *args, &block)
     end
+    protected :method_missing
 
     class LoadHandler
       include Sequencescape::Api::BasicErrorHandling

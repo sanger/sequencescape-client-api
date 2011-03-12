@@ -1,0 +1,35 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "model_b": {
+    "actions": {
+      "read": "http://localhost:3000/UUID"
+    },
+
+    "uuid": "UUID",
+
+    "model_a": {
+      "actions": {
+        "read": "http://localhost:3000/BELONGS_TO_UUID"
+      }
+    },
+    "model_by_simple_name": {
+      "actions": {
+        "read": "http://localhost:3000/BELONGS_TO_UUID"
+      }
+    },
+    "model_by_full_name": {
+      "actions": {
+        "read": "http://localhost:3000/BELONGS_TO_UUID"
+      }
+    },
+    "model_with_early_data": {
+      "actions": {
+        "read": "http://localhost:3000/BELONGS_TO_UUID"
+      },
+      "name": "early data from JSON"
+    }
+  }
+}
+

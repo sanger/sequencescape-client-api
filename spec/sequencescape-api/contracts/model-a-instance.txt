@@ -1,0 +1,20 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "model_a": {
+    "actions": {
+      "read": "http://localhost:3000/UUID"
+    },
+
+    "uuid": "UUID",
+
+    "model_bs": {
+      "actions": {
+        "read": "http://localhost:3000/pages/1"
+      },
+      "size": 3
+    }
+  }
+}
+

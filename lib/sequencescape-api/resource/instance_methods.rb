@@ -21,13 +21,4 @@ module Sequencescape::Api::Resource::InstanceMethods
     super
     @api, @attributes = api, {}
   end
-
-  def respond_to?(name, include_private = false)
-    super || attributes.key?(name.to_s)
-  end
-
-  def method_missing(name, *args, &block)
-    (args.empty? and attributes.key?(name.to_s)) ? attributes[name.to_s] : super
-  end
-  protected :method_missing
 end

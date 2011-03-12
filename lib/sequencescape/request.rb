@@ -6,8 +6,8 @@ class Sequencescape::Request < ::Sequencescape::Api::Resource
   belongs_to :sample
   belongs_to :submission
 
-  belongs_to :source_asset, :class_name => 'Sequencescape::Asset'
-  belongs_to :target_asset, :class_name => 'Sequencescape::Asset'
+  belongs_to :source_asset, :class_name => 'Asset'
+  belongs_to :target_asset, :class_name => 'Asset'
 
   attribute_accessor :type, :state
   validates_inclusion_of :state, :in => %w{pending started failed passed cancelled blocked hold}

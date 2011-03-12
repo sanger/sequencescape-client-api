@@ -5,8 +5,11 @@ module Sequencescape::Api::Actions
     line = __LINE__ + 1
     class_eval(%Q{
       def #{name}(attributes = nil)
+        url = actions.try(#{action.to_sym.inspect}) or
+          raise Sequencescape::Api::Error, "Cannot perform #{action} without an URL"
+
         new(attributes || {}, false).tap do |object|
-          object.save!(:url => actions.#{action})
+          object.save!(:url => url)
         end
       end
     }, __FILE__, line)

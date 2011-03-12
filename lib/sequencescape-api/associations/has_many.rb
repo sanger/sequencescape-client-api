@@ -11,6 +11,17 @@ module Sequencescape::Api::Associations::HasMany
     extend  ::Sequencescape::Api::Actions
     include ::Sequencescape::Api::Associations::HasMany::Json
     include ::Sequencescape::Api::Associations::HasMany::Validation
+    include Enumerable
+
+    def size
+      return @attributes['size'] if api.capabilities.size_in_pages?
+      all.size
+    end
+
+    def empty?
+      return @attributes['size'].zero? if api.capabilities.size_in_pages?
+      all.empty?
+    end
   end
 
   class InlineAssociationProxy 
@@ -52,6 +63,10 @@ module Sequencescape::Api::Associations::HasMany
 
     def all
       @objects
+    end
+
+    def each_page(&block)
+      yield(@objects)
     end
 
     def new(json, &block)

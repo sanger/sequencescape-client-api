@@ -1,0 +1,28 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "revision": 2,
+
+  "model_a": {
+    "actions": {
+      "read": "http://localhost:3000/model_a"
+    }
+  },
+  "model_b": {
+    "actions": {
+      "read": "http://localhost:3000/model_b"
+    }
+  },
+  "model_c": {
+    "actions": {
+      "read": "http://localhost:3000/model_c",
+      "create": "http://localhost:3000/model_c/create"
+    }
+  },
+  "pages": {
+    "actions": {
+      "read": "http://localhost:3000/pages/1"
+    }
+  }
+}

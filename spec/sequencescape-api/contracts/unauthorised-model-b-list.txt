@@ -1,0 +1,14 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "actions": {
+    "read": "http://localhost:3000/model_b/1",
+    "first": "http://localhost:3000/model_b/1",
+    "last": "http://localhost:3000/model_b/1"
+  },
+  "size": 0,
+  "model_b": [
+
+  ]
+}
