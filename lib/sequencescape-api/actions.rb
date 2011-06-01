@@ -1,6 +1,11 @@
 module Sequencescape::Api::Actions
-  def has_create_action(name = :create!, options = {})
-    action = options[:action] || :create
+  def has_create_action(*args)
+    options      = args.extract_options!
+    name         = args.first || :create!
+
+    action       = options[:action] || :create
+    result_class = 'self'
+    result_class = "api.#{options[:resource]}" if options[:resource]
 
     line = __LINE__ + 1
     class_eval(%Q{
@@ -8,7 +13,7 @@ module Sequencescape::Api::Actions
         url = actions.try(#{action.to_sym.inspect}) or
           raise Sequencescape::Api::Error, "Cannot perform #{action} without an URL"
 
-        new(attributes || {}, false).tap do |object|
+        #{result_class}.new(attributes || {}, false).tap do |object|
           object.save!(:url => url)
         end
       end
