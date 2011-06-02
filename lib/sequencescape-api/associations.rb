@@ -48,6 +48,10 @@ module Sequencescape::Api::Associations
     attr_reader :associations
     private :associations
 
+    def is_association?(name)
+      associations.key?(name.to_sym)
+    end
+
     def attributes_for(path, default_value_if_missing = nil)
       attributes_from_path(path, default_value_if_missing) or
         raise Sequencescape::Api::JsonError.new(path.to_s, self)

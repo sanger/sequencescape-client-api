@@ -1,24 +1,47 @@
 require 'sequencescape-api/associations/base'
+require 'sequencescape-api/error_handling'
 
 module Sequencescape::Api::Associations::BelongsTo
-  class AssociationProxy < Sequencescape::Api::Associations::Base
-    write_inheritable_attribute(:default_attributes_if_missing, {})
+  module CommonBehaviour
+    def self.included(base)
+      base.class_eval do
+        include Sequencescape::Api::ErrorHandling
+      end
+    end
 
     def initialize(*args, &block)
       super
-      @object, @loaded = new(@attributes, false), false
+      @object = new(@attributes, false)
     end
+
+    def update_from_json(json)
+      @object.send(:update_from_json, json, false)
+    end
+    private :update_from_json
 
     def respond_to?(name, include_private = false)
       # One of our methods, or an eager loaded attribute, or the object needs to be loaded & checked
-      super or @object.eager_loaded_attribute?(name) or object.respond_to?(name, include_private)
+      super or is_handled_by_object_instance?(name) or object.respond_to?(name, include_private)
     end
 
     def method_missing(name, *args, &block)
-      target = @object.eager_loaded_attribute?(name) ? @object : object
+      target = is_handled_by_object_instance?(name) ? @object : object
       target.send(name, *args, &block)
     end
     protected :method_missing
+
+    def is_handled_by_object_instance?(name)
+      return false if @object.nil?
+
+      # TODO: I really hate special cases!
+      case
+      when name.to_sym == :uuid                  then true
+      when @object.eager_loaded_attribute?(name) then true
+      when @object.is_association?(name)         then true
+      else false
+      end
+    end
+    private :is_handled_by_object_instance?
 
     class LoadHandler
       include Sequencescape::Api::BasicErrorHandling
@@ -35,11 +58,7 @@ module Sequencescape::Api::Associations::BelongsTo
       end
     end
 
-    attr_writer :loaded
-    private :loaded=
-
     def object
-      @object   = nil unless @loaded
       @object ||= api.read(actions.read, LoadHandler.new(self))
       @object
     end
@@ -48,18 +67,41 @@ module Sequencescape::Api::Associations::BelongsTo
     def as_json(options = nil)
       @object.as_json({ :root => false, :uuid => false }.reverse_merge(options || {}))
     end
+  end
 
-    delegate :hash, :to => :@object
-    def eql?(proxy_or_object)
-      proxy_or_object = proxy_or_object.instance_variable_get(:@object) if proxy_or_object.is_a?(self.class)
-      @object.eql?(proxy_or_object)
+  class InlineAssociationProxy < Sequencescape::Api::Associations::Base
+    include Sequencescape::Api::Associations::BelongsTo::CommonBehaviour
+  end
+
+  class AssociationProxy < Sequencescape::Api::Associations::Base
+    include Sequencescape::Api::Associations::BelongsTo::CommonBehaviour
+
+    write_inheritable_attribute(:default_attributes_if_missing, {})
+
+    def initialize(*args, &block)
+      super
+      @loaded = false
     end
+
+    attr_writer :loaded
+    private :loaded=
+
+    def object
+      @object = nil unless @loaded
+      super
+    end
+    private :object
   end
 
   def belongs_to(association, options = {}, &block)
     association = association.to_sym
 
-    proxy = Class.new(AssociationProxy)
+    proxy = Class.new(
+      case options[:disposition].try(:to_sym)
+      when :inline then InlineAssociationProxy
+      else AssociationProxy
+      end
+    )
     proxy.association = association
     proxy.options     = options
     proxy.instance_eval(&block) if block_given?

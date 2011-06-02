@@ -9,7 +9,7 @@ require 'active_model/errors'
 require 'active_model/validator'
 require 'active_model/validations'
 
-module Sequencescape::Api::Resource::ErrorHandling
+module Sequencescape::Api::ErrorHandling
   def self.included(base)
     base.class_eval do
       extend ActiveModel::Translation

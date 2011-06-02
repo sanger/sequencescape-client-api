@@ -1,6 +1,7 @@
 require 'sequencescape-api/associations'
 require 'sequencescape-api/composition'
 require 'sequencescape-api/actions'
+require 'sequencescape-api/error_handling'
 
 class Sequencescape::Api::JsonError < Sequencescape::Api::Error
   def initialize(path, object)
@@ -12,7 +13,6 @@ class Sequencescape::Api::Resource
   require 'sequencescape-api/resource/instance_methods'
   require 'sequencescape-api/resource/modifications'
   require 'sequencescape-api/resource/attributes'
-  require 'sequencescape-api/resource/error_handling'
   require 'sequencescape-api/resource/active_model'
   require 'sequencescape-api/resource/json'
 
@@ -20,7 +20,7 @@ class Sequencescape::Api::Resource
   extend Attributes
   include InstanceMethods
   include Modifications
-  include ErrorHandling
+  include ::Sequencescape::Api::ErrorHandling
   include Json
 
   extend Sequencescape::Api::Associations
