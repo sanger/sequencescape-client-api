@@ -1,7 +1,7 @@
 require 'sequencescape-api/resource'
 
 class Sequencescape::TagLayoutTemplate < ::Sequencescape::Api::Resource
-  attribute_accessor :name
+  attribute_reader :name
   belongs_to :target, :class_name => 'Plate'
   belongs_to :tag_group
 

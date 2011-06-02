@@ -18,5 +18,5 @@ class Sequencescape::PlatePurpose < ::Sequencescape::Api::Resource
     include Sequencescape::PlatePurpose::PlateCreation
   end
 
-  attribute_accessor :name
+  attribute_reader :name
 end

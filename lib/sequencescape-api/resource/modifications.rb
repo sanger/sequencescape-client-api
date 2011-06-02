@@ -81,6 +81,7 @@ module Sequencescape::Api::Resource::Modifications
     case
     when name.to_s == 'actions'                     then update_actions(value)
     when name.to_s == 'uuid'                        then @uuid = (value || @uuid)
+    when is_attribute?(name)                        then attributes[name.to_s] = value # Handles read-only attributes
     when respond_to?(:"#{name}=", :include_private) then send(:"#{name}=", value)
     else # TODO: Maybe we need debug logging in here at some point!
     end

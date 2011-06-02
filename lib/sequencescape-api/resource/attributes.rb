@@ -11,8 +11,12 @@ module Sequencescape::Api::Resource::Attributes
   end
 
   module InstanceMethods
+    def is_attribute?(name)
+      defined_attributes.include?(name.to_sym)
+    end
+
     def eager_loaded_attribute?(name)
-      defined_attributes.include?(name.to_sym) and attributes.key?(name.to_s)
+      is_attribute?(name) and attributes.key?(name.to_s)
     end
   end
 
