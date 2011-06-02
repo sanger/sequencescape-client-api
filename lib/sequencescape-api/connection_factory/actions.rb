@@ -95,7 +95,11 @@ module Sequencescape::Api::ConnectionFactory::Actions
   private :perform
 
   def jsonify(body, options)
-    body.nil? ? {} : body.as_json(options.merge(:root => true))
+    case
+    when body.nil?        then {}
+    when body.is_a?(Hash) then body
+    else                       body.as_json(options.merge(:root => true))
+    end
   end
   private :jsonify
 
