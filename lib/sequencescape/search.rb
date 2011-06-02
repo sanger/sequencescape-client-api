@@ -49,6 +49,8 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
     }, __FILE__, line)
   end
 
+  attribute_reader :name
+
   search_action(:first)
   search_action(:last)
 
