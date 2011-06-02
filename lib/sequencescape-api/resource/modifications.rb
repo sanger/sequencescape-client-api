@@ -52,7 +52,7 @@ module Sequencescape::Api::Resource::Modifications
   def modify!(options)
     action    = options[:action]
     http_verb = options[:http_verb] || options[:action]
-    url       = (options[:url] || actions.send(action)) or
+    url       = (options[:url] || (action && actions.send(action))) or
       raise Sequencescape::Api::Error, "Cannot perform #{action} without an URL"
 
     self.tap do
