@@ -20,7 +20,7 @@ module Sequencescape::Api::Resource::Attributes
     end
   end
 
-  def attribute_reader(*names)
+  def generate_attribute_reader(*names)
     options    = names.extract_options!
     conversion = options[:conversion].blank? ? nil : "try(#{options[:conversion].to_sym.inspect})"
 
@@ -41,9 +41,9 @@ module Sequencescape::Api::Resource::Attributes
     end
     extend_attribute_methods(names)
   end
-  private :attribute_reader
+  private :generate_attribute_reader
 
-  def attribute_writer(*names)
+  def generate_attribute_writer(*names)
     options = names.extract_options!
 
     names.each do |name|
@@ -59,11 +59,23 @@ module Sequencescape::Api::Resource::Attributes
     end
     extend_attribute_methods(names)
   end
+  private :generate_attribute_writer
+
+  def attribute_reader(*names)
+    attribute_accessor(*names)
+    class_eval { names.map { |m| private :"#{m}=" } }
+  end
+  private :attribute_reader
+
+  def attribute_writer(*names)
+    attribute_accessor(*names)
+    class_eval { names.map(&method(:private)) }
+  end
   private :attribute_writer
 
   def attribute_accessor(*names)
-    attribute_reader(*names)
-    attribute_writer(*names)
+    generate_attribute_reader(*names)
+    generate_attribute_writer(*names)
   end
   private :attribute_accessor
 

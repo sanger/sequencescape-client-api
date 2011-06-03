@@ -10,7 +10,8 @@ Content-Type: application/json
 
     "uuid": "UUID",
     "changes_during_update": "changed",
-    "remains_same_during_update": "stays the same"
+    "remains_same_during_update": "stays the same",
+    "write_only": "has been set"
   }
 }
 

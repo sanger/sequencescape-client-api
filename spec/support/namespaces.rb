@@ -23,6 +23,9 @@ module Unauthorised
     end
 
     attribute_accessor :changes_during_update, :remains_same_during_update
+
+    attribute_reader :read_only
+    attribute_writer :write_only
   end
 
   class Page < Sequencescape::Api::Resource

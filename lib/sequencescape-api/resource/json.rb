@@ -59,11 +59,17 @@ module Sequencescape::Api::Resource::Json
   end
 
   def attributes_for_json(options)
-    # TODO: created_at, updated_at need to be hidden
+    attributes_to_send_to_server(options).tap do |changed_attributes|
+      [ 'created_at', 'updated_at' ].map(&changed_attributes.method(:delete))
+    end
+  end
+  private :attributes_for_json
+
+  def attributes_to_send_to_server(options)
     return attributes if options[:force] or (options[:action] == :create)
     Hash[changes.keys.map { |k| [ k.to_s, send(k) ] }]
   end
-  private :attributes_for_json
+  private :attributes_to_send_to_server
 
   def associations_for_json(options)
     Hash[
