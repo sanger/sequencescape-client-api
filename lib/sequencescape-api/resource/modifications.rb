@@ -50,7 +50,7 @@ module Sequencescape::Api::Resource::Modifications
   end
 
   def modify!(options)
-    raise Sequencescape::Api::Error, "No actions exist" if option[:url].nil? and actions.nil?
+    raise Sequencescape::Api::Error, "No actions exist" if options[:url].nil? and actions.nil?
 
     action    = options[:action]
     http_verb = options[:http_verb] || options[:action]
