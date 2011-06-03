@@ -50,7 +50,7 @@ module Sequencescape::Api::Resource::Modifications
   end
 
   def modify!(options)
-    raise Sequencescape::Api::Error, "No actions exist" if option[:url].nil? and actions.nil?
+    raise Sequencescape::Api::Error, "No actions exist" if options[:url].nil? and actions.nil?
 
     action    = options[:action]
     http_verb = options[:http_verb] || options[:action]
@@ -84,7 +84,6 @@ module Sequencescape::Api::Resource::Modifications
     case
     when name.to_s == 'actions'                     then update_actions(value)
     when name.to_s == 'uuid'                        then @uuid = (value || @uuid)
-    when is_attribute?(name)                        then attributes[name.to_s] = value # Handles read-only attributes
     when respond_to?(:"#{name}=", :include_private) then send(:"#{name}=", value)
     else # TODO: Maybe we need debug logging in here at some point!
     end
