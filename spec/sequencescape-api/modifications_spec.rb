@@ -95,7 +95,11 @@ describe 'Updating a resource' do
     stub_request_from('update-model-c') { response('model-c-instance-updated') }
 
     before(:each) do
-      subject.update_attributes!(:changes_during_update => 'sent from client', :remains_same_during_update => 'from JSON')
+      subject.update_attributes!(
+        :changes_during_update => 'sent from client',
+        :remains_same_during_update => 'from JSON',
+        :write_only => 'has been set'
+      )
     end
 
     it_behaves_like 'it is updating a resource'
@@ -107,6 +111,7 @@ describe 'Updating a resource' do
     before(:each) do
       subject.changes_during_update      = 'sent from client'
       subject.remains_same_during_update = 'from JSON'
+      subject.write_only                 = 'has been set'
       subject.save!
     end
 

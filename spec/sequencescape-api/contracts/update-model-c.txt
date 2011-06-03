@@ -5,6 +5,7 @@ Cookie: WTSISignOn=single-sign-on-cookie
 
 {
   "model_c": {
-    "changes_during_update": "sent from client"
+    "changes_during_update": "sent from client",
+    "write_only": "has been set"
   }
 }
