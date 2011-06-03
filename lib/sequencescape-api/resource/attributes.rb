@@ -42,6 +42,9 @@ module Sequencescape::Api::Resource::Attributes
   def attribute_writer(*names)
     options = names.extract_options!
 
+    # we declare the getter as private, because it's used to know if it's value has changed
+    attribute_reader(*names)
+
     names.each do |name|
       defined_attributes << name.to_sym
 
@@ -51,7 +54,9 @@ module Sequencescape::Api::Resource::Attributes
           #{name}_will_change! if not attributes.key?(#{name.to_s.inspect}) or #{name} != value
           attributes[#{name.to_s.inspect}] = value
         end
+        private :#{name}
       }, __FILE__, line)
+
     end
     extend_attribute_methods(names)
   end
