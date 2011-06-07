@@ -1,12 +1,11 @@
 class Sequencescape::Tag
   include Sequencescape::Api::Composition::Target
 
-  attribute_accessor :uuid, :exepcted_sequencescape
-  composed_of :group, :class_name => 'Sequencescape::Tag::Group'
+  attribute_accessor :name, :oligo, :group, :identifier
 
   class Group
     include Sequencescape::Api::Composition::Target
 
-    attribute_accessor :uuid, :name
+    attribute_accessor :name, :tags
   end
 end

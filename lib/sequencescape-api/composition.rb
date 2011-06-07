@@ -27,6 +27,7 @@ module Sequencescape::Api::Composition
     line = __LINE__ + 1
     class_eval(%Q{
       def #{name}
+        return nil unless attributes_for?(#{name.to_s.inspect})
         api.model(#{composed_class_name.inspect}).new(self, attributes_for(#{name.to_s.inspect}))
       end
 
