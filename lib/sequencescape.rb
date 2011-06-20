@@ -36,6 +36,7 @@ require 'sequencescape/transfer_template'
 require 'sequencescape/transfer'
 require 'sequencescape/tag_layout_template'
 require 'sequencescape/tag_layout'
+require 'sequencescape/bait_library_layout'
 
 # Ensure that the I18n stuff has been properly configured
 I18n.config.load_path << File.expand_path(File.join(File.dirname(__FILE__), %w{sequencescape locale en.yml}))

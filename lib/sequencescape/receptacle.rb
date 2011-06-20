@@ -1,9 +1,11 @@
 require 'sequencescape/tag'
+require 'sequencescape/bait_library'
 
 module Sequencescape::Receptacle
   class Aliquot < Sequencescape::Api::Resource
     belongs_to :sample, :disposition => :inline
     composed_of :tag
+    composed_of :bait_library
   end
 
   def self.included(base)

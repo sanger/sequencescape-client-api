@@ -4,21 +4,19 @@ module Sequencescape::Api::Composition
       base.class_eval do
         include Sequencescape::Api::Resource::ActiveModel
         extend Sequencescape::Api::Resource::Attributes
-        extend Sequencescape::Api::Composition
+
+        extend  Sequencescape::Api::Resource::Groups
+        include Sequencescape::Api::Resource::Groups::Json
       end
     end
 
     def initialize(owner, attributes)
       @owner, @attributes = owner, attributes
+      attributes.each { |k,v| send(:"#{k}=", v) }
     end
 
     attr_reader :attributes
     private :attributes
-
-    def attributes_for(name)
-      attributes[name]
-    end
-    private :attributes_for
   end
 
   def composed_of(name, options = {})
