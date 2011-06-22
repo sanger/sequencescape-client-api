@@ -1,10 +1,8 @@
 require 'sequencescape/asset'
 require 'sequencescape/behaviour/receptacle'
 
-class Sequencescape::Well < ::Sequencescape::Asset
+class Sequencescape::Lane < ::Sequencescape::Asset
   include Sequencescape::Behaviour::Receptacle
 
-  belongs_to :plate
-
-  attribute_accessor :location
+  attribute_accessor :external_release
 end

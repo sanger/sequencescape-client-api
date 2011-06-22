@@ -1,13 +1,6 @@
-require 'sequencescape-api/resource'
-require 'sequencescape/receptacle'
+require 'sequencescape/tube'
 
-class Sequencescape::SampleTube < ::Sequencescape::Asset
-  include Sequencescape::Receptacle
-
+class Sequencescape::SampleTube < ::Sequencescape::Tube
   has_many   :requests
   has_many   :library_tubes
-
-  attribute_accessor :closed
-  attribute_accessor :concentration, :volume
-  attribute_accessor :scanned_in_date, :conversion => :to_time
 end
