@@ -6,6 +6,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
 
   has_many :wells, :disposition => :inline
   belongs_to :plate_purpose
+  belongs_to :creation_transfer, :class_name => 'Transfer'
 
   attribute_accessor :size, :iteration, :state
 end
