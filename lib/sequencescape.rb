@@ -37,6 +37,7 @@ require 'sequencescape/transfer'
 require 'sequencescape/tag_layout_template'
 require 'sequencescape/tag_layout'
 require 'sequencescape/bait_library_layout'
+require 'sequencescape/barcode_printer'
 
 # Ensure that the I18n stuff has been properly configured
 I18n.config.load_path << File.expand_path(File.join(File.dirname(__FILE__), %w{sequencescape locale en.yml}))

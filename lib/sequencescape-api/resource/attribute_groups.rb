@@ -53,7 +53,7 @@ class Sequencescape::Api::Resource::Groups::Proxy
 
     def initialize(owner, attributes = {})
       @owner, @attributes = owner, {}
-      attributes.each { |k,v| send(:"#{k}=", v) if respond_to?(:"#{k}=") }
+      attributes.each { |k,v| send(:"#{k}=", v) if respond_to?(:"#{k}=", :include_private_methods) }
     end
 
     def as_json_for_update(options)
