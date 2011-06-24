@@ -11,6 +11,7 @@ class Sequencescape::Api
 
   def initialize(options = {})
     @models, @model_namespace = {}, options.delete(:namespace) || Sequencescape
+    @model_namespace = @model_namespace.constantize if @model_namespace.is_a?(String)
     @connection = self.class.connection_factory.create(options).tap do |connection|
       connection.root(self)
     end
