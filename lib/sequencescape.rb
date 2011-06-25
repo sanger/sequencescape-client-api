@@ -15,6 +15,7 @@ require 'sequencescape/project'
 require 'sequencescape/asset'
 require 'sequencescape/asset_group'
 require 'sequencescape/library_tube'
+require 'sequencescape/multiplexed_library_tube'
 require 'sequencescape/sample_tube'
 require 'sequencescape/sample'
 
