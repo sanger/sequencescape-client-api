@@ -6,5 +6,5 @@ class Sequencescape::Well < ::Sequencescape::Asset
 
   belongs_to :plate
 
-  attribute_accessor :location
+  attribute_accessor :location, :state
 end
