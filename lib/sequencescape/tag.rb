@@ -6,6 +6,6 @@ class Sequencescape::Tag
   class Group
     include Sequencescape::Api::Composition::Target
 
-    attribute_accessor :name, :tags
+    attribute_accessor :name, :tags, :created_at, :updated_at
   end
 end
