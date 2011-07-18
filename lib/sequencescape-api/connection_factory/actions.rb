@@ -83,7 +83,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   def perform(http_verb, url, body = nil, &block)
     uri = URI.parse(url)
     Net::HTTP.start(uri.host, uri.port) do |connection|
-      request = Net::HTTP.const_get(http_verb.to_s.classify).new(uri.path, headers)
+      request = Net::HTTP.const_get(http_verb.to_s.classify).new(uri.request_uri, headers)
       unless body.nil?
         request.content_type = 'application/json'
         #request.body         = body.to_json
