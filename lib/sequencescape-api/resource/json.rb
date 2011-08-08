@@ -15,6 +15,27 @@ module Sequencescape::Api::Resource::Json
     end
   end
 
+  class CoercionHandler
+    include Sequencescape::Api::BasicErrorHandling
+
+    def initialize(api, owner)
+      @api, @owner = api, owner
+    end
+
+    attr_reader :api
+    delegate :new, :to => :@owner
+    private :api, :new
+
+    def success(json)
+      new(api, json, true)
+    end
+  end
+
+  # Coerces the current object instance to another class.
+  def coerce_to(klazz)
+    api.read_uuid(self.uuid, CoercionHandler.new(api, klazz))
+  end
+
   def as_json(options = nil)
     options = { :action => :create, :root => true }.merge(options || {})
     send(:"as_json_for_#{options[:action]}", options)
@@ -34,6 +55,7 @@ module Sequencescape::Api::Resource::Json
     if must_output_full_json?(options)
       json = { }
       json['uuid'] = uuid if options[:uuid] and uuid.present?
+
       json.merge!(attributes_for_json(options))
       json.merge!(associations_for_json(options.merge(:root => false)))
 

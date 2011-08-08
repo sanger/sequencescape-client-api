@@ -15,6 +15,7 @@ class Sequencescape::Api::Resource
   require 'sequencescape-api/resource/attributes'
   require 'sequencescape-api/resource/active_model'
   require 'sequencescape-api/resource/json'
+  require 'sequencescape-api/resource/attribute_groups'
 
   include ActiveModel
   extend Attributes
@@ -22,6 +23,9 @@ class Sequencescape::Api::Resource
   include Modifications
   include ::Sequencescape::Api::ErrorHandling
   include Json
+
+  extend  Groups
+  include Groups::Json
 
   extend Sequencescape::Api::Associations
   extend Sequencescape::Api::Composition

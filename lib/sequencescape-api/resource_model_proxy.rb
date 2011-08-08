@@ -16,6 +16,7 @@ class Sequencescape::Api::ResourceModelProxy
 
   def initialize(api, model, actions)
     @api, @model, @actions = api, model, OpenStruct.new(actions)
+    @model.send(:initialize_class_actions, self)
   end
 
   attr_reader :api, :actions, :model
