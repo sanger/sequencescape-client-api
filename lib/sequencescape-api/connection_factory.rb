@@ -6,8 +6,10 @@ class Sequencescape::Api::ConnectionFactory
   class_inheritable_accessor :default_url
 
   def self.create(options)
-    required_options = [ :cookie ]
-    required_options.push(:url) if self.default_url.blank?
+    required_options = []
+    required_options.push(:cookie) if options[:authorisation].blank?
+    required_options.push(:url)    if self.default_url.blank?
+
     required_options.push(:allow_blank => false)
     options.required!(*required_options) do |missing|
       raise ::Sequencescape::Api::Error, "No #{missing.or_sentence} set"

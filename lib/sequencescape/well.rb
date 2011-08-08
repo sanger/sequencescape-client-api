@@ -1,6 +1,11 @@
-require 'sequencescape-api/resource'
+require 'sequencescape/asset'
+require 'sequencescape/behaviour/receptacle'
+require 'sequencescape/behaviour/state_driven'
 
-class Sequencescape::Well < ::Sequencescape::Api::Resource
+class Sequencescape::Well < ::Sequencescape::Asset
+  include Sequencescape::Behaviour::Receptacle
+  include Sequencescape::Behaviour::StateDriven
+
   belongs_to :plate
 
   attribute_accessor :location

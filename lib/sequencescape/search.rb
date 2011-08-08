@@ -26,8 +26,8 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
   # The response from the server contains the JSON for each of the resources found.  We simply
   # need to be able to create the resources from each of these.
   class MultipleResultHandler
-    def initialize(model)
-      @model = model
+    def initialize(api,model)
+      @api, @model = api, model
     end
 
     def redirection(json, &block)
@@ -35,7 +35,7 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
     end
 
     def new(json)
-      @model.new(json, false)
+      @model.new(@api, json, false)
     end
     private :new
   end
@@ -43,7 +43,7 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
   def self.search_action(name)
     line = __LINE__ + 1
     class_eval(%Q{
-      def #{name}(criteria)
+      def #{name}(criteria = {})
         api.create(actions.#{name}, { 'search' => criteria }, SingleResultHandler.new(api))
       end
     }, __FILE__, line)
@@ -57,7 +57,7 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
   # When performing a search for all records we need to provide the model (as in 'api.plate') 
   # that we expect to be returned.  So there is a limitation at the moment that the results can
   # only belong to the same model hierarchy.
-  def all(model, criteria)
-    api.create(actions.all, { 'search' => criteria }, MultipleResultHandler.new(model))
+  def all(model, criteria = {})
+    api.create(actions.all, { 'search' => criteria }, MultipleResultHandler.new(api, model))
   end
 end
