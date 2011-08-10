@@ -35,7 +35,9 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
     end
 
     def new(json)
-      @model.new(@api, json, false)
+      args = [ json, false ]
+      args.unshift(@api) unless @model.is_a_proxied_model?
+      @model.new(*args)
     end
     private :new
   end

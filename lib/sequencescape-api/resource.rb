@@ -30,4 +30,8 @@ class Sequencescape::Api::Resource
   extend Sequencescape::Api::Associations
   extend Sequencescape::Api::Composition
   extend Sequencescape::Api::Actions
+
+  def self.is_a_proxied_model?
+    false
+  end
 end
