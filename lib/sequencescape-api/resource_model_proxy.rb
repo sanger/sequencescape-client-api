@@ -35,6 +35,10 @@ class Sequencescape::Api::ResourceModelProxy
   end
   protected :method_missing
 
+  def is_a_proxied_model?
+    true
+  end
+
   # Here are some methods that need to be delegated directly.
   delegate :ai, :to => :model
 end
