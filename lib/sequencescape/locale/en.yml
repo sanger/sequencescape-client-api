@@ -26,6 +26,14 @@ en:
           barcode: "Barcode"
           two_dimensional_barcode: "2D Barcode"
 
+        request:
+          request_options: &request_options
+            read_length: "Read length"
+            library_type: "Library type"
+            fragment_size_required:
+              from: "Fragment size (from)"
+              to: "Fragment size (to)"
+
         asset_group:
           name: "Name"
           study:
@@ -90,14 +98,6 @@ en:
           funding_model: "Funding model"
 
           roles: "Roles"
-
-        request:
-          request_options: &request_options
-            read_length: "Read length"
-            library_type: "Library type"
-            fragment_size_required:
-              from: "Fragment size (from)"
-              to: "Fragment size (to)"
 
         sample:
           name: "Name"
