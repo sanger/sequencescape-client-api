@@ -7,5 +7,5 @@ class Sequencescape::TagLayout < ::Sequencescape::Api::Resource
   composed_of :tag_group, :class_name => 'Tag::Group'
 
   attr_reader :direction
-  attr_accessor :substitutions
+  attribute_accessor :substitutions
 end
