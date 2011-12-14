@@ -6,7 +6,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   include Sequencescape::Behaviour::Barcoded
   include Sequencescape::Behaviour::StateDriven
 
-  has_many :wells, :disposition => :inline
+  has_many :wells
   belongs_to :plate_purpose
   composed_of :stock_plate, :class_name => 'Plate'
 
