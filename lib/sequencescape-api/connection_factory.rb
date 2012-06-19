@@ -19,11 +19,12 @@ class Sequencescape::Api::ConnectionFactory
     new(options)
   end
 
-  attr_reader :url, :cookie
-  private :url, :cookie
+  attr_reader :url, :cookie, :read_timeout
+  private :url, :cookie, :read_timeout
 
   def initialize(options)
     @url, @cookie, @authorisation = options[:url], options[:cookie], options[:authorisation]
+    @read_timeout = options[:read_timeout] || 120
   end
   private_class_method :initialize
 
