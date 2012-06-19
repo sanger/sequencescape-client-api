@@ -5,7 +5,7 @@ module Sequencescape::Api::Associations::Base::InstanceMethods
       class_inheritable_reader :default_attributes_if_missing
 
       attr_reader :model
-      delegate :api, :to => :@owner
+      delegate :api, :read_timeout, :to => :@owner
       private :api, :model
     end
   end

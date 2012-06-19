@@ -23,6 +23,7 @@ class Sequencescape::Api::ResourceModelProxy
   private :api, :actions, :model
 
   delegate :nil?, :inspect, :to => :model
+  delegate :read_timeout, :to => :api
 
   has_create_action
 
