@@ -11,9 +11,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   include Sequencescape::Plate::WellStructure
   include Sequencescape::Plate::Pooling
 
-  has_many :wells do
-    include Sequencescape::Api::FinderMethods::Caching
-  end
+  has_many :wells
 
   belongs_to :plate_purpose
   composed_of :stock_plate, :class_name => 'Plate'
