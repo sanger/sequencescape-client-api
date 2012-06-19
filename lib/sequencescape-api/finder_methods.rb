@@ -60,6 +60,13 @@ module Sequencescape::Api::FinderMethods
   end
 end
 
+module Sequencescape::Api::FinderMethods::Caching
+  def all(reload = false)
+    @cached_all = super() if @cached_all.nil? or reload
+    @cached_all
+  end
+end
+
 class Sequencescape::Api::PageOfResults
   include Enumerable
 

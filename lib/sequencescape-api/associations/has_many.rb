@@ -8,6 +8,7 @@ module Sequencescape::Api::Associations::HasMany
 
   class AssociationProxy < ::Sequencescape::Api::Associations::Base
     include ::Sequencescape::Api::FinderMethods
+    include ::Sequencescape::Api::FinderMethods::Caching
     extend  ::Sequencescape::Api::Actions
     include ::Sequencescape::Api::Associations::HasMany::Json
     include ::Sequencescape::Api::Associations::HasMany::Validation

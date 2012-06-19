@@ -27,6 +27,16 @@ class Sequencescape::Api::Resource
   extend  Groups
   include Groups::Json
 
+  def initialize(*args, &block)
+    super
+    after_load
+  end
+
+  def after_load
+    # Does nothing
+  end
+  private :after_load
+
   extend Sequencescape::Api::Associations
   extend Sequencescape::Api::Composition
   extend Sequencescape::Api::Actions
