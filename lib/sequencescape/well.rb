@@ -11,6 +11,6 @@ class Sequencescape::Well < ::Sequencescape::Asset
   attribute_accessor :location, :pool
 
   def pool_id
-    pool['id']
+    pool.nil? ? nil : pool['id']
   end
 end
