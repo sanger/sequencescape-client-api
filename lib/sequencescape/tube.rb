@@ -9,4 +9,6 @@ class Sequencescape::Tube < ::Sequencescape::Asset
   attribute_accessor :closed
   attribute_accessor :concentration, :volume
   attribute_accessor :scanned_in_date, :conversion => :to_time
+
+  belongs_to :purpose, :class_name => 'TubePurpose'
 end
