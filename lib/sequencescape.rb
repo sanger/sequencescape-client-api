@@ -14,6 +14,8 @@ require 'sequencescape/project'
 
 require 'sequencescape/asset'
 require 'sequencescape/asset_group'
+
+require 'sequencescape/tube_purpose'
 require 'sequencescape/library_tube'
 require 'sequencescape/multiplexed_library_tube'
 require 'sequencescape/sample_tube'
@@ -32,6 +34,7 @@ require 'sequencescape/search'
 
 # Pulldown API support
 require 'sequencescape/plate_creation'
+require 'sequencescape/tube_creation'
 require 'sequencescape/state_change'
 require 'sequencescape/transfer_template'
 require 'sequencescape/transfer'
