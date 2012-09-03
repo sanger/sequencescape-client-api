@@ -4,19 +4,6 @@ describe 'Various associations' do
   is_working_as_an_unauthorised_client
 
   context 'has_many' do
-    shared_examples_for 'a paged result' do
-      it 'physically contains 3 items' do
-        subject.map(&:inspect).size.should == 3
-      end
-
-      it 'can be walked in pages' do
-        check = double('check that page gets called at least once')
-        check.should_receive(:called).at_least(1).at_most(3)
-
-        subject.each_page(&check.method(:called))
-      end
-    end
-
     context 'with size included in the JSON' do
       stub_request_from('retrieve-model') { response('model-a-instance') }
 
@@ -85,6 +72,10 @@ describe 'Various associations' do
       subject { resource.model_with_early_data }
 
       its(:name) { should == 'early data from JSON' }
+
+      it 'has grouped data' do
+        subject.group.data.should == 'early group data from JSON'
+      end
 
       context do
         stub_request_and_response('belongs-to-association')

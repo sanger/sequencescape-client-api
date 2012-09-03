@@ -5,6 +5,9 @@ module Unauthorised
     has_many :model_bs
 
     attribute_accessor :name, :data
+    attribute_group :group do
+      attribute_accessor :data
+    end
   end
 
   class ModelB < Sequencescape::Api::Resource

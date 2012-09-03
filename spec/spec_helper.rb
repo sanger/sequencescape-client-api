@@ -5,6 +5,7 @@ require 'sequencescape'
 $:.push(File.expand_path(File.join(File.dirname(__FILE__), 'support')))
 require 'contract_helper'
 require 'namespaces'
+require 'shared_examples'
 
 # Ensure that RSpec mocking is used
 RSpec.configure do |config|
