@@ -19,6 +19,10 @@ module Sequencescape::Api::Resource::Groups
       super
       attribute_groups.values.map(&:clear_changed_attributes)
     end
+
+    def eager_loaded_attribute?(name)
+      super or attribute_groups.key?(name.to_sym)
+    end
   end
 
   module Json

@@ -28,7 +28,10 @@ Content-Type: application/json
       "actions": {
         "read": "http://localhost:3000/BELONGS_TO_UUID"
       },
-      "name": "early data from JSON"
+      "name": "early data from JSON",
+      "group": {
+        "data": "early group data from JSON"
+      }
     }
   }
 }
