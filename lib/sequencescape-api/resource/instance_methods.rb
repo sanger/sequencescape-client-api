@@ -19,7 +19,6 @@ module Sequencescape::Api::Resource::InstanceMethods
   end
 
   def initialize(api, json = nil, wrapped = false)
-    super
     @api, @attributes = api, {}
   end
 end
