@@ -9,3 +9,7 @@ class Sequencescape::Api::Version2 < Sequencescape::Api::Version1
     true
   end
 end
+
+class Sequencescape::Api::Version3 < Sequencescape::Api::Version1
+
+end

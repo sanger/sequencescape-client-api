@@ -1,0 +1,16 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "actions": {
+    "first": "http://localhost:3000/page=1",
+    "next": "http://localhost:3000/page=2",
+    "last": "http://localhost:3000/page=-1",
+    "read": "http://localhost:3000/page=1"
+  },
+  "model_as": [
+    {
+
+    } 
+  ]
+}
