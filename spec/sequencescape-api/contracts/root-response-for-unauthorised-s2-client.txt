@@ -6,23 +6,24 @@ Content-Type: application/json
 
   "model_a": {
     "actions": {
-      "read": "http://localhost:3000/model_a"
+      "read": "http://localhost:3000/model_a",
+      "first": "http://localhost:3000/model_a/page=1",
+      "last": "http://localhost:3000/model_a/page=-1"
     }
   },
   "model_b": {
     "actions": {
-      "read": "http://localhost:3000/model_b"
+      "read": "http://localhost:3000/model_b",
+      "first": "http://localhost:3000/model_b/page=1",
+      "last": "http://localhost:3000/model_b/page=-1"
     }
   },
   "model_c": {
     "actions": {
       "read": "http://localhost:3000/model_c",
-      "create": "http://localhost:3000/model_c/create"
-    }
-  },
-  "pages": {
-    "actions": {
-      "read": "http://localhost:3000/page=1"
+      "create": "http://localhost:3000/model_c/create",
+      "first": "http://localhost:3000/model_c/page=1",
+      "last": "http://localhost:3000/model_c/page=-1"
     }
   }
 }

@@ -85,40 +85,40 @@ describe 'Various associations' do
   end
 end
 
-describe 'Various associations' do
-  is_working_as_an_unauthorised_s2_client
-  
-  context 'with S2 version (revision 3) of the JSON' do
-    stub_request_from('retrieve-model') { response('model-a-s2-instance') }
-
-    subject { api.model_a.find('UUID').model_bs }
-
-    context do
-      stub_request_and_response('s2-results-page-1')
-      stub_request_and_response('s2-results-page-2')
-      stub_request_and_response('s2-results-page-3')
-
-      it_behaves_like 'a paged result'
-    end
-
-    context '#first' do
-      stub_request_and_response('s2-results-page-1')
-
-      it 'only loads the page needed' do
-        subject.first.should_not be_nil
-      end
-    end
-
-    context '#last' do
-      stub_request_and_response('s2-results-page-1')
-      stub_request_from('retrieve-s2-results-page-last') { response('s2-results-page-3') }
-       
-      it 'only loads the pages needed' do
-        subject.last.should_not be_nil
-      end
-    end
-  end
-    
-
-end
+#describe 'Various associations' do
+#  is_working_as_an_unauthorised_s2_client
+#  
+#  context 'with S2 version (revision 3) of the JSON' do
+#    stub_request_from('retrieve-model') { response('model-a-s2-instance') }
+#
+#    subject { api.model_a.find('UUID').model_bs }
+#
+#    context do
+#      stub_request_and_response('s2-results-page-1')
+#      stub_request_and_response('s2-results-page-2')
+#      stub_request_and_response('s2-results-page-3')
+#
+#      it_behaves_like 'a paged result'
+#    end
+#
+#    context '#first' do
+#      stub_request_and_response('s2-results-page-1')
+#
+#      it 'only loads the page needed' do
+#        subject.first.should_not be_nil
+#      end
+#    end
+#
+#    context '#last' do
+#      stub_request_and_response('s2-results-page-1')
+#      stub_request_from('retrieve-s2-results-page-last') { response('s2-results-page-3') }
+#       
+#      it 'only loads the pages needed' do
+#        subject.last.should_not be_nil
+#      end
+#    end
+#  end
+#    
+#
+#end
 

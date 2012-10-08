@@ -3,11 +3,11 @@ Content-Type: application/json
 
 {
   "actions": {
-    "first": "http://localhost:3000/page=1",
-    "previous": "http://localhost:3000/page=1",
-    "next": "http://localhost:3000/page=3",
-    "last": "http://localhost:3000/page=-1",
-    "read": "http://localhost:3000/page=2"
+    "first": "http://localhost:3000/model_a/page=1",
+    "previous": "http://localhost:3000/model_a/page=1",
+    "next": "http://localhost:3000/model_a/page=3",
+    "last": "http://localhost:3000/model_a/page=-1",
+    "read": "http://localhost:3000/model_a/page=2"
   },
   "model_as": [
     {
