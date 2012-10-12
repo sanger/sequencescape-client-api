@@ -83,8 +83,8 @@ module ContractHelper
       stub_request_from("retrieve-#{contract_name}") { response(contract_name) }
     end
 
-    def is_working_as_an_unauthorised_client
-      stub_request_from('retrieve-root-with-an-unauthorised-client') { response('root-response-for-unauthorised-client') }
+    def is_working_as_an_unauthorised_client(returned_response='root-response-for-unauthorised-client')
+      stub_request_from('retrieve-root-with-an-unauthorised-client') { response( returned_response ) }
       let(:api) do
         Sequencescape::Api.new(
           :url => 'http://localhost:3000/', :cookie => 'single-sign-on-cookie',
@@ -92,6 +92,11 @@ module ContractHelper
         )
       end
     end
+
+    def is_working_as_an_unauthorised_s2_client
+      is_working_as_an_unauthorised_client('root-response-for-unauthorised-s2-client')
+    end
+
 
     def is_working_as_an_authorised_client
       stub_request_from('retrieve-root-with-an-authorised-client') { response('root-response-for-authorised-client') }
