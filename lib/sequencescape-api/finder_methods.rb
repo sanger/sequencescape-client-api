@@ -56,7 +56,7 @@ module Sequencescape::Api::FinderMethods
   end
 
   def all
-    api.read(actions.read, AllHandler.new(self))
+    api.read(actions.send(api.capabilities.page_action), AllHandler.new(self))
   end
 end
 
