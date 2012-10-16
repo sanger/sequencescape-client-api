@@ -159,7 +159,7 @@ class Sequencescape::Api::PageOfResults
     end
 
     raise Sequencescape::Api::Error, 'No object json in page!' if json.keys.empty?
-    @actions, @objects = OpenStruct.new(actions), json[json.keys.first].map(&@ctor)
+    @actions, @objects = OpenStruct.new(actions), json[json.keys.first].map{|jsn| @ctor.call(jsn,true) }
   end
   private :update_from_json
 end

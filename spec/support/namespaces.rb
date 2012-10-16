@@ -31,6 +31,20 @@ module Unauthorised
     attribute_writer :write_only
   end
 
+  class ModelD < Sequencescape::Api::Resource
+    has_many :model_es, :disposition => :receptacle_inline
+  end
+
+  class ModelE < Sequencescape::Api::Resource
+    belongs_to :model_d
+    has_many :aliquots, :disposition => :inline
+    attribute_accessor :location
+  end
+
+  class Aliquot < Sequencescape::Api::Resource
+    belongs_to :model_e
+  end
+
   class Page < Sequencescape::Api::Resource
   end
 

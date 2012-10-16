@@ -93,11 +93,6 @@ module ContractHelper
       end
     end
 
-    def is_working_as_an_unauthorised_s2_client
-      is_working_as_an_unauthorised_client('root-response-for-unauthorised-s2-client')
-    end
-
-
     def is_working_as_an_authorised_client
       stub_request_from('retrieve-root-with-an-authorised-client') { response('root-response-for-authorised-client') }
 

@@ -11,7 +11,9 @@ Content-Type: application/json
 
     "model_bs": {
       "actions": {
-        "read": "http://localhost:3000/pages/1"
+      	"first": "http://localhost:3000/model_a/page=1",
+        "read": "http://localhost:3000/model_a/page=1",
+        "last": "http://localhost:3000/model_a/page=-1"
       },
       "size": 3
     }

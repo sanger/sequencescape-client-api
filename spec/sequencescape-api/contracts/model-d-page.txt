@@ -1,0 +1,23 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "actions": {
+    "first": "http://localhost:3000/model_d/page=1",
+    "next": "http://localhost:3000/model_d/page=2",
+    "last": "http://localhost:3000/model_d/page=-1",
+    "read": "http://localhost:3000/model_d/page=1"
+  },
+  "size": 1,
+  "model_ds": [
+	{
+	  "model_d": {
+	    "actions": {
+	      "read": "http://localhost:3000/UUID",
+	      "update": "http://localhost:3000/UUID"
+	    },
+	    "model_es": {"A1":[{}, {}],"A2":[{}],"A3":[{}]}
+	  }
+	}
+  ]
+}

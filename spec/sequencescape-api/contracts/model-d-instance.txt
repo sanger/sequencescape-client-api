@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "model_d": {
+    "actions": {
+      "read": "http://localhost:3000/UUID",
+      "update": "http://localhost:3000/UUID"
+     },
+     "model_es": {"A1":[{}, {}],"A2":[{}],"A3":[{}]}
+  }
+}
+
