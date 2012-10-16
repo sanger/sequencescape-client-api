@@ -8,6 +8,7 @@ Content-Type: application/json
      "last": "http://localhost:3000/model_a/page=-1",
      "read": "http://localhost:3000/model_a/page=3"
   },
+  "size": 3,
   "model_as": [
     {
 

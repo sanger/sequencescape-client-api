@@ -11,7 +11,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   include Sequencescape::Plate::WellStructure
   include Sequencescape::Plate::Pooling
 
-  has_many :wells
+  has_many :wells, :disposition => :receptacle_inline
 
   belongs_to :plate_purpose
   composed_of :stock_plate, :class_name => 'Plate'

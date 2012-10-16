@@ -12,15 +12,15 @@ describe 'Various associations' do
       its(:size) { should == 3 }
 
       context do
-        stub_request_and_response('results-page-1')
-        stub_request_and_response('results-page-2')
-        stub_request_and_response('results-page-3')
+        stub_request_and_response('s2-results-page-1')
+        stub_request_and_response('s2-results-page-2')
+        stub_request_and_response('s2-results-page-3')
 
         it_behaves_like 'a paged result'
       end
 
       context '#first' do
-        stub_request_and_response('results-page-1')
+        stub_request_and_response('s2-results-page-1')
 
         it 'only loads the page needed' do
           subject.first.should_not be_nil
@@ -28,8 +28,8 @@ describe 'Various associations' do
       end
 
       context '#last' do
-        stub_request_and_response('results-page-1')
-        stub_request_and_response('results-page-3')
+        stub_request_and_response('s2-results-page-1')
+        stub_request_from('retrieve-s2-results-page-last') { response('s2-results-page-3') }
 
         it 'only loads the pages needed' do
           subject.last.should_not be_nil
@@ -46,6 +46,35 @@ describe 'Various associations' do
 
       it_behaves_like 'a paged result'
     end
+
+    context ':disposition => :receptacle_inline' do
+      stub_request_from('retrieve-model') { response('model-d-instance') }
+
+      subject { api.model_d.find('UUID').model_es }
+
+      its(:size) { should == 3 }
+
+      it 'should behave like a receptacle' do
+        subject.first.location.should eq("A1")
+        subject.first.aliquots.size.should == 2
+        subject.should respond_to(:each)
+      end
+    end
+
+    context ':disposition => :receptacle_inline via page' do
+          stub_request_from('retrieve-model-page') { response('model-d-page') }
+          #stub_request_from('retrieve-model') { response('model-d-instance') }
+
+          subject { api.model_d.first.model_es }
+
+          its(:size) { should == 3 }
+
+          it 'should behave like a receptacle' do
+            subject.first.location.should eq("A1")
+            subject.first.aliquots.size.should == 2
+            subject.should respond_to(:each)
+          end
+        end
   end
 
   context 'belongs_to' do
@@ -84,41 +113,3 @@ describe 'Various associations' do
     end
   end
 end
-
-#describe 'Various associations' do
-#  is_working_as_an_unauthorised_s2_client
-#  
-#  context 'with S2 version (revision 3) of the JSON' do
-#    stub_request_from('retrieve-model') { response('model-a-s2-instance') }
-#
-#    subject { api.model_a.find('UUID').model_bs }
-#
-#    context do
-#      stub_request_and_response('s2-results-page-1')
-#      stub_request_and_response('s2-results-page-2')
-#      stub_request_and_response('s2-results-page-3')
-#
-#      it_behaves_like 'a paged result'
-#    end
-#
-#    context '#first' do
-#      stub_request_and_response('s2-results-page-1')
-#
-#      it 'only loads the page needed' do
-#        subject.first.should_not be_nil
-#      end
-#    end
-#
-#    context '#last' do
-#      stub_request_and_response('s2-results-page-1')
-#      stub_request_from('retrieve-s2-results-page-last') { response('s2-results-page-3') }
-#       
-#      it 'only loads the pages needed' do
-#        subject.last.should_not be_nil
-#      end
-#    end
-#  end
-#    
-#
-#end
-

@@ -5,6 +5,7 @@ require 'sequencescape-api/actions'
 module Sequencescape::Api::Associations::HasMany
   require 'sequencescape-api/associations/has_many/json'
   require 'sequencescape-api/associations/has_many/validation'
+  require 'sequencescape-api/associations/has_many/shared_inline'
 
   class AssociationProxy < ::Sequencescape::Api::Associations::Base
     include ::Sequencescape::Api::FinderMethods
@@ -25,12 +26,32 @@ module Sequencescape::Api::Associations::HasMany
     end
   end
 
+  class ReceptacleInlineAssociationProxy
+    include Enumerable
+    include ::Sequencescape::Api::FinderMethods::Delegation
+    include ::Sequencescape::Api::Associations::Base::InstanceMethods
+    include ::Sequencescape::Api::Associations::HasMany::Json
+    include ::Sequencescape::Api::Associations::HasMany::Validation
+    include ::Sequencescape::Api::Associations::HasMany::SharedInline
+
+    def initialize(owner, json = nil)
+      super
+      @objects =
+        case
+          when @attributes.is_a?(Hash) then @attributes.map { |location, json| new({'location' => location, 'aliquots' => json }) }
+        else raise StandardError, "Cannot handle has_many JSON: #{json.inspect}"
+        end
+    end
+
+  end
+
   class InlineAssociationProxy 
     include Enumerable
     include ::Sequencescape::Api::FinderMethods::Delegation
     include ::Sequencescape::Api::Associations::Base::InstanceMethods
     include ::Sequencescape::Api::Associations::HasMany::Json
     include ::Sequencescape::Api::Associations::HasMany::Validation
+    include ::Sequencescape::Api::Associations::HasMany::SharedInline
 
     def initialize(owner, json = nil)
       super
@@ -41,15 +62,6 @@ module Sequencescape::Api::Associations::HasMany
         else raise StandardError, "Cannot handle has_many JSON: #{json.inspect}"
         end
     end
-
-    def update_from_json(json)
-      case
-      when json.is_a?(Array) then @objects = json.map(&method(:new))
-      when json.is_a?(Hash)  then update_objects_from_json(json)
-      else raise StandardError, "Cannot handle has_many JSON: #{json.inspect}"
-      end
-    end
-    private :update_from_json
 
     def update_objects_from_json(json)
       all.each do |object|
@@ -62,23 +74,6 @@ module Sequencescape::Api::Associations::HasMany
       @objects.detect { |o| o.uuid == uuid }
     end
 
-    def all
-      @objects
-    end
-
-    def each_page(&block)
-      yield(@objects)
-    end
-
-    def new(json, &block)
-      super(json, false, &block)
-    end
-    private :new
-
-    # We are changed if any of our objects have been changed.
-    def changed?
-      @objects.any?(&:changed?)
-    end
   end
 
   def has_many(association, options = {}, &block)
@@ -87,6 +82,7 @@ module Sequencescape::Api::Associations::HasMany
     proxy = Class.new(
       case options[:disposition].try(:to_sym)
       when :inline then InlineAssociationProxy
+      when :receptacle_inline then ReceptacleInlineAssociationProxy
       else AssociationProxy
       end
     )

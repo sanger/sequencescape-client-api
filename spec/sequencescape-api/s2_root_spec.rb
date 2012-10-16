@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'Retrieving the root S2 URL' do
   context 'with an unauthorised S2 client' do
-    is_working_as_an_unauthorised_s2_client
+    is_working_as_an_unauthorised_client
 
     context "with a specified namespace" do
       context do
