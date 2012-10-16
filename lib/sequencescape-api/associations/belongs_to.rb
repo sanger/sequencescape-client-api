@@ -73,6 +73,10 @@ module Sequencescape::Api::Associations::BelongsTo
     include Sequencescape::Api::Associations::BelongsTo::CommonBehaviour
   end
 
+  class ReceptacleInlineAssociationProxy < InlineAssociationProxy
+
+  end
+
   class AssociationProxy < Sequencescape::Api::Associations::Base
     include Sequencescape::Api::Associations::BelongsTo::CommonBehaviour
 
@@ -99,6 +103,7 @@ module Sequencescape::Api::Associations::BelongsTo
     proxy = Class.new(
       case options[:disposition].try(:to_sym)
       when :inline then InlineAssociationProxy
+      when :receptacle_inline then ReceptacleInlineAssociationProxy
       else AssociationProxy
       end
     )

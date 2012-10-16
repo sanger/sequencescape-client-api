@@ -2,27 +2,36 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "revision": 2,
+  "revision": 3,
 
   "model_a": {
     "actions": {
-      "read": "http://localhost:3000/model_a"
+      "read": "http://localhost:3000/model_a",
+      "first": "http://localhost:3000/model_a/page=1",
+      "last": "http://localhost:3000/model_a/page=-1"
     }
   },
   "model_b": {
     "actions": {
-      "read": "http://localhost:3000/model_b"
+      "read": "http://localhost:3000/model_b",
+      "first": "http://localhost:3000/model_b/page=1",
+      "last": "http://localhost:3000/model_b/page=-1"
     }
   },
   "model_c": {
     "actions": {
       "read": "http://localhost:3000/model_c",
-      "create": "http://localhost:3000/model_c/create"
+      "create": "http://localhost:3000/model_c/create",
+      "first": "http://localhost:3000/model_c/page=1",
+      "last": "http://localhost:3000/model_c/page=-1"
     }
   },
-  "pages": {
+  "model_d": {
     "actions": {
-      "read": "http://localhost:3000/pages/1"
+      "read": "http://localhost:3000/model_d",
+      "create": "http://localhost:3000/model_d/create",
+      "first": "http://localhost:3000/model_d/page=1",
+      "last": "http://localhost:3000/model_d/page=-1"
     }
   }
 }

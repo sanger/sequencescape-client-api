@@ -14,7 +14,7 @@ class Sequencescape::Api::Version2 < Sequencescape::Api::Version1
   end
 end
 
-class Sequencescape::Api::Version3 < Sequencescape::Api::Version1
+class Sequencescape::Api::Version3 < Sequencescape::Api::Version2
   def page_action
       :first
     end

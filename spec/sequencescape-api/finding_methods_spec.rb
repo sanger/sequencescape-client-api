@@ -24,11 +24,11 @@ end
 describe 'Finding resource instances' do
   is_working_as_an_unauthorised_client
 
-  stub_request_and_response('results-page-1')
-  stub_request_and_response('results-page-2')
-  stub_request_and_response('results-page-3')
+  stub_request_and_response('s2-results-page-1')
+  stub_request_and_response('s2-results-page-2')
+  stub_request_and_response('s2-results-page-3')
 
-  subject { api.page.all }
+  subject { api.model_a.all }
 
   it_behaves_like 'a paged result'
 end

@@ -3,10 +3,10 @@ Content-Type: application/json
 
 {
   "actions": {
-    "first": "http://localhost:3000/pages/1",
-    "next": "http://localhost:3000/pages/2",
-    "last": "http://localhost:3000/pages/3",
-    "read": "http://localhost:3000/pages/1"
+    "first": "http://localhost:3000/pages/page=1",
+    "next": "http://localhost:3000/pages/page=2",
+    "last": "http://localhost:3000/pages/page=-1",
+    "read": "http://localhost:3000/pages/page=1"
   },
   "size": 3,
   "model_as": [
