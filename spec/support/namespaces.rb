@@ -33,6 +33,7 @@ module Unauthorised
 
   class ModelD < Sequencescape::Api::Resource
     has_many :model_es, :disposition => :receptacle_inline
+    include Sequencescape::Api::Resource::Attributes::SizeCalculator
   end
 
   class ModelE < Sequencescape::Api::Resource
