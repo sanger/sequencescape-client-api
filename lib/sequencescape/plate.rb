@@ -10,6 +10,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   include Sequencescape::Behaviour::StateDriven
   include Sequencescape::Plate::WellStructure
   include Sequencescape::Plate::Pooling
+  include Sequencescape::Api::Resource::Attributes::SizeCalculator
 
   has_many :wells, :disposition => :receptacle_inline
 
@@ -20,5 +21,5 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   has_many :transfers_to_tubes, :class_name => 'Transfer'
   belongs_to :creation_transfer, :class_name => 'Transfer'
 
-  attribute_accessor :size, :iteration, :pools
+  attribute_accessor :iteration, :pools
 end

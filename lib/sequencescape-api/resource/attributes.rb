@@ -20,6 +20,16 @@ module Sequencescape::Api::Resource::Attributes
     end
   end
 
+  module SizeCalculator
+    def self.included(base)
+      base.class_eval { attribute_accessor :dimension }
+    end
+
+    def size
+      dimension["row_number"]*dimension["column_number"]
+    end
+  end
+
   def generate_attribute_reader(*names)
     options    = names.extract_options!
     conversion = options[:conversion].blank? ? nil : "try(#{options[:conversion].to_sym.inspect})"
