@@ -26,7 +26,7 @@ module Sequencescape::Api::Resource::Attributes
     end
 
     def size
-      dimension["row_number"]*dimension["column_number"]
+      dimension["number_of_rows"]*dimension["number_of_columns"]
     end
   end
 
