@@ -7,7 +7,7 @@ Content-Type: application/json
       "read": "http://localhost:3000/UUID",
       "update": "http://localhost:3000/UUID"
      },
-     "dimension": {"row_number":8, "column_number":12},
+     "dimension": {"number_of_rows":8, "number_of_columns":12},
      "model_es": {"A1":[{}, {}],"A2":[{}],"A3":[{}]}
   }
 }
