@@ -22,11 +22,11 @@ module Sequencescape::Api::Resource::Attributes
 
   module SizeCalculator
     def self.included(base)
-      base.class_eval { attribute_accessor :dimension }
+      base.class_eval { attribute_accessor :number_of_rows, :number_of_columns}
     end
 
     def size
-      dimension["number_of_rows"]*dimension["number_of_columns"]
+      number_of_rows*number_of_columns
     end
   end
 
