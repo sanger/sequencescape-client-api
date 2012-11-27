@@ -32,9 +32,8 @@ class Sequencescape::Api
     Lims::Api::PlateCreation.new(self)
   end
 
-  def transfer
-    plate_transfer
-#    Lims::Api::PlateTransfer.new(self)
+  def transfer_template
+    StampTemplate.new(self)
   end
 
   def method_missing(name, *args, &block)
