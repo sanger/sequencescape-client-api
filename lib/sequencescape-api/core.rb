@@ -28,6 +28,14 @@ class Sequencescape::Api
     super || @models.keys.include?(name.to_s)
   end
 
+  def plate_creation(*args)
+    Lims::Api::PlateCreation.new(self)
+  end
+
+  def transfer_template
+    StampTemplate.new(self)
+  end
+
   def method_missing(name, *args, &block)
     return super unless @models.keys.include?(name.to_s)
     ResourceModelProxy.new(self, model(name), @models[name.to_s])

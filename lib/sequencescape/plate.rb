@@ -22,4 +22,8 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   belongs_to :creation_transfer, :class_name => 'Transfer'
 
   attribute_accessor :iteration, :pools
+
+  def child
+    self
+  end
 end
