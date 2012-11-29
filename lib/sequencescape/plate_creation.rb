@@ -15,10 +15,10 @@ module Lims
       end
 
       def order_uuid(plate_uuid)
-        create_search = @api.create_search.create!(
-          :model => "order",
-          :description => "search order from parent plate uuid",
-          :criteria => {:item => {:uuid => plate_uuid}})
+        #create_search = @api.create_search.create!(
+        #  :model => "order",
+        #  :description => "search order from parent plate uuid",
+        #  :criteria => {:item => {:uuid => plate_uuid}})
 
         Settings.temp["Order uuid"]
       end
