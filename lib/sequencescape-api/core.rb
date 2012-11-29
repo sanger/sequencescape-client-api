@@ -36,6 +36,10 @@ class Sequencescape::Api
     StampTemplate.new(self)
   end
 
+  def state_change(*args)
+    Lims::Api::StateChange.new(self)
+  end
+
   def method_missing(name, *args, &block)
     return super unless @models.keys.include?(name.to_s)
     ResourceModelProxy.new(self, model(name), @models[name.to_s])
