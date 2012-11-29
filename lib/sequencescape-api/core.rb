@@ -32,6 +32,10 @@ class Sequencescape::Api
     Lims::Api::PlateCreation.new(self)
   end
 
+  def state_change(*args)
+    Lims::Api::StateChange.new(self)
+  end
+
   def transfer
     plate_transfer
 #    Lims::Api::PlateTransfer.new(self)

@@ -33,6 +33,9 @@ require 'sequencescape/submission_template'
 require 'sequencescape/search'
 
 # Pulldown API support
+require 'sequencescape/order'
+require 'sequencescape/create_search'
+require 'sequencescape/update_order'
 require 'sequencescape/plate_creation'
 require 'sequencescape/tube_creation'
 require 'sequencescape/state_change'
