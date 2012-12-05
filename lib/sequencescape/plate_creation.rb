@@ -26,10 +26,12 @@ module Lims
       def create!(attributes = {})
         response = @api.plate.create!({:number_of_rows => 8, :number_of_columns => 12}.merge(attributes))
 
+        # Save the plate as an order item
         uuid = response.child.uuid
+        role = attributes[:child_purpose]
         order = @api.update_order.create!(
           :order_uuid => order_uuid(attributes[:parent]), 
-          :items => {uuid => {:uuid => uuid}}
+          :items => {role => {:uuid => uuid}}
         )
 
         response
