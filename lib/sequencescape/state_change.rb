@@ -29,9 +29,12 @@ module Lims::Api
     end
 
     def create!(attributes = {})
+      plate = @api.plate.find(attributes[:target])
+      item_role = plate.plate_purpose.uuid
+
       @api.update_order.create!(
         :order_uuid => order_uuid,
-        :items => {attributes[:target] => {
+        :items => {item_role => {
           :event => s2_event(attributes[:target_state]), 
           :uuid => attributes[:target]}}
       )
