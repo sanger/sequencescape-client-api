@@ -27,3 +27,10 @@ class Sequencescape::Plate < ::Sequencescape::Asset
     self
   end
 end
+
+class Sequencescape::Plate::CreationTransferBelongsToProxy
+  def transfers
+    order = api.order.find(Settings.temp["Order uuid"])
+    Hash[order.parameters["sequencing_pool"].map { |well| [well, "A1"] }]
+  end
+end
