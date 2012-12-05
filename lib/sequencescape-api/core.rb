@@ -33,7 +33,7 @@ class Sequencescape::Api
   end
 
   def transfer_template
-    StampTemplate.new(self)
+    Lims::Api::TransferTemplate.new(self)
   end
 
   def state_change(*args)
