@@ -9,6 +9,7 @@ class Sequencescape::Tube < ::Sequencescape::Asset
   attribute_accessor :closed
   attribute_accessor :concentration, :volume
   attribute_accessor :scanned_in_date, :conversion => :to_time
+  attribute_accessor :state, :prefix, :number, :type, :ean13
 
   belongs_to :purpose, :class_name => 'TubePurpose'
   belongs_to :stock_plate, :class_name => 'Plate'

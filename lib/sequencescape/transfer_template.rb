@@ -10,6 +10,7 @@ end
 
 module Lims::Api
   class TransferTemplate
+
     def initialize(api)
       @api = api
       init_transfer_map
@@ -42,10 +43,32 @@ module Lims::Api
       )
     end
 
+    def transfer_wells_to_mx_tubes
+      order_uuid = Settings.temp["Order uuid"]
+      order = @api.order.find(order_uuid)
+      #TODO ke fix this to get the child purpose?
+      tube_uuid = order.items["MX tube"]["uuid"]
+
+      @transfer_map["A1"] = tube_uuid
+
+      # Update order with the state
+      @api.update_order.create!(
+        :order_uuid => order_uuid,
+        :state => {"A1" => "MX tube"}
+      )
+    end
+
     def find(uuid)
       case uuid
-      when "transfer_templates_1_12" then stamp_transfer
-      when "pool_transfer" then pool_transfer
+      when "transfer_templates_1_12" then
+        stamp_transfer
+        @create_transfer = create_for_transfer_plates
+      when "pool_transfer" then
+        pool_transfer
+        @create_transfer = create_for_transfer_plates
+      when "transfer_wells_to_mx_tubes" then
+        transfer_wells_to_mx_tubes
+        @create_transfer = create_for_wells_to_tubes
       end
       self
     end
@@ -55,13 +78,33 @@ module Lims::Api
       OpenStruct.new(:transfers => @transfer_map)
     end
 
+    def create_for_transfer_plates
+      lambda { |attributes|
+        @api.plate_transfer.create!({
+          :source_uuid => attributes[:source],
+          :target_uuid => attributes[:destination],
+          :transfer_map => @transfer_map
+        })
+      }
+    end
+
+    def create_for_wells_to_tubes
+      lambda { |attributes|
+        @api.transfer_wells_to_tube.create!({
+          :plate_uuid => attributes[:source],
+          :well_to_tube_map => @transfer_map
+        })
+      }
+    end
+
     def create!(attributes)
       #TODO ke4 remove the '_uuid endings'
-      @api.plate_transfer.create!({
-        :source_uuid => attributes[:source],
-        :target_uuid => attributes[:destination],
-        :transfer_map => @transfer_map
-      })
+#      @api.plate_transfer.create!({
+#        :source_uuid => attributes[:source],
+#        :target_uuid => attributes[:destination],
+#        :transfer_map => @transfer_map
+#      })
+      @create_transfer.call(attributes)
     end
   end
 end
