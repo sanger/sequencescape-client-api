@@ -32,7 +32,6 @@ class Sequencescape::Plate < ::Sequencescape::Asset
     order = api.order.find(Settings.temp["Order uuid"])
     tube_uuid = order.items["MX tube"]["uuid"]
 
-    #[OpenStruct.new(:uuid => tube_uuid)]
     [api.tube.find(tube_uuid)]
   end
 end
@@ -71,13 +70,7 @@ module ::Pulldown
     has_many :transfers_to_tubes, :class_name => 'PooledPlate::Transfer'
 
     def well_to_tube_transfers
-#      debugger
-#      transfers_to_tubes.first.transfers
-      {"A1" => api.tube.find('af7d4b90-2112-0130-7567-406c8f37cea7')
-#        OpenStruct.new(:uuid => 'af7d4b90-2112-0130-7567-406c8f37cea7',
-#        :state => 'done',
-#        :barcode => OpenStruct.new(:prefix => 'pr', :number => 12, :ean13 => '373', :type => "BType"),
-#        :aliquots => [9])
+      {"A1" => tubes.first
       }
     end
 
@@ -89,13 +82,6 @@ module ::Pulldown
 
     # Well locations ordered by columns.
     WELLS_IN_COLUMN_MAJOR_ORDER = (1..12).inject([]) { |a,c| a.concat(('A'..'H').map { |r| "#{r}#{c}" }) ; a }
-
-    # Returns the tubes that an instance of this plate has been transferred into.
-#      def tubes
-#        debugger
-#        return [] unless has_transfers_to_tubes?
-#        WELLS_IN_COLUMN_MAJOR_ORDER.map(&well_to_tube_transfers.method(:[])).compact
-#      end
 
     def tubes_and_sources
       return [] unless has_transfers_to_tubes?
@@ -111,29 +97,3 @@ module ::Pulldown
     end
   end
 end
-
-#module Pulldown
-#  class Plate
-#    def coerce
-#      self
-#    endc
-#  end
-#end
-#    def new(api, json, success)
-#      debugger
-#      @api, @owner, @success = api, owner, success
-#    end
-#
-#    class TransfersToTubesHasManyProxy
-#      def first
-#        self
-#      end
-#
-#      def transfers
-#        debugger
-#        order = api.order.find(Settings.temp["Order uuid"])
-#          Hash["A1" => order.targets["MX tube"]]
-#      end
-#    end
-#  end
-#end
