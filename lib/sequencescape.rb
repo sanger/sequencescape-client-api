@@ -33,6 +33,8 @@ require 'sequencescape/submission_template'
 require 'sequencescape/search'
 
 # Pulldown API support
+require 'sequencescape/tag_wells'
+require 'sequencescape/oligo'
 require 'sequencescape/order'
 require 'sequencescape/create_search'
 require 'sequencescape/update_order'

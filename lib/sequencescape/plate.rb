@@ -71,14 +71,7 @@ module ::Pulldown
     has_many :transfers_to_tubes, :class_name => 'PooledPlate::Transfer'
 
     def well_to_tube_transfers
-#      debugger
-#      transfers_to_tubes.first.transfers
-      {"A1" => api.tube.find('af7d4b90-2112-0130-7567-406c8f37cea7')
-#        OpenStruct.new(:uuid => 'af7d4b90-2112-0130-7567-406c8f37cea7',
-#        :state => 'done',
-#        :barcode => OpenStruct.new(:prefix => 'pr', :number => 12, :ean13 => '373', :type => "BType"),
-#        :aliquots => [9])
-      }
+      {"A1" => tubes.first} 
     end
 
     # We know that if there are any transfers with this plate as a source then they are into
