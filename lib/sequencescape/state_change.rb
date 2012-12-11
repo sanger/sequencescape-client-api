@@ -29,9 +29,14 @@ module Lims::Api
     end
 
     def create!(attributes = {})
+      #TODO ke4 clean up it later
       plate = @api.plate.find(attributes[:target])
       item_role = plate.plate_purpose.uuid
 
+      if item_role.nil?
+        tube = @api.tube.find(attributes[:target])
+        item_role = tube.purpose.uuid
+      end
       @api.update_order.create!(
         :order_uuid => order_uuid,
         :items => {item_role => {
