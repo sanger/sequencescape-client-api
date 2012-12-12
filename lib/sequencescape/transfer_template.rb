@@ -98,12 +98,6 @@ module Lims::Api
     end
 
     def create!(attributes)
-      #TODO ke4 remove the '_uuid endings'
-#      @api.plate_transfer.create!({
-#        :source_uuid => attributes[:source],
-#        :target_uuid => attributes[:destination],
-#        :transfer_map => @transfer_map
-#      })
       @create_transfer.call(attributes)
     end
   end

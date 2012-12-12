@@ -29,6 +29,7 @@ module Lims::Api
     end
 
     def create!(attributes = {})
+      #TODO ke4 clean up it later
       plate = @api.plate.find(attributes[:target])
       item_role = plate.plate_purpose.uuid
 
