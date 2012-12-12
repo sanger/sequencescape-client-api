@@ -32,7 +32,7 @@ module Lims::Api
     end
 
     def create!(attributes)
-      @api.tag_well.create!({
+      @api.tag_wells.create!({
         :plate_uuid => attributes[:plate],
         :well_to_tag_map => wells_to_tag_map(attributes[:plate]) 
       })
