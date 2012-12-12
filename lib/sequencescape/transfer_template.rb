@@ -90,7 +90,7 @@ module Lims::Api
 
     def create_for_wells_to_tubes
       lambda { |attributes|
-        @api.transfer_wells_to_tube.create!({
+        @api.transfer_wells_to_tubes.create!({
           :plate_uuid => attributes[:source],
           :well_to_tube_map => @transfer_map
         })
