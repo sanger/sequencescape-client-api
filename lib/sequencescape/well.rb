@@ -13,4 +13,12 @@ class Sequencescape::Well < ::Sequencescape::Asset
   def pool_id
     pool.nil? ? nil : pool['id']
   end
+
+  def state
+    begin
+    attributes["pool"]["wells"][location].first["state"]
+    rescue 
+    nil
+    end
+  end
 end
