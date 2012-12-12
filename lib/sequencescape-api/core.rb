@@ -40,6 +40,16 @@ class Sequencescape::Api
     Lims::Api::StateChange.new(self)
   end
 
+  def tag_layout_template(*args)
+    name = :tag_layout_template
+    @original_tag_layout_template = ResourceModelProxy.new(self, model(name), @models[name.to_s])
+    Lims::Api::TagWells.new(self)
+  end
+
+  def original_tag_layout_template
+    @original_tag_layout_template
+  end
+
   def method_missing(name, *args, &block)
     return super unless @models.keys.include?(name.to_s)
     ResourceModelProxy.new(self, model(name), @models[name.to_s])
