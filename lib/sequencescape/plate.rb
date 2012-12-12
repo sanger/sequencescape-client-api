@@ -32,7 +32,6 @@ class Sequencescape::Plate < ::Sequencescape::Asset
     order = api.order.find(Settings.temp["Order uuid"])
     tube_uuid = order.items["MX tube"]["uuid"]
 
-    #[OpenStruct.new(:uuid => tube_uuid)]
     [api.tube.find(tube_uuid)]
   end
 end
