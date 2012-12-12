@@ -1,7 +1,13 @@
-class Sequencescape::Tag
-  include Sequencescape::Api::Composition::Target
+require 'sequencescape-api/resource'
 
-  attribute_accessor :name, :oligo, :group, :identifier
+class Sequencescape::Tag < ::Sequencescape::Api::Resource
+
+  attribute_accessor :name, :oligo, :group
+
+  # TODO fix identifier in Lims-api
+  def identifier
+    1
+  end
 
   class Group
     include Sequencescape::Api::Composition::Target

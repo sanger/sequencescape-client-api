@@ -70,8 +70,7 @@ module ::Pulldown
     has_many :transfers_to_tubes, :class_name => 'PooledPlate::Transfer'
 
     def well_to_tube_transfers
-      {"A1" => tubes.first
-      }
+      {"A1" => tubes.first} 
     end
 
     # We know that if there are any transfers with this plate as a source then they are into
