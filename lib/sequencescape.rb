@@ -34,6 +34,7 @@ require 'sequencescape/search'
 
 # Pulldown API support
 require 'sequencescape/plate_creation'
+require 'sequencescape/pooled_plate_creation'
 require 'sequencescape/tube_creation'
 require 'sequencescape/tube_from_tube_creation'
 require 'sequencescape/specific_tube_creation'
