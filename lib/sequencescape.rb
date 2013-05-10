@@ -13,6 +13,7 @@ require 'sequencescape/study'
 require 'sequencescape/project'
 
 require 'sequencescape/asset'
+require 'sequencescape/barcoded_asset'
 require 'sequencescape/asset_group'
 
 require 'sequencescape/tube_purpose'
