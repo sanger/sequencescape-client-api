@@ -5,11 +5,13 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   require 'sequencescape/behaviour/state_driven'
   require 'sequencescape/plate/well_structure'
   require 'sequencescape/plate/pooling'
+  require 'sequencescape/behaviour/labeled'
 
   include Sequencescape::Behaviour::Barcoded
   include Sequencescape::Behaviour::StateDriven
   include Sequencescape::Plate::WellStructure
   include Sequencescape::Plate::Pooling
+  include Sequencescape::Behaviour::Labeled
 
   has_many :wells
 
@@ -20,7 +22,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   has_many :transfers_to_tubes, :class_name => 'Transfer'
   has_many :creation_transfers, :class_name => 'Transfer'
 
-  attribute_accessor :size, :iteration, :pools, :label_text, :pre_cap_groups
+  attribute_accessor :size, :iteration, :pools, :pre_cap_groups, :location
 
   # Provides backwards compatability
   def creation_transfer
