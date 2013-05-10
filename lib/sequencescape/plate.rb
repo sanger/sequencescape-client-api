@@ -5,13 +5,11 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   require 'sequencescape/behaviour/state_driven'
   require 'sequencescape/plate/well_structure'
   require 'sequencescape/plate/pooling'
-  require 'sequencescape/plate/pre_cap_groups'
 
   include Sequencescape::Behaviour::Barcoded
   include Sequencescape::Behaviour::StateDriven
   include Sequencescape::Plate::WellStructure
   include Sequencescape::Plate::Pooling
-  include Sequencescape::Plate::PreCapGroups
 
   has_many :wells
 
