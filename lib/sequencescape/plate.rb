@@ -6,12 +6,14 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   require 'sequencescape/plate/well_structure'
   require 'sequencescape/plate/pooling'
   require 'sequencescape/behaviour/labeled'
+  require 'sequencescape/behaviour/qced'
 
   include Sequencescape::Behaviour::Barcoded
   include Sequencescape::Behaviour::StateDriven
   include Sequencescape::Plate::WellStructure
   include Sequencescape::Plate::Pooling
   include Sequencescape::Behaviour::Labeled
+  include Sequencescape::Behaviour::Qced
 
   has_many :wells
 

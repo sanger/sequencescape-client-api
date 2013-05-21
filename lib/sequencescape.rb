@@ -26,6 +26,8 @@ require 'sequencescape/plate'
 require 'sequencescape/plate_purpose'
 require 'sequencescape/well'
 
+require 'sequencescape/qc_file'
+
 require 'sequencescape/asset_audit'
 
 require 'sequencescape/submission'
