@@ -10,6 +10,8 @@ class Sequencescape::Tube < ::Sequencescape::Asset
   include Sequencescape::Behaviour::Labeled
   include Sequencescape::Behaviour::Qced
 
+  has_many :requests
+
   attribute_accessor :closed
   attribute_accessor :concentration, :volume
   attribute_accessor :scanned_in_date, :conversion => :to_time
