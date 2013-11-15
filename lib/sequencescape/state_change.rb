@@ -7,4 +7,5 @@ class Sequencescape::StateChange < ::Sequencescape::Api::Resource
   attribute_accessor :target_state
   attribute_accessor :previous_state
   attribute_accessor :reason
+  attribute_accessor :customer_accepts_responsibility
 end
