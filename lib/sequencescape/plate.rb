@@ -24,7 +24,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   has_many :transfers_to_tubes, :class_name => 'Transfer'
   has_many :creation_transfers, :class_name => 'Transfer'
 
-  attribute_accessor :size, :iteration, :pools, :pre_cap_groups, :location
+  attribute_accessor :size, :iteration, :pools, :pre_cap_groups, :location, :priority
 
   # Provides backwards compatability
   def creation_transfer
