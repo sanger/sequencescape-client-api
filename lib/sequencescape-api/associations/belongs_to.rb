@@ -50,8 +50,14 @@ module Sequencescape::Api::Associations::BelongsTo
         @owner = owner
       end
 
-      delegate :new, :loaded, :to => :@owner
-      private :new, :loaded
+      delegate :loaded, :to => :@owner
+      private :loaded
+
+      def new(*args, &block)
+        # TODO: Consider updating
+        @owner.__send__(:new, *args, &block)
+      end
+      private :new
 
       def success(json)
         new(json, true).tap { loaded = true }
@@ -76,7 +82,7 @@ module Sequencescape::Api::Associations::BelongsTo
   class AssociationProxy < Sequencescape::Api::Associations::Base
     include Sequencescape::Api::Associations::BelongsTo::CommonBehaviour
 
-    write_inheritable_attribute(:default_attributes_if_missing, {})
+    cattr_writer(:default_attributes_if_missing, {})
 
     def initialize(*args, &block)
       super

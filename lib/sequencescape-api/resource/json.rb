@@ -23,7 +23,13 @@ module Sequencescape::Api::Resource::Json
     end
 
     attr_reader :api
-    delegate :new, :to => :@owner
+
+    def new(*args, &block)
+      # TODO: Consider updating
+      @owner.__send__(:new, *args, &block)
+    end
+    private :new
+
     private :api, :new
 
     def success(json)

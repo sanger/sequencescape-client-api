@@ -5,8 +5,8 @@ module Sequencescape::Api::Resource::Attributes
   def self.extended(base)
     base.class_eval do
       include InstanceMethods
-      class_inheritable_reader :defined_attributes
-      write_inheritable_attribute(:defined_attributes, Set.new)
+      cattr_reader :defined_attributes
+      cattr_writer(:defined_attributes) { Set.new }
     end
   end
 

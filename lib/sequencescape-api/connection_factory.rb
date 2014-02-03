@@ -3,7 +3,7 @@ require 'uri'
 class Sequencescape::Api::ConnectionFactory
   ConnectionError = Class.new(::Sequencescape::Api::Error)
 
-  class_inheritable_accessor :default_url
+  cattr_accessor :default_url
 
   def self.create(options)
     required_options = []

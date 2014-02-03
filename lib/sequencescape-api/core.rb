@@ -4,7 +4,7 @@ require 'sequencescape-api/connection_factory'
 require 'sequencescape-api/capabilities'
 
 require 'active_support'
-require 'active_support/core_ext/class/inheritable_attributes'
+require 'active_support/core_ext/class'
 
 class Sequencescape::Api
   extend Sequencescape::Api::ConnectionFactory::Helpers

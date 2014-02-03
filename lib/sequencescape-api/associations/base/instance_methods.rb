@@ -1,12 +1,18 @@
 module Sequencescape::Api::Associations::Base::InstanceMethods
   def self.included(base)
     base.class_eval do
-      class_inheritable_accessor :association, :options
-      class_inheritable_reader :default_attributes_if_missing
+      cattr_accessor :association, :options
+      cattr_reader :default_attributes_if_missing
 
       attr_reader :model
-      delegate :api, :read_timeout, :to => :@owner
-      private :api, :model
+      delegate :read_timeout, :to => :@owner
+      private :model
+
+      def api(*args, &block)
+        # TODO: Consider updating
+        @owner.__send__(:api, *args, &block)
+      end
+      private :api
     end
   end
 

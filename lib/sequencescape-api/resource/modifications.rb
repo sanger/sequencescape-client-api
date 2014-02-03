@@ -5,7 +5,10 @@ class Sequencescape::Api::ModifyingHandler
     @owner = owner
   end
 
-  delegate :update_from_json, :to => :@owner
+  def update_from_json(*args, &block)
+    # TODO: Consider updating
+    @owner.__send__(:update_from_json, *args, &block)
+  end
   private :update_from_json
 
   def error(field_and_errors_pair)
@@ -46,7 +49,7 @@ module Sequencescape::Api::Resource::Modifications
 
   def save!(options = nil)
     action = persisted? ? :update : :create
-    modify!({ :action => action }.reverse_merge(options || {}))
+    modify!((options || {}).merge({ :action => action }))
   end
 
   def modify!(options)

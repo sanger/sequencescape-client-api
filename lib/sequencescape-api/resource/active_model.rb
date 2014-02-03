@@ -1,4 +1,5 @@
 require 'active_model/conversion'
+require 'active_model/attribute_methods'
 require 'active_model/dirty'
 
 # Code that is required to support the ActiveModel basic interface.

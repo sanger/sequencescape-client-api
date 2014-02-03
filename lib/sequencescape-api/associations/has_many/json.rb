@@ -1,6 +1,6 @@
 module Sequencescape::Api::Associations::HasMany::Json
   def self.included(base)
-    base.write_inheritable_attribute(:default_attributes_if_missing, [])
+    base.cattr_writer(:default_attributes_if_missing) { [] }
   end
 
   def as_json(options = nil)
