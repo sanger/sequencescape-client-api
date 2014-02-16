@@ -25,7 +25,7 @@ module Sequencescape::Api::Associations::HasMany
     end
   end
 
-  class InlineAssociationProxy 
+  class InlineAssociationProxy
     include Enumerable
     include ::Sequencescape::Api::FinderMethods::Delegation
     include ::Sequencescape::Api::Associations::Base::InstanceMethods
