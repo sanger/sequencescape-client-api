@@ -1,0 +1,9 @@
+POST /UUID/model_bs HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Cookie: WTSISignOn=single-sign-on-cookie
+
+{
+  "model_b": {
+  }
+}

@@ -46,6 +46,15 @@ describe 'Various associations' do
 
       it_behaves_like 'a paged result'
     end
+
+    context 'with create action' do
+      stub_request_from('retrieve-model') { response('model-a-instance') }
+      stub_request_from('create-via-has-many') { response('model-b-instance') }
+
+      subject { api.model_a.find('UUID').model_bs.create!() }
+
+      its(:class) { should == Unauthorised::ModelB }
+    end
   end
 
   context 'belongs_to' do

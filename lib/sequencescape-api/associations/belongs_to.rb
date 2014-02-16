@@ -82,7 +82,7 @@ module Sequencescape::Api::Associations::BelongsTo
   class AssociationProxy < Sequencescape::Api::Associations::Base
     include Sequencescape::Api::Associations::BelongsTo::CommonBehaviour
 
-    cattr_writer(:default_attributes_if_missing, {})
+    default_attributes_if_missing = []
 
     def initialize(*args, &block)
       super

@@ -1,8 +1,8 @@
 module Sequencescape::Api::Associations::Base::InstanceMethods
   def self.included(base)
     base.class_eval do
-      cattr_accessor :association, :options
-      cattr_reader :default_attributes_if_missing
+      class_attribute :association, :options
+      class_attribute :default_attributes_if_missing, :instance_writer => false
 
       attr_reader :model
       delegate :read_timeout, :to => :@owner
