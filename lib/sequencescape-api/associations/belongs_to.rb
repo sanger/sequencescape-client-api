@@ -82,7 +82,7 @@ module Sequencescape::Api::Associations::BelongsTo
   class AssociationProxy < Sequencescape::Api::Associations::Base
     include Sequencescape::Api::Associations::BelongsTo::CommonBehaviour
 
-    default_attributes_if_missing = []
+    default_attributes_if_missing = {}
 
     def initialize(*args, &block)
       super
@@ -97,6 +97,10 @@ module Sequencescape::Api::Associations::BelongsTo
       super
     end
     private :object
+
+    def uuid_only?
+      @object.__send__(:uuid_only?)
+    end
   end
 
   def belongs_to(association, options = {}, &block)
