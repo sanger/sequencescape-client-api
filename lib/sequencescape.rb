@@ -58,6 +58,7 @@ require 'sequencescape/qcable'
 require 'sequencescape/stamp'
 require 'sequencescape/template'
 require 'sequencescape/plate_template'
+require 'sequencescape/qcable_creator'
 
 # Ensure that the I18n stuff has been properly configured
 I18n.config.load_path << File.expand_path(File.join(File.dirname(__FILE__), %w{sequencescape locale en.yml}))
