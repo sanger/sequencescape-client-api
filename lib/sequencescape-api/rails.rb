@@ -32,13 +32,13 @@ module Sequencescape::Api::Rails
     private :api_connection_options
 
     def sequencescape_api_error_handler(exception)
-      Rails.logger.error(exception, exception.backtrace)
+      Rails.logger.error "#{exception}, #{exception.backtrace}"
       raise StandardError, "There is an issue with the API connection to Sequencescape (#{exception.message})"
     end
     private :sequencescape_api_error_handler
 
     def sequencescape_api_unauthenticated_handler(exception)
-      Rails.logger.error(exception, exception.backtrace)
+      Rails.logger.error "#{exception}, #{exception.backtrace}"
       raise StandardError, "You are not authenticated; please visit the WTSI login page"
     end
     private :sequencescape_api_unauthenticated_handler
@@ -47,7 +47,7 @@ module Sequencescape::Api::Rails
   # Including this module into your Rails model indicates that the model is associated with
   # a remote resource.  This then means that your model table needs a string 'uuid' column
   # and that when you perform a save the remote resource will also be saved if it can or
-  # needs to be.  The remote resource is exposed through `remote_resource` which you are 
+  # needs to be.  The remote resource is exposed through `remote_resource` which you are
   # advised to use `delegate` to hand off to.
   module Resourced
     def self.included(base)
