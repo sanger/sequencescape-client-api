@@ -24,7 +24,6 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
 
   def retrieve(url, handler, content_type)
-    puts "Retrive: #{url}"
     perform(:get, url, nil, content_type) do |response|
       case response
       when Net::HTTPSuccess      then response
