@@ -54,13 +54,14 @@ module Sequencescape::Api::Actions
 
     def has_update_action(name, options = {})
       api_method = options[:verb] == :create ? :create : :update
+      skip_json  = options[:skip_json]||false
       action     = options[:action] || :update
 
       line = __LINE__ + 1
       class_eval(%Q{
         def #{name}(body = nil)
           update_from_json(body || {}, false)
-          modify!(:action => #{action.to_sym.inspect}, :http_verb => #{api_method.to_sym.inspect})
+          modify!(:action => #{action.to_sym.inspect}, :http_verb => #{api_method.to_sym.inspect}, :skip_json => #{skip_json})
         end
       }, __FILE__, line)
     end
