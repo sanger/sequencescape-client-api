@@ -53,6 +53,7 @@ module Sequencescape::Api::Resource::Modifications
     raise Sequencescape::Api::Error, "No actions exist" if options[:url].nil? and actions.nil?
 
     action    = options[:action]
+    skip_json = options[:skip_json]||false
     http_verb = options[:http_verb] || options[:action]
     url       = options[:url]
     url     ||= (actions.send(action) or raise Sequencescape::Api::Error, "Cannot perform #{action}")
@@ -61,10 +62,12 @@ module Sequencescape::Api::Resource::Modifications
     self.tap do
       run_validations! or raise Sequencescape::Api::ResourceInvalid, self
 
+      object = skip_json ? {} : self
+
       api.send(
         http_verb,
         url,
-        self,
+        object,
         Sequencescape::Api::ModifyingHandler.new(self)
       )
 
