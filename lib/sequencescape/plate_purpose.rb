@@ -19,4 +19,5 @@ class Sequencescape::PlatePurpose < ::Sequencescape::Api::Resource
   end
 
   attribute_reader :name
+  attribute_accessor :lifespan
 end
