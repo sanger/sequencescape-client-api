@@ -20,7 +20,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   belongs_to :plate_purpose
   composed_of :stock_plate, :class_name => 'Plate'
 
-  has_many :comments
+  #has_many :comments
 
   has_many :source_transfers, :class_name => 'Transfer'
   has_many :transfers_to_tubes, :class_name => 'Transfer'
