@@ -1,6 +1,9 @@
-class Sequencescape::Comment
-  #belongs_to :plate
+require 'sequencescape-api/resource'
 
-  #attribute_accessor :content, :title
+class Sequencescape::Comment
+
+  include Sequencescape::Api::Composition::Target
+
+  attribute_accessor :description, :title
 
 end

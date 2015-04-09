@@ -22,7 +22,7 @@ require 'sequencescape/multiplexed_library_tube'
 require 'sequencescape/sample_tube'
 require 'sequencescape/sample'
 
-#require 'sequencescape/comment'
+require 'sequencescape/comment'
 require 'sequencescape/plate'
 require 'sequencescape/plate_purpose'
 require 'sequencescape/well'
