@@ -18,7 +18,7 @@ class Sequencescape::Api
   end
 
   attr_reader :capabilities
-  delegate :read, :create, :update, :to => :@connection
+  delegate :read, :create, :create_from_file, :update, :retrieve, :to => :@connection
 
   def read_uuid(uuid, handler)
     read(@connection.url_for_uuid(uuid), handler)

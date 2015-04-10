@@ -1,10 +1,16 @@
 require 'sequencescape/asset'
 require 'sequencescape/behaviour/receptacle'
 require 'sequencescape/behaviour/barcoded'
+require 'sequencescape/behaviour/labeled'
+require 'sequencescape/behaviour/qced'
 
 class Sequencescape::Tube < ::Sequencescape::Asset
   include Sequencescape::Behaviour::Receptacle
   include Sequencescape::Behaviour::Barcoded
+  include Sequencescape::Behaviour::Labeled
+  include Sequencescape::Behaviour::Qced
+
+  has_many :requests
 
   attribute_accessor :closed
   attribute_accessor :concentration, :volume

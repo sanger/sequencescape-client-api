@@ -13,6 +13,7 @@ require 'sequencescape/study'
 require 'sequencescape/project'
 
 require 'sequencescape/asset'
+require 'sequencescape/barcoded_asset'
 require 'sequencescape/asset_group'
 
 require 'sequencescape/tube_purpose'
@@ -25,6 +26,8 @@ require 'sequencescape/plate'
 require 'sequencescape/plate_purpose'
 require 'sequencescape/well'
 
+require 'sequencescape/qc_file'
+
 require 'sequencescape/asset_audit'
 
 require 'sequencescape/submission'
@@ -34,10 +37,14 @@ require 'sequencescape/search'
 
 # Pulldown API support
 require 'sequencescape/plate_creation'
+require 'sequencescape/pooled_plate_creation'
 require 'sequencescape/tube_creation'
+require 'sequencescape/tube_from_tube_creation'
+require 'sequencescape/specific_tube_creation'
 require 'sequencescape/state_change'
 require 'sequencescape/transfer_template'
 require 'sequencescape/transfer'
+require 'sequencescape/bulk_transfer'
 require 'sequencescape/tag_layout_template'
 require 'sequencescape/tag_layout'
 require 'sequencescape/bait_library_layout'
