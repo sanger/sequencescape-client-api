@@ -31,7 +31,8 @@ require 'sequencescape/qc_file'
 require 'sequencescape/asset_audit'
 
 require 'sequencescape/submission'
-require 'sequencescape/submission_template'
+require 'sequencescape/order_template'
+require 'sequencescape/order'
 
 require 'sequencescape/search'
 
@@ -46,9 +47,22 @@ require 'sequencescape/transfer_template'
 require 'sequencescape/transfer'
 require 'sequencescape/bulk_transfer'
 require 'sequencescape/tag_layout_template'
+require 'sequencescape/tag_group'
 require 'sequencescape/tag_layout'
 require 'sequencescape/bait_library_layout'
 require 'sequencescape/barcode_printer'
+
+# TagQC support
+require 'sequencescape/lot'
+require 'sequencescape/robot'
+require 'sequencescape/lot_type'
+require 'sequencescape/qcable'
+require 'sequencescape/stamp'
+require 'sequencescape/template'
+require 'sequencescape/plate_template'
+require 'sequencescape/qcable_creator'
+require 'sequencescape/qc_decision'
+require 'sequencescape/plate_conversion'
 
 # Ensure that the I18n stuff has been properly configured
 I18n.config.load_path << File.expand_path(File.join(File.dirname(__FILE__), %w{sequencescape locale en.yml}))

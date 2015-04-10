@@ -1,15 +1,16 @@
 require 'sequencescape-api/resource'
 
 class Sequencescape::Submission < ::Sequencescape::Api::Resource
-  belongs_to :project
-  belongs_to :study
-  has_many   :requests
+  belongs_to :user
+  # TODO: get this working
+  # has_many   :requests
 
-  has_update_action :submit!, :action => 'submit', :verb => :create
+  # TODO: use a has many, but ensure it works
+  attribute_accessor :orders
 
-  attribute_accessor :state
-  attribute_accessor :asset_group_name
-  attribute_accessor :assets
-  attribute_accessor :request_types
-  attribute_accessor :request_options
+  has_update_action :submit!, :action => 'submit', :verb => :create, :skip_json => true
+
+  attribute_reader :state
+  attribute_reader :asset_group_name
+
 end
