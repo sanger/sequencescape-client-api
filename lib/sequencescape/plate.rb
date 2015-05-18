@@ -20,6 +20,22 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   belongs_to :plate_purpose
   composed_of :stock_plate, :class_name => 'Plate'
 
+  module CommentsCreation
+    def create!(attributes = nil)
+      attributes ||= {}
+
+      new({}, false).tap do |comment|
+        api.create(actions.create, { 'comment' => attributes }, Sequencescape::Api::ModifyingHandler.new(comment))
+      end
+    end
+  end
+
+  #has_class_create_action(:create!, :action => :create)
+
+  has_many :comments do
+    include Sequencescape::Plate::CommentsCreation
+  end
+
   has_many :source_transfers, :class_name => 'Transfer'
   has_many :transfers_to_tubes, :class_name => 'Transfer'
   has_many :creation_transfers, :class_name => 'Transfer'
