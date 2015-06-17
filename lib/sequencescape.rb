@@ -32,6 +32,7 @@ require 'sequencescape/qc_file'
 require 'sequencescape/asset_audit'
 
 require 'sequencescape/submission'
+require 'sequencescape/submission_pool'
 require 'sequencescape/order_template'
 require 'sequencescape/order'
 
