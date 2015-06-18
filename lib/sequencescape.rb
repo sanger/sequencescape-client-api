@@ -18,6 +18,7 @@ require 'sequencescape/asset_group'
 
 require 'sequencescape/tube_purpose'
 require 'sequencescape/library_tube'
+require 'sequencescape/stock_multiplexed_library_tube'
 require 'sequencescape/multiplexed_library_tube'
 require 'sequencescape/sample_tube'
 require 'sequencescape/sample'
