@@ -16,6 +16,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   include Sequencescape::Behaviour::Qced
 
   has_many :wells
+  has_many :submission_pools
 
   belongs_to :plate_purpose
   composed_of :stock_plate, :class_name => 'Plate'
