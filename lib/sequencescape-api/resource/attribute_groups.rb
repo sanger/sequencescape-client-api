@@ -27,7 +27,7 @@ module Sequencescape::Api::Resource::Groups
 
   module Json
     def as_json_for_update(options)
-      super.tap { |json| json[json_root].merge!(attribute_group_json(options)) }
+      super.tap { |json| json.fetch(json_root).merge!(attribute_group_json(options)) }
     end
     private :as_json_for_update
   end
