@@ -12,8 +12,6 @@ class Sequencescape::Well < ::Sequencescape::Asset
   attribute_accessor :location, :pool
   attribute_accessor :initial_volume, :measured_volume, :current_volume
 
-  has_update_action :submit!, :action => 'submit', :verb => :create, :skip_json => true
-
   def pool_id
     pool.nil? ? nil : pool['id']
   end

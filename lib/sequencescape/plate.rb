@@ -42,8 +42,6 @@ class Sequencescape::Plate < ::Sequencescape::Asset
 
   has_many :comments do
     include Sequencescape::Plate::CommentsCreation
-    # Horrible hack
-    def update_from_json(json) ; end
   end
 
   has_many :source_transfers, :class_name => 'Transfer'
