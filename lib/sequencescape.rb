@@ -68,6 +68,9 @@ require 'sequencescape/qcable_creator'
 require 'sequencescape/qc_decision'
 require 'sequencescape/plate_conversion'
 
+# Events
+require 'sequencescape/library_event'
+
 # Ensure that the I18n stuff has been properly configured
 I18n.config.load_path << File.expand_path(File.join(File.dirname(__FILE__), %w{sequencescape locale en.yml}))
 
