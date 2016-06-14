@@ -16,5 +16,5 @@ class Sequencescape::LotType < ::Sequencescape::Api::Resource
     include Sequencescape::LotType::LotCreator
   end
 
-  attribute_accessor :name, :template_class
+  attribute_accessor :name, :template_class, :printer_type, :qcable_name
 end
