@@ -28,7 +28,10 @@ module Sequencescape::Api::FinderMethods
       @owner = owner
     end
 
-    delegate :new, :to => :@owner
+    def new(*args, &block)
+      # TODO: Consider updating
+      @owner.__send__(:new, *args, &block)
+    end
     private :new
 
     def success(json)
@@ -47,8 +50,17 @@ module Sequencescape::Api::FinderMethods
       @owner = owner
     end
 
-    delegate :api, :new, :to => :@owner
-    private :api, :new
+    def api(*args, &block)
+      # TODO: Consider updating
+      @owner.__send__(:api, *args, &block)
+    end
+    private :api
+
+    def new(*args, &block)
+      # TODO: Consider updating
+      @owner.__send__(:new, *args, &block)
+    end
+    private :new
 
     def success(json)
       ::Sequencescape::Api::PageOfResults.new(api, json, &method(:new))
@@ -125,8 +137,11 @@ class Sequencescape::Api::PageOfResults
     def initialize(owner)
       @owner = owner
     end
-    
-    delegate :update_from_json, :to => :@owner
+
+    def update_from_json(*args, &block)
+      # TODO: Consider updating
+      @owner.__send__(:update_from_json, *args, &block)
+    end
     private :update_from_json
 
     def success(json)

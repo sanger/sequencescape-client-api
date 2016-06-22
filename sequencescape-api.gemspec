@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency('activesupport', '~> 3.0.0')
-  s.add_dependency('activemodel', '~> 3.0.0')
+  s.add_dependency('activesupport', '~> 4')
+  s.add_dependency('activemodel', '~> 4')
   s.add_dependency('i18n')
   s.add_dependency('yajl-ruby', '~> 1.1.0')
 

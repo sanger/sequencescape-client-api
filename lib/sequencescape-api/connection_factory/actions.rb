@@ -16,17 +16,6 @@ BEGIN {
   end
 }
 
-# Add a special exception class we need for invalid attributes being sent across from the client.
-module Net
-  class HTTPUnprocessableEntity < HTTPClientError
-    HAS_BODY = true
-  end
-
-  class HTTPResponse
-    CODE_TO_OBJ['422'] = HTTPUnprocessableEntity
-  end
-end
-
 module Sequencescape::Api::ConnectionFactory::Actions
   ServerError = Class.new(Sequencescape::Api::ConnectionFactory::ConnectionError)
 

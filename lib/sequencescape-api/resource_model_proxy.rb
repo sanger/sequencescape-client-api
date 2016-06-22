@@ -1,5 +1,4 @@
 require 'active_support'
-require 'active_support/basic_object'
 
 require 'sequencescape-api/finder_methods'
 require 'sequencescape-api/actions'

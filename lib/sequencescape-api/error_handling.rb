@@ -2,12 +2,12 @@ require 'active_model/naming'
 require 'active_model/translation'
 
 # Uh, ok, so why do I have to include these if I'm not going to use them!?!!
-require 'active_model/deprecated_error_methods'
 require 'active_model/errors'
 
 # Uh, ok, so why do I have to include these when I've kind of said I want everything!?!!
 require 'active_model/validator'
 require 'active_model/validations'
+require 'active_model/callbacks'
 
 module Sequencescape::Api::ErrorHandling
   def self.included(base)

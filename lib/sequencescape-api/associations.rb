@@ -1,4 +1,3 @@
-require 'active_model/deprecated_error_methods'
 require 'active_model/errors'
 
 module Sequencescape::Api::Associations
@@ -88,10 +87,14 @@ module Sequencescape::Api::Associations
 
       def clear
         association_errors.map(&:clear)
-        super 
+        super
       end
 
-      delegate :associations, :to => :@base
+      def associations(*args, &block)
+        # TODO: Consider updating
+        @base.__send__(:associations, *args, &block)
+      end
+      private :associations
 
       def association_errors
         associations.values.map(&:errors)

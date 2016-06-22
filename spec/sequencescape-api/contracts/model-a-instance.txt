@@ -11,7 +11,8 @@ Content-Type: application/json
 
     "model_bs": {
       "actions": {
-        "read": "http://localhost:3000/pages/1"
+        "read": "http://localhost:3000/pages/1",
+        "create": "http://localhost:3000/UUID/model_bs"
       },
       "size": 3
     }
