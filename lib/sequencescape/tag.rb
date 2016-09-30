@@ -6,6 +6,8 @@ class Sequencescape::Tag
   class Group
     include Sequencescape::Api::Composition::Target
 
+    attr_accessor :actions
+
     attribute_accessor :uuid
     attribute_accessor :name, :tags, :created_at, :updated_at
   end
