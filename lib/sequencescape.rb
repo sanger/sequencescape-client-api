@@ -38,6 +38,8 @@ require 'sequencescape/order'
 
 require 'sequencescape/search'
 
+require 'sequencescape/process_metadatum_collection'
+
 # Pulldown API support
 require 'sequencescape/plate_creation'
 require 'sequencescape/pooled_plate_creation'
