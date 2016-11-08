@@ -1,6 +1,6 @@
 require 'sequencescape-api/resource'
 
-class Sequencescape::ProcessMetadatumCollection < Sequencescape::Api::Resource
+class Sequencescape::CustomMetadatumCollection < Sequencescape::Api::Resource
   belongs_to :asset
   belongs_to :user
 
