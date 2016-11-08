@@ -29,9 +29,25 @@ class Sequencescape::Plate < ::Sequencescape::Asset
         api.create(actions.create, { 'comment' => attributes }, Sequencescape::Api::ModifyingHandler.new(comment))
       end
     end
+
   end
 
-  #has_class_create_action(:create!, :action => :create)
+  module CurrentVolumeSubstraction
+    def create!(attributes = nil)
+      attributes ||= {}
+
+      new({}, false).tap do |volume_update|
+        api.create(actions.create, { 'volume_update' => attributes }, Sequencescape::Api::ModifyingHandler.new(volume_update))
+      end
+    end
+
+    def substract_volume!(volume_change)
+      create!({ :volume_change => volume_change})
+    end
+  end
+  has_many :volume_updates do
+    include Sequencescape::Plate::CurrentVolumeSubstraction
+  end
 
   has_many :comments do
     include Sequencescape::Plate::CommentsCreation
