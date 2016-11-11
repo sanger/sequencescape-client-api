@@ -18,6 +18,7 @@ class Sequencescape::PlatePurpose < ::Sequencescape::Api::Resource
     include Sequencescape::PlatePurpose::PlateCreation
   end
 
-  attribute_reader :name
-  attribute_accessor :lifespan
+  attribute_accessor :name, :lifespan, :cherrypickable_target, :stock_plate
+  attribute_writer :parents, :children
+
 end
