@@ -19,6 +19,6 @@ class Sequencescape::PlatePurpose < ::Sequencescape::Api::Resource
   end
 
   attribute_accessor :name, :lifespan, :cherrypickable_target, :stock_plate
-  attribute_writer :parents, :children
+  attribute_writer :parent_uuids, :child_uuids
 
 end
