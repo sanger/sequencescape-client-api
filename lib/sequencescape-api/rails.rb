@@ -8,7 +8,11 @@ module Sequencescape::Api::Rails
         attr_reader :api
         private :api
 
-        before_filter :configure_api
+        if respond_to?(:before_action)
+          before_action :configure_api
+        else
+          before_filter :configure_api
+        end
 
         # Order is important here: later ones override earlier.
         rescue_from(::Sequencescape::Api::Error,                :with => :sequencescape_api_error_handler)
