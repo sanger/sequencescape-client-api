@@ -19,6 +19,8 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   has_many :submission_pools
 
   belongs_to :plate_purpose
+  belongs_to :custom_metadatum_collection
+
   composed_of :stock_plate, :class_name => 'Plate'
 
   module CommentsCreation
