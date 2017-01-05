@@ -73,7 +73,7 @@ module Sequencescape::Api::Associations
     class CompositeErrors < ::ActiveModel::Errors
       def [](field)
         association, *subfield = field.to_s.split('.')
-        errors_from_association = associations[association.to_sym].try(:errors).try(:[], subfield.join('.')) 
+        errors_from_association = associations[association.to_sym].try(:errors).try(:[], subfield.join('.'))
         errors_from_association.blank? ? super : errors_from_association
       end
 

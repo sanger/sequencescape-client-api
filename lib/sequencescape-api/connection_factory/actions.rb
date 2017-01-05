@@ -96,7 +96,11 @@ module Sequencescape::Api::ConnectionFactory::Actions
   private :handle_redirect
 
   def perform(http_verb, url, body = nil, accepts = nil, &block)
-    uri = URI.parse(url)
+    begin
+      uri = URI.parse(url)
+    rescue URI::InvalidURIError => e
+      raise URI::InvalidURIError, "#{http_verb} failed: #{url.inspect} is not a valid uri"
+    end
     Net::HTTP.start(uri.host, uri.port) do |connection|
       connection.read_timeout = read_timeout
       request_headers =  headers
