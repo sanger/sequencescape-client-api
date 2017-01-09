@@ -13,7 +13,7 @@ class Sequencescape::PlatePurpose < ::Sequencescape::Api::Resource
   end
 
   has_many :children, :class_name => 'PlatePurpose'
-  has_many :partents, :class_name => 'PlatePurpose'
+  has_many :parents, :class_name => 'PlatePurpose'
 
   has_many :plates do
     include Sequencescape::PlatePurpose::PlateCreation
