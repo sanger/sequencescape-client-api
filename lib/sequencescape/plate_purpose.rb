@@ -13,12 +13,12 @@ class Sequencescape::PlatePurpose < ::Sequencescape::Api::Resource
   end
 
   has_many :children, :class_name => 'PlatePurpose'
+  has_many :partents, :class_name => 'PlatePurpose'
 
   has_many :plates do
     include Sequencescape::PlatePurpose::PlateCreation
   end
 
   attribute_accessor :name, :lifespan, :cherrypickable_target, :stock_plate
-  attribute_writer :parent_uuids, :child_uuids, :input_plate
-
+  attribute_writer :input_plate
 end

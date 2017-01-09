@@ -2,7 +2,6 @@ module Unauthorised
   MODELS_THROUGH_API = [ :model_a, :model_b, :model_c ]
 
   class ModelA < Sequencescape::Api::Resource
-
     module LotCreator
       def create!(attributes=nil)
         attributes ||= {}
@@ -32,6 +31,7 @@ module Unauthorised
 
   class ModelC < Sequencescape::Api::Resource
     has_many :model_bs, :disposition => :inline
+    has_many :model_as
 
     attribute_accessor :attribute_validated_at_client, :attribute_validated_at_server
     validates_each(:attribute_validated_at_client) do |record, attribute, value|

@@ -1,0 +1,10 @@
+POST /model_c/create HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Cookie: WTSISignOn=single-sign-on-cookie
+
+{
+  "model_c": {
+    "model_as": ["model-a-uuids"]
+  }
+}
