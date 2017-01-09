@@ -43,6 +43,10 @@ module Sequencescape::Api::Associations::HasMany
       else json
       end
     end
+
+    def update_from_json(_)
+      @cached_all = nil
+    end
   end
 
   class InlineAssociationProxy
