@@ -19,5 +19,5 @@ class Sequencescape::TubePurpose < ::Sequencescape::Api::Resource
   end
 
   attribute_reader :name
-  attribute_writer :target_type, :parents, :children
+  attribute_writer :target_type, :parents, :children, :type
 end
