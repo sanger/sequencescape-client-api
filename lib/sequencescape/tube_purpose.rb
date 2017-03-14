@@ -13,10 +13,12 @@ class Sequencescape::TubePurpose < ::Sequencescape::Api::Resource
   end
 
   has_many :children, :class_name => 'TubePurpose'
+  has_many :parents, :class_name => 'TubePurpose'
 
   has_many :tubes do
     include Sequencescape::TubePurpose::TubeCreation
   end
 
   attribute_reader :name
+  attribute_writer :target_type, :type
 end

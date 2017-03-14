@@ -40,10 +40,13 @@ class Sequencescape::Api
     parts.inject(@model_namespace) { |context, part| context.const_get(part) }
   rescue NameError => missing_constant_in_user_specified_namespace_fallback
     raise if @model_namespace == ::Sequencescape
-
     parts.inject([ ::Sequencescape, @model_namespace ]) do |(source, dest), part|
       const_from_source = source.const_get(part)
-      [ const_from_source, dest.const_set(part, const_from_source) ]
+      if dest.const_defined?(part)
+        [ const_from_source, dest.const_get(part) ]
+      else
+        [ const_from_source, dest.const_set(part, const_from_source) ]
+      end
     end.last
   end
 

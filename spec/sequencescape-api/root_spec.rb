@@ -23,7 +23,8 @@ describe 'Retrieving the root URL' do
         end
 
         it "errors because Sequencescape::#{model.to_s.classify} is not defined" do
-          lambda { subject.send(model.to_sym) }.should raise_error(NameError, "uninitialized constant Sequencescape::#{model.to_s.classify}")
+          # Note: Using a regex as > Ruby 2.3 'DidYouMean' changes the error message slightly.
+          lambda { subject.send(model.to_sym) }.should raise_error(NameError, /uninitialized constant Sequencescape::#{model.to_s.classify}/)
         end
       end
     end

@@ -23,6 +23,30 @@ module Sequencescape::Api::Associations::HasMany
       return @attributes['size'].zero? if api.capabilities.size_in_pages?
       all.empty?
     end
+
+    def present?
+      !empty?
+    end
+
+    def initialize(owner, json = nil)
+      super
+      @cached_all = case
+        when json.is_a?(Array) then json.map {|js| new_from(js) }
+        else nil
+        end
+    end
+
+    def new_from(json)
+      case
+      when json.is_a?(String) then new(uuid: json) # We've recieved an array of strings, prob. uuids
+      when json.is_a?(Hash) then new(json)
+      else json
+      end
+    end
+
+    def update_from_json(_)
+      @cached_all = nil
+    end
   end
 
   class InlineAssociationProxy

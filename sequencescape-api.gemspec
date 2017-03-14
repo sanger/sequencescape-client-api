@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency('yajl-ruby', '>= 1.1.0')
 
   s.add_development_dependency('rspec', '~> 2.11.0')
+  s.add_development_dependency('pry')
   s.add_development_dependency('webmock')
   s.add_development_dependency('yard')
   s.add_development_dependency('redcarpet')

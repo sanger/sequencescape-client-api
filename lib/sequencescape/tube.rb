@@ -16,8 +16,11 @@ class Sequencescape::Tube < ::Sequencescape::Asset
   attribute_accessor :concentration, :volume
   attribute_accessor :scanned_in_date, :conversion => :to_time
 
+  attribute_reader :state
+
   attribute_accessor :sibling_tubes
 
   belongs_to :purpose, :class_name => 'TubePurpose'
   belongs_to :stock_plate, :class_name => 'Plate'
+  belongs_to :custom_metadatum_collection
 end

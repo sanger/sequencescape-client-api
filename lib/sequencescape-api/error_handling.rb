@@ -21,7 +21,7 @@ module Sequencescape::Api::ErrorHandling
 
   #--
   # A bit of a fiddle this but any records that are UUID only are typically coming from the user
-  # having selected a load.  If this has happened then there is no data and so none of the 
+  # having selected a load.  If this has happened then there is no data and so none of the
   # validations should be run.
   #++
   module TurnOffValidationOfUuidOnlyRecords

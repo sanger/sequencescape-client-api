@@ -37,6 +37,8 @@ require 'sequencescape/order_template'
 require 'sequencescape/order'
 
 require 'sequencescape/search'
+require 'sequencescape/work_completion'
+require 'sequencescape/custom_metadatum_collection'
 
 # Pulldown API support
 require 'sequencescape/plate_creation'
@@ -74,4 +76,3 @@ require 'sequencescape/library_event'
 
 # Ensure that the I18n stuff has been properly configured
 I18n.config.load_path << File.expand_path(File.join(File.dirname(__FILE__), %w{sequencescape locale en.yml}))
-

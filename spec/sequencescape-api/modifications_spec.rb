@@ -60,9 +60,23 @@ describe 'Creating a resource' do
     context 'belongs_to' do
       it 'takes an object and converts it to UUID'
     end
-    context 'has_many' do
+    context 'has_many disposition: :inline' do
+      stub_request_from('create-model-c-has-many-inline') { response('model-c-instance-created') }
+
       it 'takes an array of objects and converts them to UUID'
-      it 'assumes an array of strings are UUIDs'
+      it 'assumes an array of strings are UUIDs' do
+        target.create!(:model_bs => ['model-b-uuids'])
+      end
+      it 'raises if not given an enumerable'
+    end
+
+    context 'has_many' do
+      stub_request_from('create-model-c-has-many') { response('model-c-instance-created') }
+
+      it 'takes an array of objects and converts them to UUID'
+      it 'assumes an array of strings are UUIDs' do
+        target.create!(:model_as => ['model-a-uuids'])
+      end
       it 'raises if not given an enumerable'
     end
   end

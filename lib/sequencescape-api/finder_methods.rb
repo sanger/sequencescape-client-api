@@ -99,6 +99,10 @@ class Sequencescape::Api::PageOfResults
     @objects.empty?
   end
 
+  def present?
+    !empty?
+  end
+
   def each(&block)
     walk_pages do
       @objects.each(&block)
