@@ -7,6 +7,8 @@ module Sequencescape::Behaviour
       belongs_to :sample, :disposition => :inline
       composed_of :tag
       composed_of :bait_library
+
+      attribute_accessor :suboptimal
     end
 
     def self.included(base)
