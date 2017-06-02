@@ -109,7 +109,7 @@ module Sequencescape::Api::Resource::Json
     ]
   end
   private :associations_for_json
-  
+
   def must_output_full_json?(options, target = self)
     options[:force] or (options[:action] == :create) or target.changed?
   end
