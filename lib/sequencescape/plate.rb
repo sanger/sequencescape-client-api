@@ -17,6 +17,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
 
   has_many :wells
   has_many :submission_pools
+  has_many :transfer_request_collections
 
   belongs_to :plate_purpose
   belongs_to :custom_metadatum_collection
