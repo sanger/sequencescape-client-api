@@ -29,7 +29,11 @@ module Sequencescape::Api::Resource::Groups
     def as_json_for_update(options)
       super.tap do |json|
         begin
-          json.fetch(json_root).merge!(attribute_group_json(options))
+          if options[:root]
+            json.fetch(json_root).merge!(attribute_group_json(options))
+          else
+            json.merge!(attribute_group_json(options))
+          end
         rescue KeyError => e
           # If we get a key error, append the json to out exception to assist diagnosing issues
           e.message << " in #{json.to_json}"
