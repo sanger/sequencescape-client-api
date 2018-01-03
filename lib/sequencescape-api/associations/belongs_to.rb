@@ -101,6 +101,12 @@ module Sequencescape::Api::Associations::BelongsTo
     def uuid_only?
       @object.__send__(:uuid_only?)
     end
+
+    delegate :hash, to: :uuid
+
+    def eql?(other)
+      uuid == other.uuid
+    end
   end
 
   def belongs_to(association, options = {}, &block)

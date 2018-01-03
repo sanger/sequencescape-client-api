@@ -70,6 +70,16 @@ describe 'Creating a resource' do
       it 'raises if not given an enumerable'
     end
 
+    context 'has_many disposition: :inline nested' do
+      stub_request_from('create-model-c-has-many-inline-nested') { response('model-c-instance-created') }
+
+      it 'takes an array of objects and converts them to UUID'
+      it 'assumes an array of strings are UUIDs' do
+        target.create!(:model_bs => [{ "test_attribute" => "test_value" }])
+      end
+      it 'raises if not given an enumerable'
+    end
+
     context 'has_many' do
       stub_request_from('create-model-c-has-many') { response('model-c-instance-created') }
 
