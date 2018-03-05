@@ -54,7 +54,7 @@ class Sequencescape::Api
 
   def success(json)
     @capabilities = Sequencescape::Api.const_get("Version#{json.delete('revision') || 1}").new
-    @models       = Hash[json.map { |k,v| [ k.to_s.singularize, v['actions'] ] }]
+    @models       = json.each_with_object({}) { |(k, v), models| models[k.to_s.singularize] = v['actions'] }
   end
 
   def inspect
