@@ -95,18 +95,15 @@ module Sequencescape::Api::Resource::Json
 
   def attributes_to_send_to_server(options)
     return attributes if options[:force] or (options[:action] == :create)
-    Hash[changes.keys.map { |k| [ k.to_s, send(k) ] }]
+    changes.keys.each_with_object({}) { |k, attributes| attributes[k.to_s] = send(k) }
   end
   private :attributes_to_send_to_server
 
   def associations_for_json(options)
-    Hash[
-      associations.select do |k,v|
-        must_output_full_json?(options, v)
-      end.map do |k,v|
-        [ k.to_s, v.as_json(options) ]
-      end
-    ]
+    associations.each_with_object({}) do |(k, v), associations|
+      next unless must_output_full_json?(options, v)
+      associations[k.to_s] = v.as_json(options)
+    end
   end
   private :associations_for_json
 

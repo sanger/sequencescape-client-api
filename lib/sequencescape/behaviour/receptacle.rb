@@ -6,6 +6,7 @@ module Sequencescape::Behaviour
     class Aliquot < Sequencescape::Api::Resource
       belongs_to :sample, :disposition => :inline
       composed_of :tag
+      composed_of :tag2, :class_name => 'Tag'
       composed_of :bait_library
 
       attribute_accessor :suboptimal

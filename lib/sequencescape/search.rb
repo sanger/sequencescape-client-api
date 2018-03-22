@@ -23,6 +23,19 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
     end
   end
 
+  # Wraps paginated results such that they can be navigated
+  # a step at a time.
+  class MultipleResultPaged
+    include Enumerable
+    attr_reader :objects, :size
+    def initialize(objects, size)
+      @objects = objects
+      @size = size
+    end
+
+    delegate :each, :empty?, :present?, to: :objects
+  end
+
   # The response from the server contains the JSON for each of the resources found.  We simply
   # need to be able to create the resources from each of these.
   class MultipleResultHandler
@@ -31,7 +44,9 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
     end
 
     def redirection(json, &block)
-      json['searches'].map(&method(:new))
+      items = json['searches'].map(&method(:new))
+      size = json['size']
+      MultipleResultPaged.new(items, size)
     end
 
     def new(json)
@@ -56,7 +71,7 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
   search_action(:first)
   search_action(:last)
 
-  # When performing a search for all records we need to provide the model (as in 'api.plate') 
+  # When performing a search for all records we need to provide the model (as in 'api.plate')
   # that we expect to be returned.  So there is a limitation at the moment that the results can
   # only belong to the same model hierarchy.
   def all(model, criteria = {})
