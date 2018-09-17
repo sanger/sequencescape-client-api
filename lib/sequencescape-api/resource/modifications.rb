@@ -46,6 +46,7 @@ module Sequencescape::Api::Resource::Modifications
     update_from_json(attributes, false)
     modify!(:action => :update)
   end
+  alias update! update_attributes!
 
   def save!(options = nil)
     action = persisted? ? :update : :create
