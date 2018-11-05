@@ -7,6 +7,6 @@ class Sequencescape::TransferRequest < ::Sequencescape::Api::Resource
   belongs_to :submission, :class_name => 'Submission'
   belongs_to :outer_request, :class_name => 'Request'
 
-  attribute_accessor :type, :state
+  attribute_accessor :type, :state, :submission_id
 
 end
