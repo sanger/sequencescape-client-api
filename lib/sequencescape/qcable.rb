@@ -12,6 +12,7 @@ class Sequencescape::Qcable < ::Sequencescape::Api::Resource
   attribute_group :barcode do
     attribute_accessor :prefix, :number     # The pieces that make up a barcode
     attribute_accessor :ean13               # The EAN13 barcode number
+    attribute_accessor :machine             # The barcode printed on the label
   end
 
 end
