@@ -8,6 +8,6 @@ class Sequencescape::QcableCreator < ::Sequencescape::Api::Resource
 
   has_many :qcables
 
-  attribute_accessor :count
+  attribute_accessor :count, :barcodes
 
 end
