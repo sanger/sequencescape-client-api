@@ -74,6 +74,9 @@ require 'sequencescape/qcable_creator'
 require 'sequencescape/qc_decision'
 require 'sequencescape/plate_conversion'
 
+# Support Extraction
+require 'sequencescape/extraction_attribute'
+
 # Events
 require 'sequencescape/library_event'
 
