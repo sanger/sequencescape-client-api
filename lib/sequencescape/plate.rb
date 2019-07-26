@@ -68,4 +68,17 @@ class Sequencescape::Plate < ::Sequencescape::Asset
     raise Sequencescape::Api::Error, "Unexpected number of transfers found: #{creation_transfers.count} found, 1 expected."
   end
 
+  module UpdateExtractionAttributes
+    def create!(attributes = nil)
+      attributes ||= {}
+      new({}, false).tap do |attrs|
+        api.create(actions.create, {:extraction_attribute => attributes}, Sequencescape::Api::ModifyingHandler.new(attrs))
+      end
+    end
+  end
+
+  has_many :extraction_attributes, :class_name => 'ExtractionAttribute' do
+    include Sequencescape::Plate::UpdateExtractionAttributes
+  end
+
 end
