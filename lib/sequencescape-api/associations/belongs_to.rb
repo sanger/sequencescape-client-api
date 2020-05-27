@@ -11,7 +11,7 @@ module Sequencescape::Api::Associations::BelongsTo
 
     def initialize(*args, &block)
       super
-      @object = new(@attributes, false)
+      @object = new(@_attributes_, false)
     end
 
     def update_from_json(json)

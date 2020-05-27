@@ -15,12 +15,12 @@ module Sequencescape::Api::Associations::HasMany
     include Enumerable
 
     def size
-      return @attributes['size'] if api.capabilities.size_in_pages?
+      return @_attributes_['size'] if api.capabilities.size_in_pages?
       all.size
     end
 
     def empty?
-      return @attributes['size'].zero? if api.capabilities.size_in_pages?
+      return @_attributes_['size'].zero? if api.capabilities.size_in_pages?
       all.empty?
     end
 
@@ -60,8 +60,8 @@ module Sequencescape::Api::Associations::HasMany
       super
       @objects =
         case
-        when @attributes.is_a?(Array) then @attributes.map(&method(:new))
-        when @attributes.is_a?(Hash)  then @attributes.map { |uuid, json| new(json.merge('uuid' => uuid)) }
+        when @_attributes_.is_a?(Array) then @_attributes_.map(&method(:new))
+        when @_attributes_.is_a?(Hash)  then @_attributes_.map { |uuid, json| new(json.merge('uuid' => uuid)) }
         else raise StandardError, "Cannot handle has_many JSON: #{json.inspect}"
         end
     end

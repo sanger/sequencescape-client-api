@@ -64,13 +64,16 @@ class Sequencescape::Api::Resource::Groups::Proxy
   module InstanceMethods
     def self.included(base)
       base.class_eval do
-        attr_reader :attributes
-        private :attributes
+        private
+
+        def attributes
+          @_attributes_
+        end
       end
     end
 
     def initialize(owner, attributes = {})
-      @owner, @attributes = owner, {}
+      @owner, @_attributes_ = owner, {}
       attributes.each { |k,v| send(:"#{k}=", v) if respond_to?(:"#{k}=", :include_private_methods) }
     end
 
@@ -82,7 +85,7 @@ class Sequencescape::Api::Resource::Groups::Proxy
     private :as_json_for_update
 
     def clear_changed_attributes
-      changed_attributes.clear
+      clear_changes_information
     end
     private :clear_changed_attributes
   end

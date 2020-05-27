@@ -1,8 +1,8 @@
 module Sequencescape::Api::Resource::InstanceMethods
   def self.included(base)
     base.class_eval do
-      attr_reader :api, :actions, :attributes, :uuid
-      private :api, :actions, :attributes
+      attr_reader :api, :actions, :uuid
+      private :api, :actions
       alias_method(:model, :class)
       alias_method(:id, :uuid)
 
@@ -10,6 +10,12 @@ module Sequencescape::Api::Resource::InstanceMethods
       delegate :read_timeout, :to => :api
 
       attribute_accessor :created_at, :updated_at, :conversion => :to_time
+
+      private
+
+      def attributes
+        @_attributes_
+      end
     end
   end
 
@@ -19,6 +25,6 @@ module Sequencescape::Api::Resource::InstanceMethods
   end
 
   def initialize(api, json = nil, wrapped = false)
-    @api, @attributes = api, {}
+    @api, @_attributes_ = api, {}
   end
 end

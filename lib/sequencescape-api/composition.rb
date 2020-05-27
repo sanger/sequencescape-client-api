@@ -11,12 +11,15 @@ module Sequencescape::Api::Composition
     end
 
     def initialize(owner, attributes)
-      @owner, @attributes = owner, attributes
+      @owner, @_attributes_ = owner, attributes
       attributes.each { |k,v| send(:"#{k}=", v) }
     end
 
-    attr_reader :attributes
-    private :attributes
+    private
+
+     def attributes
+       @_attributes_
+     end
   end
 
   def composed_of(name, options = {})
@@ -30,7 +33,7 @@ module Sequencescape::Api::Composition
       end
 
       def #{name}=(attributes)
-        @attributes[#{name.to_s.inspect}] = attributes
+        @_attributes_[#{name.to_s.inspect}] = attributes
       end
     }, __FILE__, line)
   end

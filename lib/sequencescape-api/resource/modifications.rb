@@ -38,11 +38,11 @@ module Sequencescape::Api::Resource::Modifications
   def initialize(api, json = nil, wrapped = false)
     super
     update_from_json(json, wrapped)
-    changed_attributes.clear
+    clear_changes_information
   end
 
   def update_attributes!(attributes)
-    changed_attributes.clear
+    clear_changes_information
     update_from_json(attributes, false)
     modify!(:action => :update)
   end
@@ -75,7 +75,7 @@ module Sequencescape::Api::Resource::Modifications
         Sequencescape::Api::ModifyingHandler.new(self)
       )
 
-      changed_attributes.clear
+      clear_changes_information
     end
   end
   private :modify!
