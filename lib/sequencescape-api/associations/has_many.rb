@@ -16,11 +16,13 @@ module Sequencescape::Api::Associations::HasMany
 
     def size
       return @_attributes_['size'] if api.capabilities.size_in_pages?
+
       all.size
     end
 
     def empty?
       return @_attributes_['size'].zero? if api.capabilities.size_in_pages?
+
       all.empty?
     end
 
@@ -31,8 +33,8 @@ module Sequencescape::Api::Associations::HasMany
     def initialize(owner, json = nil)
       super
       @cached_all = case
-        when json.is_a?(Array) then json.map {|js| new_from(js) }
-        else nil
+                    when json.is_a?(Array) then json.map { |js| new_from(js) }
+                    else nil
         end
     end
 

@@ -1,7 +1,6 @@
 require 'sequencescape-api'
 
 module Sequencescape
-
 end
 
 require 'sequencescape/user'

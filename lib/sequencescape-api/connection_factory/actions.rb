@@ -8,7 +8,7 @@ BEGIN {
   Net::HTTP.module_eval do
     alias_method '__initialize__', 'initialize'
 
-    def initialize(*args,&block)
+    def initialize(*args, &block)
       __initialize__(*args, &block)
     ensure
       @debug_output = $stderr if ENV['HTTP_DEBUG']
@@ -103,12 +103,12 @@ module Sequencescape::Api::ConnectionFactory::Actions
     end
     Net::HTTP.start(uri.host, uri.port) do |connection|
       connection.read_timeout = read_timeout
-      request_headers =  headers
+      request_headers = headers
       request_headers.merge!('Accept' => accepts) unless accepts.nil?
       request = Net::HTTP.const_get(http_verb.to_s.classify).new(uri.request_uri, request_headers)
       unless body.nil?
         request.content_type = 'application/json'
-        #request.body         = body.to_json
+        # request.body         = body.to_json
         request.body         = Yajl::Encoder.encode(body)
       end
       yield(connection.request(request))
@@ -120,10 +120,10 @@ module Sequencescape::Api::ConnectionFactory::Actions
     uri = URI.parse(url)
     Net::HTTP.start(uri.host, uri.port) do |connection|
       connection.read_timeout = read_timeout
-      file_headers = headers.merge!({'Content-Disposition'=> "form-data; filename=\"#{filename}\""})
+      file_headers = headers.merge!({ 'Content-Disposition' => "form-data; filename=\"#{filename}\"" })
       request = Net::HTTP.const_get(http_verb.to_s.classify).new(uri.request_uri, file_headers)
       request.content_type = content_type
-      #request.body         = body.to_json
+      # request.body         = body.to_json
       request.body         = file.read
       yield(connection.request(request))
     end
@@ -141,6 +141,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
 
   def parse_json_from(response)
     raise ServerError, 'server returned non-JSON content' unless response.content_type == 'application/json'
+
     Yajl::Parser.parse(StringIO.new(response.body))
   end
   private :parse_json_from

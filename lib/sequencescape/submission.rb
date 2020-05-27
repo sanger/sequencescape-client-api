@@ -12,5 +12,4 @@ class Sequencescape::Submission < ::Sequencescape::Api::Resource
 
   attribute_reader :state
   attribute_reader :asset_group_name
-
 end

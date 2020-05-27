@@ -130,6 +130,7 @@ class Sequencescape::Api::PageOfResults
     while true
       yield
       break if actions.next.blank?
+
       next_page
     end
   end
@@ -153,7 +154,7 @@ class Sequencescape::Api::PageOfResults
     end
   end
 
-  [ :first, :last, :previous, :next ].each do |page|
+  [:first, :last, :previous, :next].each do |page|
     line = __LINE__ + 1
     class_eval(%Q{
       def #{page}_page
@@ -167,17 +168,19 @@ class Sequencescape::Api::PageOfResults
   private :last_page, :next_page
 
   def update_from_json(json)
-    json.delete('uuids_to_ids')         # Discard unwanted rubbish
+    json.delete('uuids_to_ids') # Discard unwanted rubbish
     actions = json.delete('actions')
     raise Sequencescape::Api::Error, 'No actions for page!' if actions.blank?
 
     if api.capabilities.size_in_pages?
       size = json.delete('size')
       raise Sequencescape::Api::Error, 'No size for page!' if size.blank?
+
       @size = size.to_i
     end
 
     raise Sequencescape::Api::Error, 'No object json in page!' if json.keys.empty?
+
     @actions, @objects = OpenStruct.new(actions), json[json.keys.first].map(&@ctor)
   end
   private :update_from_json

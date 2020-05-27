@@ -31,7 +31,6 @@ class Sequencescape::Plate < ::Sequencescape::Asset
         api.create(actions.create, { 'comment' => attributes }, Sequencescape::Api::ModifyingHandler.new(comment))
       end
     end
-
   end
 
   module CurrentVolumeSubstraction
@@ -44,7 +43,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
     end
 
     def substract_volume!(volume_change)
-      create!({ :volume_change => volume_change})
+      create!({ :volume_change => volume_change })
     end
   end
   has_many :volume_updates do
@@ -65,15 +64,15 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   def creation_transfer
     Rails.logger.warn "Creation transfer is deprecated, use creation_transfers instead"
     return creation_transfers.first if creation_transfers.count == 1
+
     raise Sequencescape::Api::Error, "Unexpected number of transfers found: #{creation_transfers.count} found, 1 expected."
   end
-
 
   module UpdateExtractionAttributes
     def create!(attributes = nil)
       attributes ||= {}
       new({}, false).tap do |attrs|
-        api.create(actions.create, {:extraction_attribute => attributes}, Sequencescape::Api::ModifyingHandler.new(attrs))
+        api.create(actions.create, { :extraction_attribute => attributes }, Sequencescape::Api::ModifyingHandler.new(attrs))
       end
     end
   end
@@ -81,5 +80,4 @@ class Sequencescape::Plate < ::Sequencescape::Asset
   has_many :extraction_attributes, :class_name => 'ExtractionAttribute' do
     include Sequencescape::Plate::UpdateExtractionAttributes
   end
-
 end

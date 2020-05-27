@@ -27,7 +27,7 @@ module ContractHelper
       contract(contract_name) do |file|
         match = REQUEST_REGEXP.match(file.read) or raise StandardError, "Invalidly formatted request in #{contract_name.inspect}"
 
-        @http_verb, @url   = match[:verb].downcase.to_sym, "http://localhost:3000#{match[:path]}"
+        @http_verb, @url = match[:verb].downcase.to_sym, "http://localhost:3000#{match[:path]}"
         @conditions = {}
         @conditions[:headers] = Hash[*match[:headers].split(/\r?\n/).map { |l| l.split(':') }.flatten.map(&:strip)]
         @conditions[:body] = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) unless match[:body].blank?
@@ -45,6 +45,7 @@ module ContractHelper
       until path.empty?
         filename = File.join(path, 'contracts', "#{contract_name}.txt")
         return File.open(filename, 'r') { |file| yield(file) } if File.file?(filename)
+
         path.pop
       end
       raise StandardError, "Cannot find contract #{filename.inspect} anywhere within #{@root.inspect}"

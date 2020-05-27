@@ -12,7 +12,7 @@ shared_examples_for 'errors on both client and server' do |action, request_contr
       begin
         target.__send__(action, :attribute_validated_at_client => 'please error')
       rescue Sequencescape::Api::ResourceInvalid => exception
-        exception.resource.errors[:attribute_validated_at_client].should == [ 'cannot be set' ]
+        exception.resource.errors[:attribute_validated_at_client].should == ['cannot be set']
       end
     end
   end
@@ -30,7 +30,7 @@ shared_examples_for 'errors on both client and server' do |action, request_contr
       begin
         target.__send__(action, :attribute_validated_at_server => 'please error')
       rescue Sequencescape::Api::ResourceInvalid => exception
-        exception.resource.errors[:attribute_validated_at_server].should == [ 'cannot be set' ]
+        exception.resource.errors[:attribute_validated_at_server].should == ['cannot be set']
       end
     end
   end
@@ -166,4 +166,3 @@ describe 'Updating a resource through an association' do
     it 'handles individual attribute changes'
   end
 end
-

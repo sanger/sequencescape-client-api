@@ -49,7 +49,7 @@ describe 'Retrieving the root URL' do
 
     subject { api }
 
-    [ :model_c, :model_d ].each do |model|
+    [:model_c, :model_d].each do |model|
       it "provides the #{model} through the API instance" do
         subject.should respond_to(model.to_sym)
       end

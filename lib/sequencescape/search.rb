@@ -39,7 +39,7 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
   # The response from the server contains the JSON for each of the resources found.  We simply
   # need to be able to create the resources from each of these.
   class MultipleResultHandler
-    def initialize(api,model)
+    def initialize(api, model)
       @api, @model = api, model
     end
 
@@ -50,7 +50,7 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
     end
 
     def new(json)
-      args = [ json, false ]
+      args = [json, false]
       args.unshift(@api) unless @model.is_a_proxied_model?
       @model.new(*args)
     end

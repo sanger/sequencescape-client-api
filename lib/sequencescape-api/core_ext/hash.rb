@@ -8,7 +8,7 @@ class Hash
     allowance_method = (options[:allow_blank] == false) ? :blank? : :nil?
 
     missing = keys.inject([]) do |missing, next_key|
-      missing.tap do 
+      missing.tap do
         value = self[next_key]
         missing << next_key if value.send(allowance_method)
       end

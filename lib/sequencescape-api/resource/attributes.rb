@@ -26,7 +26,7 @@ module Sequencescape::Api::Resource::Attributes
 
     names.each do |name|
       defined_attributes << name.to_sym
-      converted = [ "#{name}_before_type_cast", conversion ].compact.join('.')
+      converted = ["#{name}_before_type_cast", conversion].compact.join('.')
 
       line = __LINE__ + 1
       class_eval(%Q{

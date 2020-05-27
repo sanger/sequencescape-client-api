@@ -1,9 +1,9 @@
 module Unauthorised
-  MODELS_THROUGH_API = [ :model_a, :model_b, :model_c ]
+  MODELS_THROUGH_API = [:model_a, :model_b, :model_c]
 
   class ModelA < Sequencescape::Api::Resource
     module LotCreator
-      def create!(attributes=nil)
+      def create!(attributes = nil)
         attributes ||= {}
         new({}, false).tap do |lot|
           api.create(actions.create, { 'model_b' => attributes }, Sequencescape::Api::ModifyingHandler.new(lot))
@@ -56,12 +56,10 @@ module Unauthorised
 end
 
 module Authenticated
-  MODELS_THROUGH_API = [ :model_c, :model_d ]
+  MODELS_THROUGH_API = [:model_c, :model_d]
 
   class ModelC < Sequencescape::Api::Resource
-
   end
   class ModelD < Sequencescape::Api::Resource
-
   end
 end

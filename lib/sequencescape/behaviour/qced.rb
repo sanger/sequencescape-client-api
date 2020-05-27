@@ -1,6 +1,5 @@
 module Sequencescape::Behaviour
   module Qced
-
     module QcFile
       def create!(attributes = nil)
         attributes ||= {}
@@ -22,10 +21,9 @@ module Sequencescape::Behaviour
     def self.included(base)
       base.class_eval do
         has_many :qc_files do
-         include Sequencescape::Behaviour::Qced::QcFile
+          include Sequencescape::Behaviour::Qced::QcFile
         end
       end
     end
-
   end
 end

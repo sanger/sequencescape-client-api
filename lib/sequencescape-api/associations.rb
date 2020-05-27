@@ -10,7 +10,7 @@ module Sequencescape::Api::Associations
   end
 
   def association_methods(association, type, proxy)
-    proxy_class_name = [ association, type, 'proxy'].join('_').classify
+    proxy_class_name = [association, type, 'proxy'].join('_').classify
     const_set(proxy_class_name.to_sym, proxy)
 
     line = __LINE__ + 1
@@ -61,7 +61,7 @@ module Sequencescape::Api::Associations
     end
 
     def attributes_from_path(path, default_value_if_missing = nil)
-      path.to_s.split('.').inject(attributes) { |k,v| k.try(:[], v) } || default_value_if_missing
+      path.to_s.split('.').inject(attributes) { |k, v| k.try(:[], v) } || default_value_if_missing
     end
     private :attributes_from_path
 

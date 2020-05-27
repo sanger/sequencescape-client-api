@@ -37,4 +37,3 @@ class Sequencescape::Api::ConnectionFactory
 
   include Actions
 end
-

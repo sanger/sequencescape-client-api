@@ -8,7 +8,7 @@ module Sequencescape
       end
     end
 
-    [ :UnauthenticatedError, :ResourceNotFound ].each do |name|
+    [:UnauthenticatedError, :ResourceNotFound].each do |name|
       const_set(name, Class.new(Error) { |c| c.send(:include, GeneralError) })
     end
 

@@ -10,7 +10,7 @@ module Sequencescape::Api::Actions
     # Defines a method that is available on the resource model itself, rather than on an instance of
     # the resource model.
     def has_class_create_action(*args)
-      action_module, line = Module.new, __LINE__+1
+      action_module, line = Module.new, __LINE__ + 1
       action_module.module_eval(%Q{
         def initialize_class_actions(proxy)
           super
@@ -54,7 +54,7 @@ module Sequencescape::Api::Actions
 
     def has_update_action(name, options = {})
       api_method = options[:verb] == :create ? :create : :update
-      skip_json  = options[:skip_json]||false
+      skip_json  = options[:skip_json] || false
       action     = options[:action] || :update
 
       line = __LINE__ + 1

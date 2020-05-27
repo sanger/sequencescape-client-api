@@ -4,7 +4,7 @@ class Sequencescape::TubePurpose < ::Sequencescape::Api::Resource
   module TubeCreation
     def create!(attributes = nil)
       attributes ||= {}
-      attributes[:wells].delete_if { |_,v| v.blank? } if attributes.key?(:wells)
+      attributes[:wells].delete_if { |_, v| v.blank? } if attributes.key?(:wells)
 
       new({}, false).tap do |plate|
         api.create(actions.create, { 'plate' => attributes }, Sequencescape::Api::ModifyingHandler.new(plate))

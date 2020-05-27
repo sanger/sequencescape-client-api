@@ -3,6 +3,7 @@ module Sequencescape::Plate::Pooling
     wells.each do |well|
       pool_id, pool = pools.detect { |_, pool| pool['wells'].include?(well.location) }
       next if pool.nil?
+
       well.pool = pool
     end
   end
@@ -11,6 +12,7 @@ module Sequencescape::Plate::Pooling
     wells.each do |well|
       pre_cap_group_id, pre_cap_group = pre_cap_groups.detect { |_, pre_cap_group| pre_cap_group['wells'].include?(well.location) }
       next if pre_cap_group.nil?
+
       well.pre_cap_group = pre_cap_group
     end
   end

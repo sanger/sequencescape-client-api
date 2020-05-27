@@ -7,7 +7,7 @@ module Sequencescape::Api::Resource::Groups
     end
 
     def attribute_group_json(options)
-      attribute_groups.each_with_object({}) do |(k,v), agj|
+      attribute_groups.each_with_object({}) do |(k, v), agj|
         agj[k.to_s] = v.send(:as_json_for_update, options) if v.changed?
       end
     end
@@ -74,7 +74,7 @@ class Sequencescape::Api::Resource::Groups::Proxy
 
     def initialize(owner, attributes = {})
       @owner, @_attributes_ = owner, {}
-      attributes.each { |k,v| send(:"#{k}=", v) if respond_to?(:"#{k}=", :include_private_methods) }
+      attributes.each { |k, v| send(:"#{k}=", v) if respond_to?(:"#{k}=", :include_private_methods) }
     end
 
     def as_json_for_update(options)

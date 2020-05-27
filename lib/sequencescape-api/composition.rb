@@ -12,14 +12,14 @@ module Sequencescape::Api::Composition
 
     def initialize(owner, attributes)
       @owner, @_attributes_ = owner, attributes
-      attributes.each { |k,v| send(:"#{k}=", v) }
+      attributes.each { |k, v| send(:"#{k}=", v) }
     end
 
     private
 
-     def attributes
-       @_attributes_
-     end
+    def attributes
+      @_attributes_
+    end
   end
 
   def composed_of(name, options = {})

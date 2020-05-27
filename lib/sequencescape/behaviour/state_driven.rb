@@ -5,7 +5,7 @@ module Sequencescape::Behaviour
         attribute_reader :state
 
         # Define a few default states
-        [ :pending, :started, :passed, :failed, :cancelled, :unknown, :qc_complete ].each do |state|
+        [:pending, :started, :passed, :failed, :cancelled, :unknown, :qc_complete].each do |state|
           line = __LINE__ + 1
           class_eval(%Q{
             def #{state}?

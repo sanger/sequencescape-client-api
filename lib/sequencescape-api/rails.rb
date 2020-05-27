@@ -31,7 +31,7 @@ module Sequencescape::Api::Rails
     private :configure_api
 
     def api_connection_options
-      { }
+      {}
     end
     private :api_connection_options
 
@@ -80,6 +80,7 @@ module Sequencescape::Api::Rails
     def save_remote_resource
       return true if @remote_resource.nil?
       return true unless @remote_resource.can_save?
+
       self[:uuid] = @remote_resource
       @remote_resource.save
     end

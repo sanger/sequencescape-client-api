@@ -59,17 +59,18 @@ module Sequencescape::Api::Resource::Json
   # Returns the appropriate JSON for when we are updating a resource.
   def as_json_for_update(options)
     if must_output_full_json?(options)
-      json = { }
+      json = {}
       json['uuid'] = uuid if options[:uuid] and uuid.present?
 
       json.merge!(attributes_for_json(options))
       json.merge!(associations_for_json(options.merge(:root => false)))
 
       return json unless options[:root]
+
       { json_root => json }
     elsif options[:root]
       # We are the root element so we must output something!
-      { json_root => { } }
+      { json_root => {} }
     else
       # We are not a root element, we haven't been changed, so we might as well not exist!
       nil
@@ -78,7 +79,7 @@ module Sequencescape::Api::Resource::Json
   private :as_json_for_update
 
   def unwrapped_json(json)
-    json[(json.keys - [ 'uuids_to_ids' ]).first]
+    json[(json.keys - ['uuids_to_ids']).first]
   end
   private :unwrapped_json
 
@@ -88,13 +89,14 @@ module Sequencescape::Api::Resource::Json
 
   def attributes_for_json(options)
     attributes_to_send_to_server(options).tap do |changed_attributes|
-      [ 'created_at', 'updated_at' ].map(&changed_attributes.method(:delete))
+      ['created_at', 'updated_at'].map(&changed_attributes.method(:delete))
     end
   end
   private :attributes_for_json
 
   def attributes_to_send_to_server(options)
     return attributes if options[:force] or (options[:action] == :create)
+
     changes.keys.each_with_object({}) { |k, attributes| attributes[k.to_s] = send(k) }
   end
   private :attributes_to_send_to_server
@@ -102,6 +104,7 @@ module Sequencescape::Api::Resource::Json
   def associations_for_json(options)
     associations.each_with_object({}) do |(k, v), associations|
       next unless must_output_full_json?(options, v)
+
       associations[k.to_s] = v.as_json(options)
     end
   end

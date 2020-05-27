@@ -17,9 +17,9 @@ module Sequencescape::Api::Associations::Base::InstanceMethods
   end
 
   def initialize(owner, json = nil)
-    @owner      = owner
+    @owner = owner
     @_attributes_ = json.nil? ? owner.attributes_for(association, default_attributes_if_missing) : attributes_from(json)
-    @model      = api.model(options[:class_name] || association)
+    @model = api.model(options[:class_name] || association)
   end
 
   def new(*args, &block)
