@@ -93,13 +93,6 @@ Naming/PredicateName:
     - 'lib/sequencescape-api/resource/attributes.rb'
     - 'lib/sequencescape-api/resource_model_proxy.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: PreferredName.
-Naming/RescuedExceptionsVariableName:
-  Exclude:
-    - 'lib/sequencescape-api/core.rb'
-    - 'spec/sequencescape-api/modifications_spec.rb'
 
 # Offense count: 1
 # Configuration parameters: EnforcedStyle, AllowModifiersOnSymbols.
@@ -408,25 +401,6 @@ Style/RedundantException:
   Exclude:
     - 'lib/sequencescape/plate/well_structure.rb'
 
-# Offense count: 12
-# Cop supports --auto-correct.
-Style/RedundantSelf:
-  Exclude:
-    - 'lib/sequencescape-api/resource/active_model.rb'
-    - 'lib/sequencescape-api/resource/instance_methods.rb'
-    - 'lib/sequencescape-api/resource/json.rb'
-    - 'lib/sequencescape-api/resource/modifications.rb'
-    - 'lib/sequencescape-api/resource_model_proxy.rb'
-    - 'lib/sequencescape/plate/well_structure.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: ConvertCodeThatCanStartToReturnNil, AllowedMethods.
-# AllowedMethods: present?, blank?, presence, try, try!
-Style/SafeNavigation:
-  Exclude:
-    - 'lib/sequencescape/plate/pooling.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: .
@@ -441,10 +415,3 @@ Style/SpecialGlobalVars:
 Style/TernaryParentheses:
   Exclude:
     - 'lib/sequencescape-api/core_ext/hash.rb'
-
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: AutoCorrect, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
-# URISchemes: http, https
-Layout/LineLength:
-  Max: 149

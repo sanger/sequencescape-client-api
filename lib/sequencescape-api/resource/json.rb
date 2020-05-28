@@ -11,7 +11,7 @@ module Sequencescape::Api::Resource::Json
     end
 
     def json_root
-      self.name.demodulize.underscore
+      name.demodulize.underscore
     end
   end
 
@@ -40,7 +40,7 @@ module Sequencescape::Api::Resource::Json
 
   # Coerces the current object instance to another class.
   def coerce_to(klazz)
-    api.read_uuid(self.uuid, CoercionHandler.new(api, klazz))
+    api.read_uuid(uuid, CoercionHandler.new(api, klazz))
   end
 
   def as_json(options = nil)

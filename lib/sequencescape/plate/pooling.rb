@@ -20,7 +20,7 @@ module Sequencescape::Plate::Pooling
   end
 
   def after_load
-    pools.each { |pool_id, pool| pool['id'] = pool_id } unless pools.nil?
+    pools&.each { |pool_id, pool| pool['id'] = pool_id }
     return if pre_cap_groups.nil?
 
     pre_cap_groups.each { |pre_cap_group_id, pre_cap_group| pre_cap_group['id'] = pre_cap_group_id }

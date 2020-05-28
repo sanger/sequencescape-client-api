@@ -42,7 +42,7 @@ class Sequencescape::Api
     raise StandardError, "#{name.inspect} is rooted and that is not supported" if parts.first.blank?
 
     parts.inject(@model_namespace) { |context, part| context.const_get(part) }
-  rescue NameError => missing_constant_in_user_specified_namespace_fallback
+  rescue NameError => e
     raise if @model_namespace == ::Sequencescape
 
     parts.inject([::Sequencescape, @model_namespace]) do |(source, dest), part|

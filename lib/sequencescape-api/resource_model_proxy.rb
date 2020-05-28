@@ -8,7 +8,7 @@ require 'ostruct'
 # Any interaction with the API isn't done directly through a model but through an instance of this
 # class, that proxies the model and ensures that it uses the correct instance of Sequencescape::Api.
 class Sequencescape::Api::ResourceModelProxy
-  self.instance_methods.each { |m| undef_method(m) unless m.to_s =~ /^(__.+__|respond_to\?|object_id)$/ }
+  instance_methods.each { |m| undef_method(m) unless m.to_s =~ /^(__.+__|respond_to\?|object_id)$/ }
 
   include ::Sequencescape::Api::FinderMethods
   extend ::Sequencescape::Api::Actions

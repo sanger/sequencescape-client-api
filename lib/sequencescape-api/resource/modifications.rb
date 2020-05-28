@@ -63,7 +63,7 @@ module Sequencescape::Api::Resource::Modifications
     url     ||= (actions.send(action) or raise Sequencescape::Api::Error, "Cannot perform #{action}")
     raise Sequencescape::Api::Error, 'Cannot perform modification without a URL' if url.blank?
 
-    self.tap do
+    tap do
       run_validations! or raise Sequencescape::Api::ResourceInvalid, self
 
       object = skip_json ? {} : self

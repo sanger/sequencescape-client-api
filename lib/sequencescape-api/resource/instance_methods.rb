@@ -22,7 +22,7 @@ module Sequencescape::Api::Resource::InstanceMethods
   def eql?(object_or_proxy)
     return false unless object_or_proxy.respond_to?(:uuid)
 
-    self.uuid.eql?(object_or_proxy.uuid)
+    uuid.eql?(object_or_proxy.uuid)
   end
 
   def initialize(api, _json = nil, _wrapped = false)

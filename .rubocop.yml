@@ -17,6 +17,9 @@ Style/ClassAndModuleChildren:
 Layout/LineLength:
   Max: 120
   AutoCorrect: true
+Naming/FileName:
+  Exclude:
+    - 'lib/sequencescape-api.rb'
 
 # Pending Cops
 Layout/EmptyLinesAroundAttributeAccessor:

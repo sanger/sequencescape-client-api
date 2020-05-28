@@ -34,7 +34,6 @@ module Sequencescape::Api::Associations::HasMany
       super
       @cached_all = case json
                     when Array then json.map { |js| new_from(js) }
-                    else nil
                     end
     end
 
