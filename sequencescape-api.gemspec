@@ -30,5 +30,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency('webmock')
   s.add_development_dependency('yard')
   s.add_development_dependency('redcarpet')
-  s.add_development_dependency('rubocop')
+  s.add_development_dependency('rubocop', '~> 0.84.0')
+  s.add_development_dependency('rake')
 end
