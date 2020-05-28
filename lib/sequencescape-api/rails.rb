@@ -15,8 +15,8 @@ module Sequencescape::Api::Rails
         end
 
         # Order is important here: later ones override earlier.
-        rescue_from(::Sequencescape::Api::Error,                :with => :sequencescape_api_error_handler)
-        rescue_from(::Sequencescape::Api::UnauthenticatedError, :with => :sequencescape_api_unauthenticated_handler)
+        rescue_from(::Sequencescape::Api::Error,                with: :sequencescape_api_error_handler)
+        rescue_from(::Sequencescape::Api::UnauthenticatedError, with: :sequencescape_api_unauthenticated_handler)
       end
     end
 
@@ -26,7 +26,7 @@ module Sequencescape::Api::Rails
     private :api_class
 
     def configure_api
-      @api = api_class.new({ :cookie => cookies['WTSISignOn'] }.merge(api_connection_options))
+      @api = api_class.new({ cookie: cookies['WTSISignOn'] }.merge(api_connection_options))
     end
     private :configure_api
 
@@ -57,7 +57,7 @@ module Sequencescape::Api::Rails
     def self.included(base)
       base.class_eval do
         attr_protected :remote_resource, :uuid
-        validates_presence_of :uuid, :allow_blank => false
+        validates_presence_of :uuid, allow_blank: false
         before_save :save_remote_resource
       end
     end

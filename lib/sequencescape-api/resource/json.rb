@@ -7,7 +7,7 @@ module Sequencescape::Api::Resource::Json
 
   module ClassMethods
     def self.extended(base)
-      base.delegate :json_root, :to => 'self.class'
+      base.delegate :json_root, to: 'self.class'
     end
 
     def json_root
@@ -44,7 +44,7 @@ module Sequencescape::Api::Resource::Json
   end
 
   def as_json(options = nil)
-    options = { :action => :create, :root => true }.merge(options || {})
+    options = { action: :create, root: true }.merge(options || {})
     send(:"as_json_for_#{options[:action]}", options)
   end
 
@@ -61,10 +61,10 @@ module Sequencescape::Api::Resource::Json
   def as_json_for_update(options)
     if must_output_full_json?(options)
       json = {}
-      json['uuid'] = uuid if options[:uuid] and uuid.present?
+      json['uuid'] = uuid if options[:uuid] && uuid.present?
 
       json.merge!(attributes_for_json(options))
-      json.merge!(associations_for_json(options.merge(:root => false)))
+      json.merge!(associations_for_json(options.merge(root: false)))
 
       return json unless options[:root]
 
@@ -96,7 +96,7 @@ module Sequencescape::Api::Resource::Json
   private :attributes_for_json
 
   def attributes_to_send_to_server(options)
-    return attributes if options[:force] or (options[:action] == :create)
+    return attributes if options[:force] || (options[:action] == :create)
 
     changes.keys.each_with_object({}) { |k, attributes| attributes[k.to_s] = send(k) }
   end

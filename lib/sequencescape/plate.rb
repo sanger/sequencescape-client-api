@@ -21,14 +21,16 @@ class Sequencescape::Plate < ::Sequencescape::Asset
 
   belongs_to :plate_purpose
   belongs_to :custom_metadatum_collection
-  composed_of :stock_plate, :class_name => 'Plate'
+  composed_of :stock_plate, class_name: 'Plate'
 
   module CommentsCreation
     def create!(attributes = nil)
       attributes ||= {}
 
       new({}, false).tap do |comment|
-        api.create(actions.create, { 'comment' => attributes }, Sequencescape::Api::ModifyingHandler.new(comment))
+        api.create(actions.create,
+                   { 'comment' => attributes },
+                   Sequencescape::Api::ModifyingHandler.new(comment))
       end
     end
   end
@@ -38,12 +40,14 @@ class Sequencescape::Plate < ::Sequencescape::Asset
       attributes ||= {}
 
       new({}, false).tap do |volume_update|
-        api.create(actions.create, { 'volume_update' => attributes }, Sequencescape::Api::ModifyingHandler.new(volume_update))
+        api.create(actions.create,
+                   { 'volume_update' => attributes },
+                   Sequencescape::Api::ModifyingHandler.new(volume_update))
       end
     end
 
     def substract_volume!(volume_change)
-      create!({ :volume_change => volume_change })
+      create!({ volume_change: volume_change })
     end
   end
   has_many :volume_updates do
@@ -54,30 +58,32 @@ class Sequencescape::Plate < ::Sequencescape::Asset
     include Sequencescape::Plate::CommentsCreation
   end
 
-  has_many :source_transfers, :class_name => 'Transfer'
-  has_many :transfers_to_tubes, :class_name => 'Transfer'
-  has_many :creation_transfers, :class_name => 'Transfer'
+  has_many :source_transfers, class_name: 'Transfer'
+  has_many :transfers_to_tubes, class_name: 'Transfer'
+  has_many :creation_transfers, class_name: 'Transfer'
 
   attribute_accessor :size, :iteration, :pools, :pre_cap_groups, :location, :priority
 
   # Provides backwards compatability
   def creation_transfer
     Rails.logger.warn 'Creation transfer is deprecated, use creation_transfers instead'
-    return creation_transfers.first if creation_transfers.count == 1
+    transfers_found = creation_transfers.count
+    return creation_transfers.first if transfers_found == 1
 
-    raise Sequencescape::Api::Error, "Unexpected number of transfers found: #{creation_transfers.count} found, 1 expected."
+    raise Sequencescape::Api::Error, "Unexpected number of transfers found: #{transfers_found} found, 1 expected."
   end
 
   module UpdateExtractionAttributes
     def create!(attributes = nil)
       attributes ||= {}
       new({}, false).tap do |attrs|
-        api.create(actions.create, { :extraction_attribute => attributes }, Sequencescape::Api::ModifyingHandler.new(attrs))
+        api.create(actions.create, { extraction_attribute: attributes },
+                   Sequencescape::Api::ModifyingHandler.new(attrs))
       end
     end
   end
 
-  has_many :extraction_attributes, :class_name => 'ExtractionAttribute' do
+  has_many :extraction_attributes, class_name: 'ExtractionAttribute' do
     include Sequencescape::Plate::UpdateExtractionAttributes
   end
 end

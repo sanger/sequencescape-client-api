@@ -23,8 +23,8 @@ class Sequencescape::Api::ResourceModelProxy
   attr_reader :api, :actions, :model
   private :api, :actions, :model
 
-  delegate :nil?, :inspect, :to => :model
-  delegate :read_timeout, :to => :api
+  delegate :nil?, :inspect, to: :model
+  delegate :read_timeout, to: :api
 
   has_create_action
 
@@ -42,5 +42,5 @@ class Sequencescape::Api::ResourceModelProxy
   end
 
   # Here are some methods that need to be delegated directly.
-  delegate :ai, :to => :model
+  delegate :ai, to: :model
 end

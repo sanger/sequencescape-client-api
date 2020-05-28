@@ -13,7 +13,8 @@ module Sequencescape::Behaviour
         attributes ||= {}
 
         new({}, false).tap do |qc_file|
-          api.create_from_file(actions.create, file, filename, 'sequencescape/qc_file', Sequencescape::Api::ModifyingHandler.new(qc_file))
+          api.create_from_file(actions.create, file, filename, 'sequencescape/qc_file',
+                               Sequencescape::Api::ModifyingHandler.new(qc_file))
         end
       end
     end

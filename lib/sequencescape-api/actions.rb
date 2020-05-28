@@ -62,7 +62,7 @@ module Sequencescape::Api::Actions
       class_eval(%{
         def #{name}(body = nil)
           update_from_json(body || {}, false)
-          modify!(:action => #{action.to_sym.inspect}, :http_verb => #{api_method.to_sym.inspect}, :skip_json => #{skip_json})
+          modify!(action: #{action.to_sym.inspect}, http_verb: #{api_method.to_sym.inspect}, skip_json: #{skip_json})
         end
       }, __FILE__, line)
     end

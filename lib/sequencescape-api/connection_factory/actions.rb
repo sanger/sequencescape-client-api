@@ -48,7 +48,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
 
   def create(url, body, handler)
-    perform(:post, url, jsonify(body, :action => :create)) do |response|
+    perform(:post, url, jsonify(body, action: :create)) do |response|
       case response
       when Net::HTTPCreated             then handler.success(parse_json_from(response))
       when Net::HTTPSuccess             then handler.success(parse_json_from(response)) # TODO: should be error!
@@ -76,7 +76,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
 
   def update(url, body, handler)
-    perform(:put, url, jsonify(body, :action => :update)) do |response|
+    perform(:put, url, jsonify(body, action: :update)) do |response|
       case response
       when Net::HTTPSuccess             then handler.success(parse_json_from(response))
       when Net::HTTPUnauthorized        then handler.unauthenticated(parse_json_from(response))
@@ -134,7 +134,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
     case
     when body.nil?        then {}
     when body.is_a?(Hash) then body
-    else                       body.as_json(options.merge(:root => true))
+    else                       body.as_json(options.merge(root: true))
     end
   end
   private :jsonify

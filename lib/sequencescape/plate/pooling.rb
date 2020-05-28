@@ -10,7 +10,9 @@ module Sequencescape::Plate::Pooling
 
   def populate_wells_with_pre_cap_group
     wells.each do |well|
-      pre_cap_group_id, pre_cap_group = pre_cap_groups.detect { |_, pre_cap_group| pre_cap_group['wells'].include?(well.location) }
+      pre_cap_group_id, pre_cap_group = pre_cap_groups.detect do |_, pre_cap_group|
+        pre_cap_group['wells'].include?(well.location)
+      end
       next if pre_cap_group.nil?
 
       well.pre_cap_group = pre_cap_group
@@ -19,7 +21,9 @@ module Sequencescape::Plate::Pooling
 
   def after_load
     pools.each { |pool_id, pool| pool['id'] = pool_id } unless pools.nil?
-    pre_cap_groups.each { |pre_cap_group_id, pre_cap_group| pre_cap_group['id'] = pre_cap_group_id } unless pre_cap_groups.nil?
+    return if pre_cap_groups.nil?
+
+    pre_cap_groups.each { |pre_cap_group_id, pre_cap_group| pre_cap_group['id'] = pre_cap_group_id }
   end
   private :after_load
 end

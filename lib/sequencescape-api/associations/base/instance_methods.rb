@@ -39,8 +39,9 @@ module Sequencescape::Api::Associations::Base::InstanceMethods
     when json.is_a?(String)                                 then { uuid: json, uuid_only: true }
     when json.is_a?(Hash)                                   then json
     when json.respond_to?(:map)                             then json.map(&method(:attributes_from))
-    when json.is_a?(Sequencescape::Api::Resource)           then json.as_json(:force => true, :action => :update, :root => false, :uuid => true)
-    when json.is_a?(Sequencescape::Api::Associations::Base) then json.as_json(:force => true, :action => :update)
+    when json.is_a?(Sequencescape::Api::Resource)           then json.as_json(force: true, action: :update,
+                                                                              root: false, uuid: true)
+    when json.is_a?(Sequencescape::Api::Associations::Base) then json.as_json(force: true, action: :update)
     else raise json.inspect
     end
   end

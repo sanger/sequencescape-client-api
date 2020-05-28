@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Fake the web connections so we don't trash anything
 require 'webmock/rspec'
 
@@ -25,7 +27,9 @@ module ContractHelper
 
     def request(contract_name)
       contract(contract_name) do |file|
-        match = REQUEST_REGEXP.match(file.read) or raise StandardError, "Invalidly formatted request in #{contract_name.inspect}"
+        match = REQUEST_REGEXP.match(file.read)
+
+        raise StandardError, "Invalidly formatted request in #{contract_name.inspect}" if match.nil?
 
         @http_verb = match[:verb].downcase.to_sym
         @url = "http://localhost:3000#{match[:path]}"
@@ -87,11 +91,13 @@ module ContractHelper
     end
 
     def is_working_as_an_unauthorised_client
-      stub_request_from('retrieve-root-with-an-unauthorised-client') { response('root-response-for-unauthorised-client') }
+      stub_request_from('retrieve-root-with-an-unauthorised-client') do
+        response('root-response-for-unauthorised-client')
+      end
       let(:api) do
         Sequencescape::Api.new(
-          :url => 'http://localhost:3000/', :cookie => 'single-sign-on-cookie',
-          :namespace => Unauthorised
+          url: 'http://localhost:3000/', cookie: 'single-sign-on-cookie',
+          namespace: Unauthorised
         )
       end
     end
@@ -101,8 +107,8 @@ module ContractHelper
 
       let(:api) do
         Sequencescape::Api.new(
-          :url => 'http://localhost:3000/', :cookie => 'single-sign-on-cookie',
-          :authorisation => 'authorised!', :namespace => Authenticated
+          url: 'http://localhost:3000/', cookie: 'single-sign-on-cookie',
+          authorisation: 'authorised!', namespace: Authenticated
         )
       end
     end

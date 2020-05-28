@@ -10,5 +10,5 @@ class Sequencescape::Study < ::Sequencescape::Api::Resource
   attribute_accessor :contaminated_human_dna, :contains_human_dna
   attribute_accessor :data_release_sort_of_study, :data_release_strategy
 
-  validates :name, :presence => true
+  validates :name, presence: true
 end

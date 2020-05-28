@@ -44,17 +44,17 @@ module Sequencescape::Api::Resource::Modifications
   def update_attributes!(attributes)
     clear_changes_information
     update_from_json(attributes, false)
-    modify!(:action => :update)
+    modify!(action: :update)
   end
   alias update! update_attributes!
 
   def save!(options = nil)
     action = persisted? ? :update : :create
-    modify!((options || {}).merge({ :action => action }))
+    modify!((options || {}).merge({ action: action }))
   end
 
   def modify!(options)
-    raise Sequencescape::Api::Error, 'No actions exist' if options[:url].nil? and actions.nil?
+    raise Sequencescape::Api::Error, 'No actions exist' if options[:url].nil? && actions.nil?
 
     action    = options[:action]
     skip_json = options[:skip_json] || false

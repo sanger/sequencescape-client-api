@@ -5,7 +5,7 @@ module Sequencescape::Api::Resource::Attributes
   def self.extended(base)
     base.class_eval do
       include InstanceMethods
-      class_attribute :defined_attributes, :instance_writer => false
+      class_attribute :defined_attributes, instance_writer: false
       self.defined_attributes = Set.new
     end
   end

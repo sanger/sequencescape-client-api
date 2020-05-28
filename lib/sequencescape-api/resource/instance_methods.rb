@@ -6,10 +6,10 @@ module Sequencescape::Api::Resource::InstanceMethods
       alias_method(:model, :class)
       alias_method(:id, :uuid)
 
-      delegate :hash, :to => :uuid
-      delegate :read_timeout, :to => :api
+      delegate :hash, to: :uuid
+      delegate :read_timeout, to: :api
 
-      attribute_accessor :created_at, :updated_at, :conversion => :to_time
+      attribute_accessor :created_at, :updated_at, conversion: :to_time
 
       private
 

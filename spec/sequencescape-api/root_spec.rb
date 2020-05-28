@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'Handling authentication issues' do
   stub_request_from('retrieve-root-with-an-unauthorised-client') { response('client-fails-authentication') }
 
-  subject { Sequencescape::Api.new(:url => 'http://localhost:3000/', :cookie => 'single-sign-on-cookie') }
+  subject { Sequencescape::Api.new(url: 'http://localhost:3000/', cookie: 'single-sign-on-cookie') }
 
   it 'raises an exception' do
     lambda { subject }.should raise_error(Sequencescape::Api::UnauthenticatedError)
@@ -15,7 +17,7 @@ describe 'Retrieving the root URL' do
     is_working_as_an_unauthorised_client
 
     context 'with no namespace' do
-      subject { Sequencescape::Api.new(:url => 'http://localhost:3000/', :cookie => 'single-sign-on-cookie') }
+      subject { Sequencescape::Api.new(url: 'http://localhost:3000/', cookie: 'single-sign-on-cookie') }
 
       Unauthorised::MODELS_THROUGH_API.each do |model|
         it "provides the #{model} through the API instance" do
@@ -24,7 +26,10 @@ describe 'Retrieving the root URL' do
 
         it "errors because Sequencescape::#{model.to_s.classify} is not defined" do
           # Note: Using a regex as > Ruby 2.3 'DidYouMean' changes the error message slightly.
-          lambda { subject.send(model.to_sym) }.should raise_error(NameError, /uninitialized constant Sequencescape::#{model.to_s.classify}/)
+          lambda {
+            subject.send(model.to_sym)
+          }.should raise_error(NameError,
+                               /uninitialized constant Sequencescape::#{model.to_s.classify}/)
         end
       end
     end

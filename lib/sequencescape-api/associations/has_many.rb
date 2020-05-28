@@ -32,16 +32,16 @@ module Sequencescape::Api::Associations::HasMany
 
     def initialize(owner, json = nil)
       super
-      @cached_all = case
-                    when json.is_a?(Array) then json.map { |js| new_from(js) }
+      @cached_all = case json
+                    when Array then json.map { |js| new_from(js) }
                     else nil
-        end
+                    end
     end
 
     def new_from(json)
-      case
-      when json.is_a?(String) then new(uuid: json) # We've recieved an array of strings, prob. uuids
-      when json.is_a?(Hash) then new(json)
+      case json
+      when String then new(uuid: json) # We've recieved an array of strings, prob. uuids
+      when Hash then new(json)
       else json
       end
     end

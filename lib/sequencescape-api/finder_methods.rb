@@ -3,7 +3,7 @@ require 'ostruct'
 module Sequencescape::Api::FinderMethods
   module Delegation
     def self.included(base)
-      base.with_options(:to => :all) do |all|
+      base.with_options(to: :all) do |all|
         all.delegate :each, :first, :last, :to_a, :size
         all.delegate :empty?, :blank?
         all.delegate :each_page, :first_page, :last_page
@@ -74,7 +74,7 @@ end
 
 module Sequencescape::Api::FinderMethods::Caching
   def all(reload = false)
-    @cached_all = super() if @cached_all.nil? or reload
+    @cached_all = super() if @cached_all.nil? || reload
     @cached_all
   end
 end
@@ -128,7 +128,7 @@ class Sequencescape::Api::PageOfResults
 
   def walk_pages
     first_page
-    while true
+    loop do
       yield
       break if actions.next.blank?
 

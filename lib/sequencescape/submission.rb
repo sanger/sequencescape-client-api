@@ -8,7 +8,7 @@ class Sequencescape::Submission < ::Sequencescape::Api::Resource
   # TODO: use a has many, but ensure it works
   attribute_accessor :orders
 
-  has_update_action :submit!, :action => 'submit', :verb => :create, :skip_json => true
+  has_update_action :submit!, action: 'submit', verb: :create, skip_json: true
 
   attribute_reader :state
   attribute_reader :asset_group_name
