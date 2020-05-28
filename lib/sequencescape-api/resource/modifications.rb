@@ -115,6 +115,6 @@ module Sequencescape::Api::Resource::Modifications
   private
 
   def debug_log(message)
-    Rails.loggger.debug(message) if defined?(Rails)
+    Rails.logger.debug(message) if defined?(Rails)
   end
 end
