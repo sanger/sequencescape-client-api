@@ -93,6 +93,7 @@ module Sequencescape::Api::Resource::Modifications
     when name.to_s == 'uuid'                        then @uuid = (value || @uuid)
     when respond_to?(:"#{name}=", :include_private) then send(:"#{name}=", value)
     else # TODO: Maybe we need debug logging in here at some point!
+      Rails.loggger.debug("Unrecognized attribute #{name}")
     end
   end
   private :update_attribute
