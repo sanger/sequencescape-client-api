@@ -29,7 +29,7 @@ describe 'Retrieving the root URL' do
       end
     end
 
-    context "with a specified namespace" do
+    context 'with a specified namespace' do
       Unauthorised::MODELS_THROUGH_API.each do |model|
         context do
           stub_request_and_response("unauthorised-#{model.to_s.dasherize}-list")
@@ -49,7 +49,7 @@ describe 'Retrieving the root URL' do
 
     subject { api }
 
-    [:model_c, :model_d].each do |model|
+    %i[model_c model_d].each do |model|
       it "provides the #{model} through the API instance" do
         subject.should respond_to(model.to_sym)
       end

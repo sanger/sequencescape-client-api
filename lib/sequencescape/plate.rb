@@ -62,7 +62,7 @@ class Sequencescape::Plate < ::Sequencescape::Asset
 
   # Provides backwards compatability
   def creation_transfer
-    Rails.logger.warn "Creation transfer is deprecated, use creation_transfers instead"
+    Rails.logger.warn 'Creation transfer is deprecated, use creation_transfers instead'
     return creation_transfers.first if creation_transfers.count == 1
 
     raise Sequencescape::Api::Error, "Unexpected number of transfers found: #{creation_transfers.count} found, 1 expected."

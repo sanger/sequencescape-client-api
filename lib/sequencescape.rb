@@ -80,4 +80,4 @@ require 'sequencescape/extraction_attribute'
 require 'sequencescape/library_event'
 
 # Ensure that the I18n stuff has been properly configured
-I18n.config.load_path << File.expand_path(File.join(File.dirname(__FILE__), %w{sequencescape locale en.yml}))
+I18n.config.load_path << File.expand_path(File.join(File.dirname(__FILE__), %w[sequencescape locale en.yml]))

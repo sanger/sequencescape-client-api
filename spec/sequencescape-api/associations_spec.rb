@@ -62,7 +62,7 @@ describe 'Various associations' do
 
     let(:resource) { api.model_b.find('UUID') }
 
-    [:model_a, :model_by_simple_name, :model_by_full_name].each do |association_name|
+    %i[model_a model_by_simple_name model_by_full_name].each do |association_name|
       context "expressed as #{association_name.inspect}" do
         stub_request_and_response('belongs-to-association')
 

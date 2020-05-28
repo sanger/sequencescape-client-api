@@ -88,7 +88,8 @@ class Sequencescape::Api::PageOfResults
   attr_reader :size
 
   def initialize(api, json, &block)
-    @api, @ctor = api, block
+    @api = api
+    @ctor = block
     update_from_json(json)
   end
 
@@ -109,7 +110,7 @@ class Sequencescape::Api::PageOfResults
     end
   end
 
-  def each_page(&block)
+  def each_page
     walk_pages do
       yield(@objects.dup)
     end
@@ -154,16 +155,16 @@ class Sequencescape::Api::PageOfResults
     end
   end
 
-  [:first, :last, :previous, :next].each do |page|
+  %i[first last previous next].each do |page|
     line = __LINE__ + 1
-    class_eval(%Q{
+    class_eval("
       def #{page}_page
         self.tap do
           api.read(actions.#{page}, UpdateHandler.new(self)) unless actions.read == actions.#{page}
           yield(@objects.dup) if block_given?
         end
       end
-    }, __FILE__, line)
+    ", __FILE__, line)
   end
   private :last_page, :next_page
 
@@ -181,7 +182,8 @@ class Sequencescape::Api::PageOfResults
 
     raise Sequencescape::Api::Error, 'No object json in page!' if json.keys.empty?
 
-    @actions, @objects = OpenStruct.new(actions), json[json.keys.first].map(&@ctor)
+    @actions = OpenStruct.new(actions)
+    @objects = json[json.keys.first].map(&@ctor)
   end
   private :update_from_json
 end

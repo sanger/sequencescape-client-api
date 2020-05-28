@@ -73,7 +73,8 @@ class Sequencescape::Api::Resource::Groups::Proxy
     end
 
     def initialize(owner, attributes = {})
-      @owner, @_attributes_ = owner, {}
+      @owner = owner
+      @_attributes_ = {}
       attributes.each { |k, v| send(:"#{k}=", v) if respond_to?(:"#{k}=", :include_private_methods) }
     end
 

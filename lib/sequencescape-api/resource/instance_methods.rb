@@ -25,7 +25,8 @@ module Sequencescape::Api::Resource::InstanceMethods
     self.uuid.eql?(object_or_proxy.uuid)
   end
 
-  def initialize(api, json = nil, wrapped = false)
-    @api, @_attributes_ = api, {}
+  def initialize(api, _json = nil, _wrapped = false)
+    @api = api
+    @_attributes_ = {}
   end
 end

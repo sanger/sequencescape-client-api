@@ -95,7 +95,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
   private :handle_redirect
 
-  def perform(http_verb, url, body = nil, accepts = nil, &block)
+  def perform(http_verb, url, body = nil, accepts = nil)
     begin
       uri = URI.parse(url)
     rescue URI::InvalidURIError => e
@@ -116,7 +116,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
   private :perform
 
-  def perform_for_file(http_verb, url, file, filename, content_type, &block)
+  def perform_for_file(http_verb, url, file, filename, content_type)
     uri = URI.parse(url)
     Net::HTTP.start(uri.host, uri.port) do |connection|
       connection.read_timeout = read_timeout

@@ -10,7 +10,8 @@ class Sequencescape::Api
   extend Sequencescape::Api::ConnectionFactory::Helpers
 
   def initialize(options = {})
-    @models, @model_namespace = {}, options.delete(:namespace) || Sequencescape
+    @models = {}
+    @model_namespace = options.delete(:namespace) || Sequencescape
     @model_namespace = @model_namespace.constantize if @model_namespace.is_a?(String)
     @connection = self.class.connection_factory.create(options).tap do |connection|
       connection.root(self)
@@ -18,6 +19,7 @@ class Sequencescape::Api
   end
 
   attr_reader :capabilities
+
   delegate :read, :create, :create_from_file, :update, :retrieve, :to => :@connection
 
   def read_uuid(uuid, handler)

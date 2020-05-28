@@ -11,7 +11,8 @@ module Sequencescape::Api::Composition
     end
 
     def initialize(owner, attributes)
-      @owner, @_attributes_ = owner, attributes
+      @owner = owner
+      @_attributes_ = attributes
       attributes.each { |k, v| send(:"#{k}=", v) }
     end
 
@@ -26,7 +27,7 @@ module Sequencescape::Api::Composition
     composed_class_name = options[:class_name] || name
 
     line = __LINE__ + 1
-    class_eval(%Q{
+    class_eval(%{
       def #{name}
         return nil unless attributes_for?(#{name.to_s.inspect})
         api.model(#{composed_class_name.inspect}).new(self, attributes_for(#{name.to_s.inspect}))

@@ -92,7 +92,7 @@ module Sequencescape::Api::Associations::HasMany
       @objects
     end
 
-    def each_page(&block)
+    def each_page
       yield(@objects)
     end
 

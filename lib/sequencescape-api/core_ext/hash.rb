@@ -1,7 +1,7 @@
 class Hash
   # Yields all of the missing keys if there are any so that you can do what you like, like
   # error maybe?
-  def required!(*keys, &block)
+  def required!(*keys)
     options = keys.extract_options!
     return if keys.empty?
 

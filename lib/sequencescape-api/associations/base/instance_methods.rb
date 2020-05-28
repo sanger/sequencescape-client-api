@@ -2,10 +2,11 @@ module Sequencescape::Api::Associations::Base::InstanceMethods
   def self.included(base)
     base.class_eval do
       class_attribute :association, :options
-      class_attribute :default_attributes_if_missing, :instance_writer => false
+      class_attribute :default_attributes_if_missing, instance_writer: false
 
       attr_reader :model
-      delegate :read_timeout, :to => :@owner
+
+      delegate :read_timeout, to: :@owner
       private :model
 
       def api(*args, &block)

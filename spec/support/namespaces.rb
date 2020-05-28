@@ -1,5 +1,5 @@
 module Unauthorised
-  MODELS_THROUGH_API = [:model_a, :model_b, :model_c]
+  MODELS_THROUGH_API = %i[model_a model_b model_c]
 
   class ModelA < Sequencescape::Api::Resource
     module LotCreator
@@ -56,7 +56,7 @@ module Unauthorised
 end
 
 module Authenticated
-  MODELS_THROUGH_API = [:model_c, :model_d]
+  MODELS_THROUGH_API = %i[model_c model_d]
 
   class ModelC < Sequencescape::Api::Resource
   end

@@ -50,7 +50,7 @@ module Sequencescape::Api::Associations::BelongsTo
         @owner = owner
       end
 
-      delegate :loaded, :to => :@owner
+      delegate :loaded, to: :@owner
       private :loaded
 
       def new(*args, &block)
@@ -71,7 +71,7 @@ module Sequencescape::Api::Associations::BelongsTo
     private :object
 
     def as_json(options = nil)
-      @object.as_json({ :root => false, :uuid => false }.reverse_merge(options || {}))
+      @object.as_json({ root: false, uuid: false }.reverse_merge(options || {}))
     end
   end
 

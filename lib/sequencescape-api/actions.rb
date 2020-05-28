@@ -10,8 +10,9 @@ module Sequencescape::Api::Actions
     # Defines a method that is available on the resource model itself, rather than on an instance of
     # the resource model.
     def has_class_create_action(*args)
-      action_module, line = Module.new, __LINE__ + 1
-      action_module.module_eval(%Q{
+      action_module = Module.new
+      line = __LINE__ + 1
+      action_module.module_eval(%{
         def initialize_class_actions(proxy)
           super
 
@@ -40,7 +41,7 @@ module Sequencescape::Api::Actions
       result_class = "api.#{options[:resource]}" if options[:resource]
 
       line = __LINE__ + 1
-      class_eval(%Q{
+      class_eval(%{
         def #{name}(attributes = nil)
           url = actions.try(#{action.to_sym.inspect}) or
             raise Sequencescape::Api::Error, "Cannot perform #{action} without an URL"
@@ -58,7 +59,7 @@ module Sequencescape::Api::Actions
       action     = options[:action] || :update
 
       line = __LINE__ + 1
-      class_eval(%Q{
+      class_eval(%{
         def #{name}(body = nil)
           update_from_json(body || {}, false)
           modify!(:action => #{action.to_sym.inspect}, :http_verb => #{api_method.to_sym.inspect}, :skip_json => #{skip_json})

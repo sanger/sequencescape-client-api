@@ -8,14 +8,14 @@ class Sequencescape::Api::ConnectionFactory
   def self.create(options)
     required_options = []
     required_options.push(:cookie) if options[:authorisation].blank?
-    required_options.push(:url)    if self.default_url.blank?
+    required_options.push(:url)    if default_url.blank?
 
-    required_options.push(:allow_blank => false)
+    required_options.push(allow_blank: false)
     options.required!(*required_options) do |missing|
       raise ::Sequencescape::Api::Error, "No #{missing.or_sentence} set"
     end
 
-    options[:url] ||= self.default_url
+    options[:url] ||= default_url
     new(options)
   end
 
@@ -23,7 +23,9 @@ class Sequencescape::Api::ConnectionFactory
   private :url, :cookie, :read_timeout
 
   def initialize(options)
-    @url, @cookie, @authorisation = options[:url], options[:cookie], options[:authorisation]
+    @url = options[:url]
+    @cookie = options[:cookie]
+    @authorisation = options[:authorisation]
     @read_timeout = options[:read_timeout] || 120
   end
   private_class_method :initialize

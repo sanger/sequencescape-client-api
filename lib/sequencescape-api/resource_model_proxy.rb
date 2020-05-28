@@ -14,7 +14,9 @@ class Sequencescape::Api::ResourceModelProxy
   extend ::Sequencescape::Api::Actions
 
   def initialize(api, model, actions)
-    @api, @model, @actions = api, model, OpenStruct.new(actions)
+    @api = api
+    @model = model
+    @actions = OpenStruct.new(actions)
     @model.send(:initialize_class_actions, self)
   end
 

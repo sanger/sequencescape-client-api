@@ -4,7 +4,7 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
   class BaseHandler
     include Sequencescape::Api::BasicErrorHandling
 
-    def success(attributes)
+    def success(_attributes)
       raise Sequencescape::Api::Error, 'A success response from a search is unexpected'
     end
   end
@@ -17,7 +17,7 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
       @api = api
     end
 
-    def redirection(json, &block)
+    def redirection(json)
       json.delete('uuids_to_ids')
       Sequencescape::Api::FinderMethods::FindByUuidHandler.new(@api.send(json.keys.first)).success(json)
     end
@@ -28,6 +28,7 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
   class MultipleResultPaged
     include Enumerable
     attr_reader :objects, :size
+
     def initialize(objects, size)
       @objects = objects
       @size = size
@@ -40,10 +41,11 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
   # need to be able to create the resources from each of these.
   class MultipleResultHandler
     def initialize(api, model)
-      @api, @model = api, model
+      @api = api
+      @model = model
     end
 
-    def redirection(json, &block)
+    def redirection(json)
       items = json['searches'].map(&method(:new))
       size = json['size']
       MultipleResultPaged.new(items, size)
@@ -59,11 +61,11 @@ class Sequencescape::Search < ::Sequencescape::Api::Resource
 
   def self.search_action(name)
     line = __LINE__ + 1
-    class_eval(%Q{
+    class_eval("
       def #{name}(criteria = {})
         api.create(actions.#{name}, { 'search' => criteria }, SingleResultHandler.new(api))
       end
-    }, __FILE__, line)
+    ", __FILE__, line)
   end
 
   attribute_reader :name

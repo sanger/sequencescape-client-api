@@ -27,7 +27,8 @@ module ContractHelper
       contract(contract_name) do |file|
         match = REQUEST_REGEXP.match(file.read) or raise StandardError, "Invalidly formatted request in #{contract_name.inspect}"
 
-        @http_verb, @url = match[:verb].downcase.to_sym, "http://localhost:3000#{match[:path]}"
+        @http_verb = match[:verb].downcase.to_sym
+        @url = "http://localhost:3000#{match[:path]}"
         @conditions = {}
         @conditions[:headers] = Hash[*match[:headers].split(/\r?\n/).map { |l| l.split(':') }.flatten.map(&:strip)]
         @conditions[:body] = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) unless match[:body].blank?
@@ -40,7 +41,7 @@ module ContractHelper
       end
     end
 
-    def contract(contract_name, &block)
+    def contract(contract_name)
       path = @root.dup
       until path.empty?
         filename = File.join(path, 'contracts', "#{contract_name}.txt")
@@ -75,7 +76,7 @@ module ContractHelper
 
   module ClassMethods
     def stub_request_from(request_filename, &block)
-      stubbed_request = StubRequestBuilder.new(File.join(File.dirname(__FILE__), %w{.. sequencescape-api contracts}))
+      stubbed_request = StubRequestBuilder.new(File.join(File.dirname(__FILE__), %w[.. sequencescape-api contracts]))
       stubbed_request.request(request_filename)
       stubbed_request.instance_eval(&block)
       stubbed_request.inject_into(self)

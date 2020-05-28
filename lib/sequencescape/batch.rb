@@ -12,7 +12,7 @@ class Sequencescape::Batch < ::Sequencescape::Api::Resource
   attribute_accessor :state, :production_state, :qc_state, :barcode
 
   def self.state_method(name)
-    class_eval(%Q{def #{name}? ; state == #{name.to_s.inspect} ; end})
+    class_eval("def #{name}? ; state == #{name.to_s.inspect} ; end")
   end
 
   state_method(:pending)

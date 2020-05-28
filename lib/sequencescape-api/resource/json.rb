@@ -19,7 +19,8 @@ module Sequencescape::Api::Resource::Json
     include Sequencescape::Api::BasicErrorHandling
 
     def initialize(api, owner)
-      @api, @owner = api, owner
+      @api = api
+      @owner = owner
     end
 
     attr_reader :api
@@ -89,7 +90,7 @@ module Sequencescape::Api::Resource::Json
 
   def attributes_for_json(options)
     attributes_to_send_to_server(options).tap do |changed_attributes|
-      ['created_at', 'updated_at'].map(&changed_attributes.method(:delete))
+      %w[created_at updated_at].map(&changed_attributes.method(:delete))
     end
   end
   private :attributes_for_json

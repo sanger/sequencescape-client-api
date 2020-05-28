@@ -75,7 +75,7 @@ describe 'Creating a resource' do
 
       it 'takes an array of objects and converts them to UUID'
       it 'assumes an array of strings are UUIDs' do
-        target.create!(:model_bs => [{ "test_attribute" => "test_value" }])
+        target.create!(:model_bs => [{ 'test_attribute' => 'test_value' }])
       end
       it 'raises if not given an enumerable'
     end

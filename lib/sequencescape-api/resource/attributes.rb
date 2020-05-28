@@ -29,7 +29,7 @@ module Sequencescape::Api::Resource::Attributes
       converted = ["#{name}_before_type_cast", conversion].compact.join('.')
 
       line = __LINE__ + 1
-      class_eval(%Q{
+      class_eval("
         def #{name}
           #{converted}
         end
@@ -37,7 +37,7 @@ module Sequencescape::Api::Resource::Attributes
         def #{name}_before_type_cast
           attributes[#{name.to_s.inspect}]
         end
-      }, __FILE__, line)
+      ", __FILE__, line)
     end
     extend_attribute_methods(names)
   end
@@ -50,12 +50,12 @@ module Sequencescape::Api::Resource::Attributes
       defined_attributes << name.to_sym
 
       line = __LINE__ + 1
-      class_eval(%Q{
+      class_eval("
         def #{name}=(value)
           #{name}_will_change! if not attributes.key?(#{name.to_s.inspect}) or #{name} != value
           attributes[#{name.to_s.inspect}] = value
         end
-      }, __FILE__, line)
+      ", __FILE__, line)
     end
     extend_attribute_methods(names)
   end

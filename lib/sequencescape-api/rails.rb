@@ -43,7 +43,7 @@ module Sequencescape::Api::Rails
 
     def sequencescape_api_unauthenticated_handler(exception)
       Rails.logger.error "#{exception}, #{exception.backtrace}"
-      raise StandardError, "You are not authenticated; please visit the WTSI login page"
+      raise StandardError, 'You are not authenticated; please visit the WTSI login page'
     end
     private :sequencescape_api_unauthenticated_handler
   end
