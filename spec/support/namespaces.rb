@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Unauthorised
-  MODELS_THROUGH_API = %i[model_a model_b model_c]
+  MODELS_THROUGH_API = %i[model_a model_b model_c].freeze
 
   class ModelA < Sequencescape::Api::Resource
     module LotCreator
@@ -58,7 +58,7 @@ module Unauthorised
 end
 
 module Authenticated
-  MODELS_THROUGH_API = %i[model_c model_d]
+  MODELS_THROUGH_API = %i[model_c model_d].freeze
 
   class ModelC < Sequencescape::Api::Resource
   end

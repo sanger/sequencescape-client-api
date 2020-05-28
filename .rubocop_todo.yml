@@ -326,22 +326,6 @@ Style/FrozenStringLiteralComment:
     - 'sequencescape-api.gemspec'
 
 # Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: line_count_dependent, lambda, literal
-Style/Lambda:
-  Exclude:
-    - 'spec/sequencescape-api/finding_methods_spec.rb'
-    - 'spec/sequencescape-api/root_spec.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: IgnoredMethods.
-Style/MethodCallWithoutArgsParentheses:
-  Exclude:
-    - 'spec/sequencescape-api/associations_spec.rb'
-
-# Offense count: 2
 Style/MethodMissingSuper:
   Exclude:
     - 'lib/sequencescape-api/associations/belongs_to.rb'
@@ -352,19 +336,3 @@ Style/MissingRespondToMissing:
   Exclude:
     - 'lib/sequencescape-api/associations/belongs_to.rb'
     - 'lib/sequencescape-api/core.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: literals, strict
-Style/MutableConstant:
-  Exclude:
-    - 'lib/sequencescape-api/version.rb'
-    - 'spec/support/contract_helper.rb'
-    - 'spec/support/namespaces.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/Not:
-  Exclude:
-    - 'lib/sequencescape-api/resource/active_model.rb'

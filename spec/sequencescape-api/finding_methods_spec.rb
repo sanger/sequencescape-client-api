@@ -11,7 +11,7 @@ describe 'Finding a resource instance' do
     stub_request_from('retrieve-model') { response('resource-not-found') }
 
     it 'raises an exception' do
-      lambda { subject }.should raise_error(Sequencescape::Api::ResourceNotFound)
+      -> { subject }.should raise_error(Sequencescape::Api::ResourceNotFound)
     end
   end
 

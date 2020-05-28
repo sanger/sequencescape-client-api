@@ -95,7 +95,7 @@ module Sequencescape::Api::Resource::Modifications
     when name.to_s == 'uuid'                        then @uuid = (value || @uuid)
     when respond_to?(:"#{name}=", :include_private) then send(:"#{name}=", value)
     else
-      Rails.loggger.debug("Unrecognized attribute #{name}")
+      debug_log("Unrecognized attribute #{name}")
     end
   end
   private :update_attribute
@@ -111,4 +111,10 @@ module Sequencescape::Api::Resource::Modifications
     @actions = actions_from_attributes.nil? ? actions_before_update : OpenStruct.new(actions_from_attributes)
   end
   private :update_actions
+
+  private
+
+  def debug_log(message)
+    Rails.loggger.debug(message) if defined?(Rails)
+  end
 end

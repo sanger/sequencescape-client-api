@@ -8,7 +8,7 @@ describe 'Handling authentication issues' do
   subject { Sequencescape::Api.new(url: 'http://localhost:3000/', cookie: 'single-sign-on-cookie') }
 
   it 'raises an exception' do
-    lambda { subject }.should raise_error(Sequencescape::Api::UnauthenticatedError)
+    -> { subject }.should raise_error(Sequencescape::Api::UnauthenticatedError)
   end
 end
 

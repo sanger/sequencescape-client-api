@@ -53,7 +53,7 @@ describe 'Various associations' do
       stub_request_from('retrieve-model') { response('model-a-instance') }
       stub_request_from('create-via-has-many') { response('model-b-instance') }
 
-      subject { api.model_a.find('UUID').model_bs.create!() }
+      subject { api.model_a.find('UUID').model_bs.create! }
 
       its(:class) { should == Unauthorised::ModelB }
     end

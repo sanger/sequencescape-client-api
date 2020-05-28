@@ -12,6 +12,6 @@ module Sequencescape::Api::Resource::ActiveModel
   end
 
   def persisted?
-    not uuid.nil?
+    !uuid.nil?
   end
 end
