@@ -58,7 +58,7 @@ module Sequencescape::Api::Resource::Json
   private :as_json_for_create
 
   # Returns the appropriate JSON for when we are updating a resource.
-  def as_json_for_update(options)
+  def as_json_for_update(options) # rubocop:todo Metrics/MethodLength
     if must_output_full_json?(options)
       json = {}
       json['uuid'] = uuid if options[:uuid] && uuid.present?
@@ -72,8 +72,7 @@ module Sequencescape::Api::Resource::Json
     elsif options[:root]
       # We are the root element so we must output something!
       { json_root => {} }
-    else
-      # We are not a root element, we haven't been changed, so we might as well not exist!
+    else # We are not a root element, we haven't been changed, so we might as well not exist!
       nil
     end
   end

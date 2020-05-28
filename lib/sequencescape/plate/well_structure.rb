@@ -3,7 +3,7 @@ module Sequencescape::Plate::WellStructure
     case size
     when 96  then ('A'..'H')
     when 384 then ('A'..'P')
-    else          raise RuntimeError, "Unknown plate size #{size}"
+    else          raise "Unknown plate size #{size}"
     end
   end
 
@@ -11,7 +11,7 @@ module Sequencescape::Plate::WellStructure
     case size
     when 96  then (1..12)
     when 384 then (1..24)
-    else          raise RuntimeError, "Unknown plate size #{size}"
+    else          raise "Unknown plate size #{size}"
     end
   end
 

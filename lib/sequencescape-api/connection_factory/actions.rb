@@ -47,7 +47,8 @@ module Sequencescape::Api::ConnectionFactory::Actions
     end
   end
 
-  def create(url, body, handler)
+  # rubocop:todo Metrics/MethodLength
+  def create(url, body, handler) # rubocop:todo Metrics/CyclomaticComplexity
     perform(:post, url, jsonify(body, action: :create)) do |response|
       case response
       when Net::HTTPCreated             then handler.success(parse_json_from(response))
@@ -60,8 +61,10 @@ module Sequencescape::Api::ConnectionFactory::Actions
       end
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
-  def create_from_file(url, file, filename, content_type, handler)
+  # rubocop:todo Metrics/MethodLength
+  def create_from_file(url, file, filename, content_type, handler) # rubocop:todo Metrics/CyclomaticComplexity
     perform_for_file(:post, url, file, filename, content_type) do |response|
       case response
       when Net::HTTPCreated             then handler.success(parse_json_from(response))
@@ -74,6 +77,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
       end
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def update(url, body, handler)
     perform(:put, url, jsonify(body, action: :update)) do |response|
@@ -95,7 +99,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
   private :handle_redirect
 
-  def perform(http_verb, url, body = nil, accepts = nil)
+  def perform(http_verb, url, body = nil, accepts = nil) # rubocop:todo Metrics/MethodLength
     begin
       uri = URI.parse(url)
     rescue URI::InvalidURIError => e

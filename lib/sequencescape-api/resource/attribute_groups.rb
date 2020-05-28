@@ -28,7 +28,7 @@ module Sequencescape::Api::Resource::Groups
   end
 
   module Json
-    def as_json_for_update(options)
+    def as_json_for_update(options) # rubocop:todo Metrics/MethodLength
       super.tap do |json|
         begin
           if options[:root]

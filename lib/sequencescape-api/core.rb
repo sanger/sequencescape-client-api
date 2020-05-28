@@ -37,7 +37,7 @@ class Sequencescape::Api
   end
   protected :method_missing
 
-  def model(name)
+  def model(name) # rubocop:todo Metrics/MethodLength
     parts = name.to_s.split('::').map(&:classify)
     raise StandardError, "#{name.inspect} is rooted and that is not supported" if parts.first.blank?
 

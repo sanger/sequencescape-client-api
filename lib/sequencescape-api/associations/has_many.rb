@@ -106,7 +106,7 @@ module Sequencescape::Api::Associations::HasMany
     end
   end
 
-  def has_many(association, options = {}, &block)
+  def has_many(association, options = {}, &block) # rubocop:todo Metrics/MethodLength
     association = association.to_sym
 
     proxy = Class.new(

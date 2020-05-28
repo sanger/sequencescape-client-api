@@ -1,5 +1,5 @@
 module Sequencescape::Api::Associations::Base::InstanceMethods
-  def self.included(base)
+  def self.included(base) # rubocop:todo Metrics/MethodLength
     base.class_eval do
       class_attribute :association, :options
       class_attribute :default_attributes_if_missing, instance_writer: false

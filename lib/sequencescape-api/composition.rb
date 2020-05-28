@@ -23,7 +23,7 @@ module Sequencescape::Api::Composition
     end
   end
 
-  def composed_of(name, options = {})
+  def composed_of(name, options = {}) # rubocop:todo Metrics/MethodLength
     composed_class_name = options[:class_name] || name
 
     line = __LINE__ + 1

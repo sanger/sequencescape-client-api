@@ -20,7 +20,7 @@ module Sequencescape::Api::Resource::Attributes
     end
   end
 
-  def generate_attribute_reader(*names)
+  def generate_attribute_reader(*names) # rubocop:todo Metrics/MethodLength
     options    = names.extract_options!
     conversion = options[:conversion].blank? ? nil : "try(#{options[:conversion].to_sym.inspect})"
 
@@ -43,7 +43,7 @@ module Sequencescape::Api::Resource::Attributes
   end
   private :generate_attribute_reader
 
-  def generate_attribute_writer(*names)
+  def generate_attribute_writer(*names) # rubocop:todo Metrics/MethodLength
     options = names.extract_options!
 
     names.each do |name|

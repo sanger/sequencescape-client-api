@@ -9,7 +9,7 @@ module Sequencescape::Api::Associations
     end
   end
 
-  def association_methods(association, type, proxy)
+  def association_methods(association, type, proxy) # rubocop:todo Metrics/MethodLength
     proxy_class_name = [association, type, 'proxy'].join('_').classify
     const_set(proxy_class_name.to_sym, proxy)
 

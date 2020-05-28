@@ -5,7 +5,7 @@ class Hash
     options = keys.extract_options!
     return if keys.empty?
 
-    allowance_method = (options[:allow_blank] == false) ? :blank? : :nil?
+    allowance_method = options[:allow_blank] == false ? :blank? : :nil?
 
     missing = keys.inject([]) do |missing, next_key|
       missing.tap do

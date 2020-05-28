@@ -168,7 +168,7 @@ class Sequencescape::Api::PageOfResults
   end
   private :last_page, :next_page
 
-  def update_from_json(json)
+  def update_from_json(json) # rubocop:todo Metrics/MethodLength
     json.delete('uuids_to_ids') # Discard unwanted rubbish
     actions = json.delete('actions')
     raise Sequencescape::Api::Error, 'No actions for page!' if actions.blank?

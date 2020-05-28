@@ -53,7 +53,8 @@ module Sequencescape::Api::Resource::Modifications
     modify!((options || {}).merge({ action: action }))
   end
 
-  def modify!(options)
+  # rubocop:todo Metrics/MethodLength
+  def modify!(options) # rubocop:todo Metrics/CyclomaticComplexity
     raise Sequencescape::Api::Error, 'No actions exist' if options[:url].nil? && actions.nil?
 
     action    = options[:action]
@@ -78,6 +79,7 @@ module Sequencescape::Api::Resource::Modifications
       clear_changes_information
     end
   end
+  # rubocop:enable Metrics/MethodLength
   private :modify!
 
   def update_from_json(json, wrapped = false)
@@ -92,7 +94,7 @@ module Sequencescape::Api::Resource::Modifications
     when name.to_s == 'actions'                     then update_actions(value)
     when name.to_s == 'uuid'                        then @uuid = (value || @uuid)
     when respond_to?(:"#{name}=", :include_private) then send(:"#{name}=", value)
-    else # TODO: Maybe we need debug logging in here at some point!
+    else
       Rails.loggger.debug("Unrecognized attribute #{name}")
     end
   end

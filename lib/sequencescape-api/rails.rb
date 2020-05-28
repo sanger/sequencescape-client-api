@@ -3,7 +3,7 @@ module Sequencescape::Api::Rails
   # provide a user (based on the WTSISignOn cookie) specific Sequencescape::Api instance to
   # use, accessible through `api`.
   module ApplicationController
-    def self.included(base)
+    def self.included(base) # rubocop:todo Metrics/MethodLength
       base.class_eval do
         attr_reader :api
         private :api

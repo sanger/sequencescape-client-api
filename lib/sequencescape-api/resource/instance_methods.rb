@@ -1,5 +1,5 @@
 module Sequencescape::Api::Resource::InstanceMethods
-  def self.included(base)
+  def self.included(base) # rubocop:todo Metrics/MethodLength
     base.class_eval do
       attr_reader :api, :actions, :uuid
       private :api, :actions

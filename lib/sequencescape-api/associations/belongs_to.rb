@@ -109,7 +109,7 @@ module Sequencescape::Api::Associations::BelongsTo
     end
   end
 
-  def belongs_to(association, options = {}, &block)
+  def belongs_to(association, options = {}, &block) # rubocop:todo Metrics/MethodLength
     association = association.to_sym
 
     proxy = Class.new(

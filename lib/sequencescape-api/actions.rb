@@ -9,7 +9,7 @@ module Sequencescape::Api::Actions
   module ClassActionHelpers
     # Defines a method that is available on the resource model itself, rather than on an instance of
     # the resource model.
-    def has_class_create_action(*args)
+    def has_class_create_action(*args) # rubocop:todo Metrics/MethodLength
       action_module = Module.new
       line = __LINE__ + 1
       action_module.module_eval(%{
@@ -32,7 +32,7 @@ module Sequencescape::Api::Actions
   end
 
   module InstanceActionHelpers
-    def has_create_action(*args)
+    def has_create_action(*args) # rubocop:todo Metrics/MethodLength
       options      = args.extract_options!
       name         = args.first || :create!
 
