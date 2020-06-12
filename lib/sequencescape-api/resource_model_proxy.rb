@@ -8,21 +8,23 @@ require 'ostruct'
 # Any interaction with the API isn't done directly through a model but through an instance of this
 # class, that proxies the model and ensures that it uses the correct instance of Sequencescape::Api.
 class Sequencescape::Api::ResourceModelProxy
-  self.instance_methods.each { |m| undef_method(m) unless m.to_s =~ /^(__.+__|respond_to\?|object_id)$/ }
+  instance_methods.each { |m| undef_method(m) unless m.to_s =~ /^(__.+__|respond_to\?|object_id)$/ }
 
   include ::Sequencescape::Api::FinderMethods
   extend ::Sequencescape::Api::Actions
 
   def initialize(api, model, actions)
-    @api, @model, @actions = api, model, OpenStruct.new(actions)
+    @api = api
+    @model = model
+    @actions = OpenStruct.new(actions)
     @model.send(:initialize_class_actions, self)
   end
 
   attr_reader :api, :actions, :model
   private :api, :actions, :model
 
-  delegate :nil?, :inspect, :to => :model
-  delegate :read_timeout, :to => :api
+  delegate :nil?, :inspect, to: :model
+  delegate :read_timeout, to: :api
 
   has_create_action
 
@@ -40,5 +42,5 @@ class Sequencescape::Api::ResourceModelProxy
   end
 
   # Here are some methods that need to be delegated directly.
-  delegate :ai, :to => :model
+  delegate :ai, to: :model
 end

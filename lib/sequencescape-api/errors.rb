@@ -8,7 +8,7 @@ module Sequencescape
       end
     end
 
-    [ :UnauthenticatedError, :ResourceNotFound ].each do |name|
+    %i[UnauthenticatedError ResourceNotFound].each do |name|
       const_set(name, Class.new(Error) { |c| c.send(:include, GeneralError) })
     end
 
@@ -30,7 +30,7 @@ module Sequencescape
         raise Sequencescape::Api::ResourceNotFound, json
       end
 
-      def redirection(json, &block)
+      def redirection(_json)
         yield(self)
       end
     end

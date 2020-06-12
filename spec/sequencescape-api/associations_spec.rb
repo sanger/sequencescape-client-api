@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'Various associations' do
@@ -51,7 +53,7 @@ describe 'Various associations' do
       stub_request_from('retrieve-model') { response('model-a-instance') }
       stub_request_from('create-via-has-many') { response('model-b-instance') }
 
-      subject { api.model_a.find('UUID').model_bs.create!() }
+      subject { api.model_a.find('UUID').model_bs.create! }
 
       its(:class) { should == Unauthorised::ModelB }
     end
@@ -62,7 +64,7 @@ describe 'Various associations' do
 
     let(:resource) { api.model_b.find('UUID') }
 
-    [ :model_a, :model_by_simple_name, :model_by_full_name ].each do |association_name|
+    %i[model_a model_by_simple_name model_by_full_name].each do |association_name|
       context "expressed as #{association_name.inspect}" do
         stub_request_and_response('belongs-to-association')
 

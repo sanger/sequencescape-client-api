@@ -3,7 +3,7 @@ require 'ostruct'
 module Sequencescape::Api::FinderMethods
   module Delegation
     def self.included(base)
-      base.with_options(:to => :all) do |all|
+      base.with_options(to: :all) do |all|
         all.delegate :each, :first, :last, :to_a, :size
         all.delegate :empty?, :blank?
         all.delegate :each_page, :first_page, :last_page
@@ -74,7 +74,7 @@ end
 
 module Sequencescape::Api::FinderMethods::Caching
   def all(reload = false)
-    @cached_all = super() if @cached_all.nil? or reload
+    @cached_all = super() if @cached_all.nil? || reload
     @cached_all
   end
 end
@@ -88,7 +88,8 @@ class Sequencescape::Api::PageOfResults
   attr_reader :size
 
   def initialize(api, json, &block)
-    @api, @ctor = api, block
+    @api = api
+    @ctor = block
     update_from_json(json)
   end
 
@@ -109,7 +110,7 @@ class Sequencescape::Api::PageOfResults
     end
   end
 
-  def each_page(&block)
+  def each_page
     walk_pages do
       yield(@objects.dup)
     end
@@ -127,9 +128,10 @@ class Sequencescape::Api::PageOfResults
 
   def walk_pages
     first_page
-    while true
+    loop do
       yield
       break if actions.next.blank?
+
       next_page
     end
   end
@@ -153,32 +155,35 @@ class Sequencescape::Api::PageOfResults
     end
   end
 
-  [ :first, :last, :previous, :next ].each do |page|
+  %i[first last previous next].each do |page|
     line = __LINE__ + 1
-    class_eval(%Q{
+    class_eval("
       def #{page}_page
         self.tap do
           api.read(actions.#{page}, UpdateHandler.new(self)) unless actions.read == actions.#{page}
           yield(@objects.dup) if block_given?
         end
       end
-    }, __FILE__, line)
+    ", __FILE__, line)
   end
   private :last_page, :next_page
 
-  def update_from_json(json)
-    json.delete('uuids_to_ids')         # Discard unwanted rubbish
+  def update_from_json(json) # rubocop:todo Metrics/MethodLength
+    json.delete('uuids_to_ids') # Discard unwanted rubbish
     actions = json.delete('actions')
     raise Sequencescape::Api::Error, 'No actions for page!' if actions.blank?
 
     if api.capabilities.size_in_pages?
       size = json.delete('size')
       raise Sequencescape::Api::Error, 'No size for page!' if size.blank?
+
       @size = size.to_i
     end
 
     raise Sequencescape::Api::Error, 'No object json in page!' if json.keys.empty?
-    @actions, @objects = OpenStruct.new(actions), json[json.keys.first].map(&@ctor)
+
+    @actions = OpenStruct.new(actions)
+    @objects = json[json.keys.first].map(&@ctor)
   end
   private :update_from_json
 end

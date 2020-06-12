@@ -1,7 +1,6 @@
 require 'sequencescape-api/resource'
 
 class Sequencescape::Lot < ::Sequencescape::Api::Resource
-
   belongs_to :user
   belongs_to :lot_type
   belongs_to :template

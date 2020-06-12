@@ -10,7 +10,8 @@ class Sequencescape::Api
   extend Sequencescape::Api::ConnectionFactory::Helpers
 
   def initialize(options = {})
-    @models, @model_namespace = {}, options.delete(:namespace) || Sequencescape
+    @models = {}
+    @model_namespace = options.delete(:namespace) || Sequencescape
     @model_namespace = @model_namespace.constantize if @model_namespace.is_a?(String)
     @connection = self.class.connection_factory.create(options).tap do |connection|
       connection.root(self)
@@ -18,7 +19,8 @@ class Sequencescape::Api
   end
 
   attr_reader :capabilities
-  delegate :read, :create, :create_from_file, :update, :retrieve, :to => :@connection
+
+  delegate :read, :create, :create_from_file, :update, :retrieve, to: :@connection
 
   def read_uuid(uuid, handler)
     read(@connection.url_for_uuid(uuid), handler)
@@ -30,22 +32,25 @@ class Sequencescape::Api
 
   def method_missing(name, *args, &block)
     return super unless @models.keys.include?(name.to_s)
+
     ResourceModelProxy.new(self, model(name), @models[name.to_s])
   end
   protected :method_missing
 
-  def model(name)
+  def model(name) # rubocop:todo Metrics/MethodLength
     parts = name.to_s.split('::').map(&:classify)
     raise StandardError, "#{name.inspect} is rooted and that is not supported" if parts.first.blank?
+
     parts.inject(@model_namespace) { |context, part| context.const_get(part) }
-  rescue NameError => missing_constant_in_user_specified_namespace_fallback
+  rescue NameError => e
     raise if @model_namespace == ::Sequencescape
-    parts.inject([ ::Sequencescape, @model_namespace ]) do |(source, dest), part|
+
+    parts.inject([::Sequencescape, @model_namespace]) do |(source, dest), part|
       const_from_source = source.const_get(part)
       if dest.const_defined?(part)
-        [ const_from_source, dest.const_get(part) ]
+        [const_from_source, dest.const_get(part)]
       else
-        [ const_from_source, dest.const_set(part, const_from_source) ]
+        [const_from_source, dest.const_set(part, const_from_source)]
       end
     end.last
   end

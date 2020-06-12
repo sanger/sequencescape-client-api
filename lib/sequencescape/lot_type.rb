@@ -1,9 +1,8 @@
 require 'sequencescape-api/resource'
 
 class Sequencescape::LotType < ::Sequencescape::Api::Resource
-
   module LotCreator
-    def create!(attributes=nil)
+    def create!(attributes = nil)
       attributes ||= {}
       new({}, false).tap do |lot|
         api.create(actions.create, { 'lot' => attributes }, Sequencescape::Api::ModifyingHandler.new(lot))

@@ -7,7 +7,7 @@ class Sequencescape::Api::Associations::Base
 
   def initialize(owner, json = nil)
     super
-    @actions = OpenStruct.new(@attributes.delete('actions'))
+    @actions = OpenStruct.new(@_attributes_.delete('actions'))
   end
 
   attr_reader :actions

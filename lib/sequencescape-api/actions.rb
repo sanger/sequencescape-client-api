@@ -9,9 +9,10 @@ module Sequencescape::Api::Actions
   module ClassActionHelpers
     # Defines a method that is available on the resource model itself, rather than on an instance of
     # the resource model.
-    def has_class_create_action(*args)
-      action_module, line = Module.new, __LINE__+1
-      action_module.module_eval(%Q{
+    def has_class_create_action(*args) # rubocop:todo Metrics/MethodLength
+      action_module = Module.new
+      line = __LINE__ + 1
+      action_module.module_eval(%{
         def initialize_class_actions(proxy)
           super
 
@@ -31,7 +32,7 @@ module Sequencescape::Api::Actions
   end
 
   module InstanceActionHelpers
-    def has_create_action(*args)
+    def has_create_action(*args) # rubocop:todo Metrics/MethodLength
       options      = args.extract_options!
       name         = args.first || :create!
 
@@ -40,7 +41,7 @@ module Sequencescape::Api::Actions
       result_class = "api.#{options[:resource]}" if options[:resource]
 
       line = __LINE__ + 1
-      class_eval(%Q{
+      class_eval(%{
         def #{name}(attributes = nil)
           url = actions.try(#{action.to_sym.inspect}) or
             raise Sequencescape::Api::Error, "Cannot perform #{action} without an URL"
@@ -54,14 +55,14 @@ module Sequencescape::Api::Actions
 
     def has_update_action(name, options = {})
       api_method = options[:verb] == :create ? :create : :update
-      skip_json  = options[:skip_json]||false
+      skip_json  = options[:skip_json] || false
       action     = options[:action] || :update
 
       line = __LINE__ + 1
-      class_eval(%Q{
+      class_eval(%{
         def #{name}(body = nil)
           update_from_json(body || {}, false)
-          modify!(:action => #{action.to_sym.inspect}, :http_verb => #{api_method.to_sym.inspect}, :skip_json => #{skip_json})
+          modify!(action: #{action.to_sym.inspect}, http_verb: #{api_method.to_sym.inspect}, skip_json: #{skip_json})
         end
       }, __FILE__, line)
     end

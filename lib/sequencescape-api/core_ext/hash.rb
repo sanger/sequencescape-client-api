@@ -1,14 +1,14 @@
 class Hash
   # Yields all of the missing keys if there are any so that you can do what you like, like
   # error maybe?
-  def required!(*keys, &block)
+  def required!(*keys)
     options = keys.extract_options!
     return if keys.empty?
 
-    allowance_method = (options[:allow_blank] == false) ? :blank? : :nil?
+    allowance_method = options[:allow_blank] == false ? :blank? : :nil?
 
     missing = keys.inject([]) do |missing, next_key|
-      missing.tap do 
+      missing.tap do
         value = self[next_key]
         missing << next_key if value.send(allowance_method)
       end

@@ -8,7 +8,7 @@ BEGIN {
   Net::HTTP.module_eval do
     alias_method '__initialize__', 'initialize'
 
-    def initialize(*args,&block)
+    def initialize(*args, &block)
       __initialize__(*args, &block)
     ensure
       @debug_output = $stderr if ENV['HTTP_DEBUG']
@@ -47,8 +47,9 @@ module Sequencescape::Api::ConnectionFactory::Actions
     end
   end
 
-  def create(url, body, handler)
-    perform(:post, url, jsonify(body, :action => :create)) do |response|
+  # rubocop:todo Metrics/MethodLength
+  def create(url, body, handler) # rubocop:todo Metrics/CyclomaticComplexity
+    perform(:post, url, jsonify(body, action: :create)) do |response|
       case response
       when Net::HTTPCreated             then handler.success(parse_json_from(response))
       when Net::HTTPSuccess             then handler.success(parse_json_from(response)) # TODO: should be error!
@@ -60,8 +61,10 @@ module Sequencescape::Api::ConnectionFactory::Actions
       end
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
-  def create_from_file(url, file, filename, content_type, handler)
+  # rubocop:todo Metrics/MethodLength
+  def create_from_file(url, file, filename, content_type, handler) # rubocop:todo Metrics/CyclomaticComplexity
     perform_for_file(:post, url, file, filename, content_type) do |response|
       case response
       when Net::HTTPCreated             then handler.success(parse_json_from(response))
@@ -74,9 +77,10 @@ module Sequencescape::Api::ConnectionFactory::Actions
       end
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def update(url, body, handler)
-    perform(:put, url, jsonify(body, :action => :update)) do |response|
+    perform(:put, url, jsonify(body, action: :update)) do |response|
       case response
       when Net::HTTPSuccess             then handler.success(parse_json_from(response))
       when Net::HTTPUnauthorized        then handler.unauthenticated(parse_json_from(response))
@@ -95,7 +99,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
   private :handle_redirect
 
-  def perform(http_verb, url, body = nil, accepts = nil, &block)
+  def perform(http_verb, url, body = nil, accepts = nil) # rubocop:todo Metrics/MethodLength
     begin
       uri = URI.parse(url)
     rescue URI::InvalidURIError => e
@@ -103,12 +107,12 @@ module Sequencescape::Api::ConnectionFactory::Actions
     end
     Net::HTTP.start(uri.host, uri.port) do |connection|
       connection.read_timeout = read_timeout
-      request_headers =  headers
+      request_headers = headers
       request_headers.merge!('Accept' => accepts) unless accepts.nil?
       request = Net::HTTP.const_get(http_verb.to_s.classify).new(uri.request_uri, request_headers)
       unless body.nil?
         request.content_type = 'application/json'
-        #request.body         = body.to_json
+        # request.body         = body.to_json
         request.body         = Yajl::Encoder.encode(body)
       end
       yield(connection.request(request))
@@ -116,14 +120,14 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
   private :perform
 
-  def perform_for_file(http_verb, url, file, filename, content_type, &block)
+  def perform_for_file(http_verb, url, file, filename, content_type)
     uri = URI.parse(url)
     Net::HTTP.start(uri.host, uri.port) do |connection|
       connection.read_timeout = read_timeout
-      file_headers = headers.merge!({'Content-Disposition'=> "form-data; filename=\"#{filename}\""})
+      file_headers = headers.merge!({ 'Content-Disposition' => "form-data; filename=\"#{filename}\"" })
       request = Net::HTTP.const_get(http_verb.to_s.classify).new(uri.request_uri, file_headers)
       request.content_type = content_type
-      #request.body         = body.to_json
+      # request.body         = body.to_json
       request.body         = file.read
       yield(connection.request(request))
     end
@@ -134,13 +138,14 @@ module Sequencescape::Api::ConnectionFactory::Actions
     case
     when body.nil?        then {}
     when body.is_a?(Hash) then body
-    else                       body.as_json(options.merge(:root => true))
+    else                       body.as_json(options.merge(root: true))
     end
   end
   private :jsonify
 
   def parse_json_from(response)
     raise ServerError, 'server returned non-JSON content' unless response.content_type == 'application/json'
+
     Yajl::Parser.parse(StringIO.new(response.body))
   end
   private :parse_json_from

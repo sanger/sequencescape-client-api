@@ -11,7 +11,7 @@ module Sequencescape::Api::Associations::BelongsTo
 
     def initialize(*args, &block)
       super
-      @object = new(@attributes, false)
+      @object = new(@_attributes_, false)
     end
 
     def update_from_json(json)
@@ -50,7 +50,7 @@ module Sequencescape::Api::Associations::BelongsTo
         @owner = owner
       end
 
-      delegate :loaded, :to => :@owner
+      delegate :loaded, to: :@owner
       private :loaded
 
       def new(*args, &block)
@@ -71,7 +71,7 @@ module Sequencescape::Api::Associations::BelongsTo
     private :object
 
     def as_json(options = nil)
-      @object.as_json({ :root => false, :uuid => false }.reverse_merge(options || {}))
+      @object.as_json({ root: false, uuid: false }.reverse_merge(options || {}))
     end
   end
 
@@ -109,7 +109,7 @@ module Sequencescape::Api::Associations::BelongsTo
     end
   end
 
-  def belongs_to(association, options = {}, &block)
+  def belongs_to(association, options = {}, &block) # rubocop:todo Metrics/MethodLength
     association = association.to_sym
 
     proxy = Class.new(

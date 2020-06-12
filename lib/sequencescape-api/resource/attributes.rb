@@ -5,7 +5,7 @@ module Sequencescape::Api::Resource::Attributes
   def self.extended(base)
     base.class_eval do
       include InstanceMethods
-      class_attribute :defined_attributes, :instance_writer => false
+      class_attribute :defined_attributes, instance_writer: false
       self.defined_attributes = Set.new
     end
   end
@@ -20,16 +20,16 @@ module Sequencescape::Api::Resource::Attributes
     end
   end
 
-  def generate_attribute_reader(*names)
+  def generate_attribute_reader(*names) # rubocop:todo Metrics/MethodLength
     options    = names.extract_options!
     conversion = options[:conversion].blank? ? nil : "try(#{options[:conversion].to_sym.inspect})"
 
     names.each do |name|
       defined_attributes << name.to_sym
-      converted = [ "#{name}_before_type_cast", conversion ].compact.join('.')
+      converted = ["#{name}_before_type_cast", conversion].compact.join('.')
 
       line = __LINE__ + 1
-      class_eval(%Q{
+      class_eval("
         def #{name}
           #{converted}
         end
@@ -37,25 +37,25 @@ module Sequencescape::Api::Resource::Attributes
         def #{name}_before_type_cast
           attributes[#{name.to_s.inspect}]
         end
-      }, __FILE__, line)
+      ", __FILE__, line)
     end
     extend_attribute_methods(names)
   end
   private :generate_attribute_reader
 
-  def generate_attribute_writer(*names)
+  def generate_attribute_writer(*names) # rubocop:todo Metrics/MethodLength
     options = names.extract_options!
 
     names.each do |name|
       defined_attributes << name.to_sym
 
       line = __LINE__ + 1
-      class_eval(%Q{
+      class_eval("
         def #{name}=(value)
           #{name}_will_change! if not attributes.key?(#{name.to_s.inspect}) or #{name} != value
           attributes[#{name.to_s.inspect}] = value
         end
-      }, __FILE__, line)
+      ", __FILE__, line)
     end
     extend_attribute_methods(names)
   end

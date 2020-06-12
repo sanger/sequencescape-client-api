@@ -1,7 +1,6 @@
 require 'sequencescape/asset'
 
 class Sequencescape::PlateTemplate < ::Sequencescape::Asset
-
   require 'sequencescape/plate/well_structure'
 
   include Sequencescape::Plate::WellStructure
@@ -9,5 +8,4 @@ class Sequencescape::PlateTemplate < ::Sequencescape::Asset
   has_many :wells
 
   attribute_accessor :size, :name
-
 end

@@ -7,11 +7,11 @@ module Sequencescape::Api::Resource::Json
 
   module ClassMethods
     def self.extended(base)
-      base.delegate :json_root, :to => 'self.class'
+      base.delegate :json_root, to: 'self.class'
     end
 
     def json_root
-      self.name.demodulize.underscore
+      name.demodulize.underscore
     end
   end
 
@@ -19,7 +19,8 @@ module Sequencescape::Api::Resource::Json
     include Sequencescape::Api::BasicErrorHandling
 
     def initialize(api, owner)
-      @api, @owner = api, owner
+      @api = api
+      @owner = owner
     end
 
     attr_reader :api
@@ -39,11 +40,11 @@ module Sequencescape::Api::Resource::Json
 
   # Coerces the current object instance to another class.
   def coerce_to(klazz)
-    api.read_uuid(self.uuid, CoercionHandler.new(api, klazz))
+    api.read_uuid(uuid, CoercionHandler.new(api, klazz))
   end
 
   def as_json(options = nil)
-    options = { :action => :create, :root => true }.merge(options || {})
+    options = { action: :create, root: true }.merge(options || {})
     send(:"as_json_for_#{options[:action]}", options)
   end
 
@@ -57,28 +58,28 @@ module Sequencescape::Api::Resource::Json
   private :as_json_for_create
 
   # Returns the appropriate JSON for when we are updating a resource.
-  def as_json_for_update(options)
+  def as_json_for_update(options) # rubocop:todo Metrics/MethodLength
     if must_output_full_json?(options)
-      json = { }
-      json['uuid'] = uuid if options[:uuid] and uuid.present?
+      json = {}
+      json['uuid'] = uuid if options[:uuid] && uuid.present?
 
       json.merge!(attributes_for_json(options))
-      json.merge!(associations_for_json(options.merge(:root => false)))
+      json.merge!(associations_for_json(options.merge(root: false)))
 
       return json unless options[:root]
+
       { json_root => json }
     elsif options[:root]
       # We are the root element so we must output something!
-      { json_root => { } }
-    else
-      # We are not a root element, we haven't been changed, so we might as well not exist!
+      { json_root => {} }
+    else # We are not a root element, we haven't been changed, so we might as well not exist!
       nil
     end
   end
   private :as_json_for_update
 
   def unwrapped_json(json)
-    json[(json.keys - [ 'uuids_to_ids' ]).first]
+    json[(json.keys - ['uuids_to_ids']).first]
   end
   private :unwrapped_json
 
@@ -88,13 +89,14 @@ module Sequencescape::Api::Resource::Json
 
   def attributes_for_json(options)
     attributes_to_send_to_server(options).tap do |changed_attributes|
-      [ 'created_at', 'updated_at' ].map(&changed_attributes.method(:delete))
+      %w[created_at updated_at].map(&changed_attributes.method(:delete))
     end
   end
   private :attributes_for_json
 
   def attributes_to_send_to_server(options)
-    return attributes if options[:force] or (options[:action] == :create)
+    return attributes if options[:force] || (options[:action] == :create)
+
     changes.keys.each_with_object({}) { |k, attributes| attributes[k.to_s] = send(k) }
   end
   private :attributes_to_send_to_server
@@ -102,6 +104,7 @@ module Sequencescape::Api::Resource::Json
   def associations_for_json(options)
     associations.each_with_object({}) do |(k, v), associations|
       next unless must_output_full_json?(options, v)
+
       associations[k.to_s] = v.as_json(options)
     end
   end

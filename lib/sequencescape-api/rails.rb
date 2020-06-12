@@ -3,7 +3,7 @@ module Sequencescape::Api::Rails
   # provide a user (based on the WTSISignOn cookie) specific Sequencescape::Api instance to
   # use, accessible through `api`.
   module ApplicationController
-    def self.included(base)
+    def self.included(base) # rubocop:todo Metrics/MethodLength
       base.class_eval do
         attr_reader :api
         private :api
@@ -15,8 +15,8 @@ module Sequencescape::Api::Rails
         end
 
         # Order is important here: later ones override earlier.
-        rescue_from(::Sequencescape::Api::Error,                :with => :sequencescape_api_error_handler)
-        rescue_from(::Sequencescape::Api::UnauthenticatedError, :with => :sequencescape_api_unauthenticated_handler)
+        rescue_from(::Sequencescape::Api::Error,                with: :sequencescape_api_error_handler)
+        rescue_from(::Sequencescape::Api::UnauthenticatedError, with: :sequencescape_api_unauthenticated_handler)
       end
     end
 
@@ -26,12 +26,12 @@ module Sequencescape::Api::Rails
     private :api_class
 
     def configure_api
-      @api = api_class.new({ :cookie => cookies['WTSISignOn'] }.merge(api_connection_options))
+      @api = api_class.new({ cookie: cookies['WTSISignOn'] }.merge(api_connection_options))
     end
     private :configure_api
 
     def api_connection_options
-      { }
+      {}
     end
     private :api_connection_options
 
@@ -43,7 +43,7 @@ module Sequencescape::Api::Rails
 
     def sequencescape_api_unauthenticated_handler(exception)
       Rails.logger.error "#{exception}, #{exception.backtrace}"
-      raise StandardError, "You are not authenticated; please visit the WTSI login page"
+      raise StandardError, 'You are not authenticated; please visit the WTSI login page'
     end
     private :sequencescape_api_unauthenticated_handler
   end
@@ -57,7 +57,7 @@ module Sequencescape::Api::Rails
     def self.included(base)
       base.class_eval do
         attr_protected :remote_resource, :uuid
-        validates_presence_of :uuid, :allow_blank => false
+        validates_presence_of :uuid, allow_blank: false
         before_save :save_remote_resource
       end
     end
@@ -80,6 +80,7 @@ module Sequencescape::Api::Rails
     def save_remote_resource
       return true if @remote_resource.nil?
       return true unless @remote_resource.can_save?
+
       self[:uuid] = @remote_resource
       @remote_resource.save
     end

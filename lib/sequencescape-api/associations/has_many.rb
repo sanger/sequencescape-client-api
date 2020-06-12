@@ -15,12 +15,14 @@ module Sequencescape::Api::Associations::HasMany
     include Enumerable
 
     def size
-      return @attributes['size'] if api.capabilities.size_in_pages?
+      return @_attributes_['size'] if api.capabilities.size_in_pages?
+
       all.size
     end
 
     def empty?
-      return @attributes['size'].zero? if api.capabilities.size_in_pages?
+      return @_attributes_['size'].zero? if api.capabilities.size_in_pages?
+
       all.empty?
     end
 
@@ -30,16 +32,15 @@ module Sequencescape::Api::Associations::HasMany
 
     def initialize(owner, json = nil)
       super
-      @cached_all = case
-        when json.is_a?(Array) then json.map {|js| new_from(js) }
-        else nil
-        end
+      @cached_all = case json
+                    when Array then json.map { |js| new_from(js) }
+                    end
     end
 
     def new_from(json)
-      case
-      when json.is_a?(String) then new(uuid: json) # We've recieved an array of strings, prob. uuids
-      when json.is_a?(Hash) then new(json)
+      case json
+      when String then new(uuid: json) # We've recieved an array of strings, prob. uuids
+      when Hash then new(json)
       else json
       end
     end
@@ -60,8 +61,8 @@ module Sequencescape::Api::Associations::HasMany
       super
       @objects =
         case
-        when @attributes.is_a?(Array) then @attributes.map(&method(:new))
-        when @attributes.is_a?(Hash)  then @attributes.map { |uuid, json| new(json.merge('uuid' => uuid)) }
+        when @_attributes_.is_a?(Array) then @_attributes_.map(&method(:new))
+        when @_attributes_.is_a?(Hash)  then @_attributes_.map { |uuid, json| new(json.merge('uuid' => uuid)) }
         else raise StandardError, "Cannot handle has_many JSON: #{json.inspect}"
         end
     end
@@ -90,7 +91,7 @@ module Sequencescape::Api::Associations::HasMany
       @objects
     end
 
-    def each_page(&block)
+    def each_page
       yield(@objects)
     end
 
@@ -105,7 +106,7 @@ module Sequencescape::Api::Associations::HasMany
     end
   end
 
-  def has_many(association, options = {}, &block)
+  def has_many(association, options = {}, &block) # rubocop:todo Metrics/MethodLength
     association = association.to_sym
 
     proxy = Class.new(

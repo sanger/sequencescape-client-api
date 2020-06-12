@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Unauthorised
-  MODELS_THROUGH_API = [ :model_a, :model_b, :model_c ]
+  MODELS_THROUGH_API = %i[model_a model_b model_c].freeze
 
   class ModelA < Sequencescape::Api::Resource
     module LotCreator
-      def create!(attributes=nil)
+      def create!(attributes = nil)
         attributes ||= {}
         new({}, false).tap do |lot|
           api.create(actions.create, { 'model_b' => attributes }, Sequencescape::Api::ModifyingHandler.new(lot))
@@ -24,14 +26,14 @@ module Unauthorised
 
   class ModelB < Sequencescape::Api::Resource
     belongs_to :model_a
-    belongs_to :model_by_simple_name, :class_name => 'ModelA'
-    belongs_to :model_by_full_name, :class_name => 'Nested::Model'
-    belongs_to :model_with_early_data, :class_name => 'ModelA'
+    belongs_to :model_by_simple_name, class_name: 'ModelA'
+    belongs_to :model_by_full_name, class_name: 'Nested::Model'
+    belongs_to :model_with_early_data, class_name: 'ModelA'
     attribute_accessor :test_attribute
   end
 
   class ModelC < Sequencescape::Api::Resource
-    has_many :model_bs, :disposition => :inline
+    has_many :model_bs, disposition: :inline
     has_many :model_as
 
     attribute_accessor :attribute_validated_at_client, :attribute_validated_at_server
@@ -56,12 +58,10 @@ module Unauthorised
 end
 
 module Authenticated
-  MODELS_THROUGH_API = [ :model_c, :model_d ]
+  MODELS_THROUGH_API = %i[model_c model_d].freeze
 
   class ModelC < Sequencescape::Api::Resource
-
   end
   class ModelD < Sequencescape::Api::Resource
-
   end
 end

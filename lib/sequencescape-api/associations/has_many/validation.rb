@@ -31,7 +31,7 @@ module Sequencescape::Api::Associations::HasMany::Validation
 
     def map_errors(&block)
       @association.map(&:errors)
-        .map(&block)
+                  .map(&block)
     end
   end
 end

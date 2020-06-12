@@ -1,7 +1,6 @@
 require 'sequencescape-api/resource'
 
 class Sequencescape::Stamp < ::Sequencescape::Api::Resource
-
   belongs_to :user
   belongs_to :lot
   belongs_to :robot

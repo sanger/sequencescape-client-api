@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 shared_examples_for 'errors on both client and server' do |action, request_contract|
   context 'may be invalid on the client side' do
     it 'raises an error' do
       lambda do
-        target.__send__(action, :attribute_validated_at_client => 'please error')
+        target.__send__(action, attribute_validated_at_client: 'please error')
       end.should raise_error(Sequencescape::Api::ResourceInvalid)
     end
 
     it 'includes the error on the field' do
       begin
-        target.__send__(action, :attribute_validated_at_client => 'please error')
-      rescue Sequencescape::Api::ResourceInvalid => exception
-        exception.resource.errors[:attribute_validated_at_client].should == [ 'cannot be set' ]
+        target.__send__(action, attribute_validated_at_client: 'please error')
+      rescue Sequencescape::Api::ResourceInvalid => e
+        e.resource.errors[:attribute_validated_at_client].should == ['cannot be set']
       end
     end
   end
@@ -22,15 +24,15 @@ shared_examples_for 'errors on both client and server' do |action, request_contr
 
     it 'raises an error' do
       lambda do
-        target.__send__(action, :attribute_validated_at_server => 'please error')
+        target.__send__(action, attribute_validated_at_server: 'please error')
       end.should raise_error(Sequencescape::Api::ResourceInvalid)
     end
 
     it 'includes the error on the field' do
       begin
-        target.__send__(action, :attribute_validated_at_server => 'please error')
-      rescue Sequencescape::Api::ResourceInvalid => exception
-        exception.resource.errors[:attribute_validated_at_server].should == [ 'cannot be set' ]
+        target.__send__(action, attribute_validated_at_server: 'please error')
+      rescue Sequencescape::Api::ResourceInvalid => e
+        e.resource.errors[:attribute_validated_at_server].should == ['cannot be set']
       end
     end
   end
@@ -49,7 +51,7 @@ describe 'Creating a resource' do
     stub_request_from('create-model-c') { response('model-c-instance-created') }
 
     subject do
-      target.create!(:changes_during_update => 'sent from client', :remains_same_during_update => 'from JSON')
+      target.create!(changes_during_update: 'sent from client', remains_same_during_update: 'from JSON')
     end
 
     its(:changes_during_update)      { should == 'set during create' }
@@ -65,7 +67,7 @@ describe 'Creating a resource' do
 
       it 'takes an array of objects and converts them to UUID'
       it 'assumes an array of strings are UUIDs' do
-        target.create!(:model_bs => ['model-b-uuids'])
+        target.create!(model_bs: ['model-b-uuids'])
       end
       it 'raises if not given an enumerable'
     end
@@ -75,7 +77,7 @@ describe 'Creating a resource' do
 
       it 'takes an array of objects and converts them to UUID'
       it 'assumes an array of strings are UUIDs' do
-        target.create!(:model_bs => [{ "test_attribute" => "test_value" }])
+        target.create!(model_bs: [{ 'test_attribute' => 'test_value' }])
       end
       it 'raises if not given an enumerable'
     end
@@ -85,7 +87,7 @@ describe 'Creating a resource' do
 
       it 'takes an array of objects and converts them to UUID'
       it 'assumes an array of strings are UUIDs' do
-        target.create!(:model_as => ['model-a-uuids'])
+        target.create!(model_as: ['model-a-uuids'])
       end
       it 'raises if not given an enumerable'
     end
@@ -120,9 +122,9 @@ describe 'Updating a resource' do
 
     before(:each) do
       subject.update_attributes!(
-        :changes_during_update => 'sent from client',
-        :remains_same_during_update => 'from JSON',
-        :write_only => 'has been set'
+        changes_during_update: 'sent from client',
+        remains_same_during_update: 'from JSON',
+        write_only: 'has been set'
       )
     end
 
@@ -166,4 +168,3 @@ describe 'Updating a resource through an association' do
     it 'handles individual attribute changes'
   end
 end
-

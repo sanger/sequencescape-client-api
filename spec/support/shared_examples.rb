@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples_for 'a paged result' do
   it 'physically contains 3 items' do
     subject.map(&:inspect).size.should == 3

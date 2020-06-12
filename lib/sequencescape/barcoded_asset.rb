@@ -8,5 +8,5 @@ class Sequencescape::BarcodedAsset < ::Sequencescape::Asset
   include Sequencescape::Behaviour::Barcoded
   include Sequencescape::Behaviour::Qced
 
-  belongs_to :stock_plate, :class_name => 'Plate'
+  belongs_to :stock_plate, class_name: 'Plate'
 end

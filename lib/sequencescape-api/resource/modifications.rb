@@ -38,32 +38,33 @@ module Sequencescape::Api::Resource::Modifications
   def initialize(api, json = nil, wrapped = false)
     super
     update_from_json(json, wrapped)
-    changed_attributes.clear
+    clear_changes_information
   end
 
   def update_attributes!(attributes)
-    changed_attributes.clear
+    clear_changes_information
     update_from_json(attributes, false)
-    modify!(:action => :update)
+    modify!(action: :update)
   end
   alias update! update_attributes!
 
   def save!(options = nil)
     action = persisted? ? :update : :create
-    modify!((options || {}).merge({ :action => action }))
+    modify!((options || {}).merge({ action: action }))
   end
 
-  def modify!(options)
-    raise Sequencescape::Api::Error, "No actions exist" if options[:url].nil? and actions.nil?
+  # rubocop:todo Metrics/MethodLength
+  def modify!(options) # rubocop:todo Metrics/CyclomaticComplexity
+    raise Sequencescape::Api::Error, 'No actions exist' if options[:url].nil? && actions.nil?
 
     action    = options[:action]
-    skip_json = options[:skip_json]||false
+    skip_json = options[:skip_json] || false
     http_verb = options[:http_verb] || options[:action]
     url       = options[:url]
     url     ||= (actions.send(action) or raise Sequencescape::Api::Error, "Cannot perform #{action}")
-    raise Sequencescape::Api::Error, "Cannot perform modification without a URL" if url.blank?
+    raise Sequencescape::Api::Error, 'Cannot perform modification without a URL' if url.blank?
 
-    self.tap do
+    tap do
       run_validations! or raise Sequencescape::Api::ResourceInvalid, self
 
       object = skip_json ? {} : self
@@ -75,9 +76,10 @@ module Sequencescape::Api::Resource::Modifications
         Sequencescape::Api::ModifyingHandler.new(self)
       )
 
-      changed_attributes.clear
+      clear_changes_information
     end
   end
+  # rubocop:enable Metrics/MethodLength
   private :modify!
 
   def update_from_json(json, wrapped = false)
@@ -92,7 +94,8 @@ module Sequencescape::Api::Resource::Modifications
     when name.to_s == 'actions'                     then update_actions(value)
     when name.to_s == 'uuid'                        then @uuid = (value || @uuid)
     when respond_to?(:"#{name}=", :include_private) then send(:"#{name}=", value)
-    else # TODO: Maybe we need debug logging in here at some point!
+    else
+      debug_log("Unrecognized attribute #{name}")
     end
   end
   private :update_attribute
@@ -108,4 +111,10 @@ module Sequencescape::Api::Resource::Modifications
     @actions = actions_from_attributes.nil? ? actions_before_update : OpenStruct.new(actions_from_attributes)
   end
   private :update_actions
+
+  private
+
+  def debug_log(message)
+    Rails.logger.debug(message) if defined?(Rails)
+  end
 end

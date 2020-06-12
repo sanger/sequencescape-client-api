@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Fake the web connections so we don't trash anything
 require 'webmock/rspec'
 
@@ -21,13 +23,16 @@ module ContractHelper
       \g<verb>\s+\g<path>\s+HTTP/1.1\g<eol>
       \g<headers>\g<eol>
       (\g<eol>\g<body>?)?
-    }mx
+    }mx.freeze
 
     def request(contract_name)
       contract(contract_name) do |file|
-        match = REQUEST_REGEXP.match(file.read) or raise StandardError, "Invalidly formatted request in #{contract_name.inspect}"
+        match = REQUEST_REGEXP.match(file.read)
 
-        @http_verb, @url   = match[:verb].downcase.to_sym, "http://localhost:3000#{match[:path]}"
+        raise StandardError, "Invalidly formatted request in #{contract_name.inspect}" if match.nil?
+
+        @http_verb = match[:verb].downcase.to_sym
+        @url = "http://localhost:3000#{match[:path]}"
         @conditions = {}
         @conditions[:headers] = Hash[*match[:headers].split(/\r?\n/).map { |l| l.split(':') }.flatten.map(&:strip)]
         @conditions[:body] = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) unless match[:body].blank?
@@ -40,11 +45,12 @@ module ContractHelper
       end
     end
 
-    def contract(contract_name, &block)
+    def contract(contract_name)
       path = @root.dup
       until path.empty?
         filename = File.join(path, 'contracts', "#{contract_name}.txt")
         return File.open(filename, 'r') { |file| yield(file) } if File.file?(filename)
+
         path.pop
       end
       raise StandardError, "Cannot find contract #{filename.inspect} anywhere within #{@root.inspect}"
@@ -74,7 +80,7 @@ module ContractHelper
 
   module ClassMethods
     def stub_request_from(request_filename, &block)
-      stubbed_request = StubRequestBuilder.new(File.join(File.dirname(__FILE__), %w{.. sequencescape-api contracts}))
+      stubbed_request = StubRequestBuilder.new(File.join(File.dirname(__FILE__), %w[.. sequencescape-api contracts]))
       stubbed_request.request(request_filename)
       stubbed_request.instance_eval(&block)
       stubbed_request.inject_into(self)
@@ -85,11 +91,13 @@ module ContractHelper
     end
 
     def is_working_as_an_unauthorised_client
-      stub_request_from('retrieve-root-with-an-unauthorised-client') { response('root-response-for-unauthorised-client') }
+      stub_request_from('retrieve-root-with-an-unauthorised-client') do
+        response('root-response-for-unauthorised-client')
+      end
       let(:api) do
         Sequencescape::Api.new(
-          :url => 'http://localhost:3000/', :cookie => 'single-sign-on-cookie',
-          :namespace => Unauthorised
+          url: 'http://localhost:3000/', cookie: 'single-sign-on-cookie',
+          namespace: Unauthorised
         )
       end
     end
@@ -99,8 +107,8 @@ module ContractHelper
 
       let(:api) do
         Sequencescape::Api.new(
-          :url => 'http://localhost:3000/', :cookie => 'single-sign-on-cookie',
-          :authorisation => 'authorised!', :namespace => Authenticated
+          url: 'http://localhost:3000/', cookie: 'single-sign-on-cookie',
+          authorisation: 'authorised!', namespace: Authenticated
         )
       end
     end

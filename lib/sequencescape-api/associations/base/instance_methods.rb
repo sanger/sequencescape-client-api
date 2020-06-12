@@ -1,11 +1,12 @@
 module Sequencescape::Api::Associations::Base::InstanceMethods
-  def self.included(base)
+  def self.included(base) # rubocop:todo Metrics/MethodLength
     base.class_eval do
       class_attribute :association, :options
-      class_attribute :default_attributes_if_missing, :instance_writer => false
+      class_attribute :default_attributes_if_missing, instance_writer: false
 
       attr_reader :model
-      delegate :read_timeout, :to => :@owner
+
+      delegate :read_timeout, to: :@owner
       private :model
 
       def api(*args, &block)
@@ -17,9 +18,9 @@ module Sequencescape::Api::Associations::Base::InstanceMethods
   end
 
   def initialize(owner, json = nil)
-    @owner      = owner
-    @attributes = json.nil? ? owner.attributes_for(association, default_attributes_if_missing) : attributes_from(json)
-    @model      = api.model(options[:class_name] || association)
+    @owner = owner
+    @_attributes_ = json.nil? ? owner.attributes_for(association, default_attributes_if_missing) : attributes_from(json)
+    @model = api.model(options[:class_name] || association)
   end
 
   def new(*args, &block)
@@ -38,8 +39,9 @@ module Sequencescape::Api::Associations::Base::InstanceMethods
     when json.is_a?(String)                                 then { uuid: json, uuid_only: true }
     when json.is_a?(Hash)                                   then json
     when json.respond_to?(:map)                             then json.map(&method(:attributes_from))
-    when json.is_a?(Sequencescape::Api::Resource)           then json.as_json(:force => true, :action => :update, :root => false, :uuid => true)
-    when json.is_a?(Sequencescape::Api::Associations::Base) then json.as_json(:force => true, :action => :update)
+    when json.is_a?(Sequencescape::Api::Resource)           then json.as_json(force: true, action: :update,
+                                                                              root: false, uuid: true)
+    when json.is_a?(Sequencescape::Api::Associations::Base) then json.as_json(force: true, action: :update)
     else raise json.inspect
     end
   end

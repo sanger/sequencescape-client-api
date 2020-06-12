@@ -11,26 +11,30 @@ module Sequencescape::Api::Composition
     end
 
     def initialize(owner, attributes)
-      @owner, @attributes = owner, attributes
-      attributes.each { |k,v| send(:"#{k}=", v) }
+      @owner = owner
+      @_attributes_ = attributes
+      attributes.each { |k, v| send(:"#{k}=", v) }
     end
 
-    attr_reader :attributes
-    private :attributes
+    private
+
+    def attributes
+      @_attributes_
+    end
   end
 
-  def composed_of(name, options = {})
+  def composed_of(name, options = {}) # rubocop:todo Metrics/MethodLength
     composed_class_name = options[:class_name] || name
 
     line = __LINE__ + 1
-    class_eval(%Q{
+    class_eval(%{
       def #{name}
         return nil unless attributes_for?(#{name.to_s.inspect})
         api.model(#{composed_class_name.inspect}).new(self, attributes_for(#{name.to_s.inspect}))
       end
 
       def #{name}=(attributes)
-        @attributes[#{name.to_s.inspect}] = attributes
+        @_attributes_[#{name.to_s.inspect}] = attributes
       end
     }, __FILE__, line)
   end

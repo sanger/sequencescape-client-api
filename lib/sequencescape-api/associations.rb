@@ -9,12 +9,12 @@ module Sequencescape::Api::Associations
     end
   end
 
-  def association_methods(association, type, proxy)
-    proxy_class_name = [ association, type, 'proxy'].join('_').classify
+  def association_methods(association, type, proxy) # rubocop:todo Metrics/MethodLength
+    proxy_class_name = [association, type, 'proxy'].join('_').classify
     const_set(proxy_class_name.to_sym, proxy)
 
     line = __LINE__ + 1
-    class_eval(%Q{
+    class_eval(%{
       def #{association}(reload = false)
         associations[#{association.inspect}]   = nil if !!reload
         associations[#{association.inspect}] ||= #{proxy_class_name}.new(self)
@@ -40,7 +40,8 @@ module Sequencescape::Api::Associations
 
   module InstanceMethods
     def initialize(*args, &block)
-      @associations, @errors = {}, nil
+      @associations = {}
+      @errors = nil
       super
     end
 
@@ -61,12 +62,13 @@ module Sequencescape::Api::Associations
     end
 
     def attributes_from_path(path, default_value_if_missing = nil)
-      path.to_s.split('.').inject(attributes) { |k,v| k.try(:[], v) } || default_value_if_missing
+      path.to_s.split('.').inject(attributes) { |k, v| k.try(:[], v) } || default_value_if_missing
     end
     private :attributes_from_path
 
     def run_validations!
-      our_result, their_result = super, @associations.values.all?(&:run_validations!)
+      our_result = super
+      their_result = @associations.values.all?(&:run_validations!)
       our_result and their_result
     end
 

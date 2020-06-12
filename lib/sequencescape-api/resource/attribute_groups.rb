@@ -7,7 +7,7 @@ module Sequencescape::Api::Resource::Groups
     end
 
     def attribute_group_json(options)
-      attribute_groups.each_with_object({}) do |(k,v), agj|
+      attribute_groups.each_with_object({}) do |(k, v), agj|
         agj[k.to_s] = v.send(:as_json_for_update, options) if v.changed?
       end
     end
@@ -28,7 +28,7 @@ module Sequencescape::Api::Resource::Groups
   end
 
   module Json
-    def as_json_for_update(options)
+    def as_json_for_update(options) # rubocop:todo Metrics/MethodLength
       super.tap do |json|
         begin
           if options[:root]
@@ -64,14 +64,18 @@ class Sequencescape::Api::Resource::Groups::Proxy
   module InstanceMethods
     def self.included(base)
       base.class_eval do
-        attr_reader :attributes
-        private :attributes
+        private
+
+        def attributes
+          @_attributes_
+        end
       end
     end
 
     def initialize(owner, attributes = {})
-      @owner, @attributes = owner, {}
-      attributes.each { |k,v| send(:"#{k}=", v) if respond_to?(:"#{k}=", :include_private_methods) }
+      @owner = owner
+      @_attributes_ = {}
+      attributes.each { |k, v| send(:"#{k}=", v) if respond_to?(:"#{k}=", :include_private_methods) }
     end
 
     def as_json_for_update(options)
@@ -82,7 +86,7 @@ class Sequencescape::Api::Resource::Groups::Proxy
     private :as_json_for_update
 
     def clear_changed_attributes
-      changed_attributes.clear
+      clear_changes_information
     end
     private :clear_changed_attributes
   end
