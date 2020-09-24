@@ -1,5 +1,5 @@
 module Sequencescape
   class Api
-    VERSION = '0.4.2-rc1'.freeze
+    VERSION = '0.4.2'.freeze
   end
 end
