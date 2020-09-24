@@ -15,3 +15,16 @@ Version Guides
 
 Rails 6 appears to be supported judging by Specs, but haven't used it in anger
 yet.
+
+Making a release
+----------------
+1. Update the version number in `lib/sequencescape-api/version.rb`
+2. For pre-releases the version number should be in the format:
+   major.minor.point-rcx
+3. For release version the version number should be in the format:
+   major.minor.point
+4. Ensure everything is committed, and for non-pre-releases, make sure you are
+   merged to master.
+```
+  rake release
+``
