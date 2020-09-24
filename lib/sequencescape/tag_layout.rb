@@ -7,5 +7,6 @@ class Sequencescape::TagLayout < ::Sequencescape::Api::Resource
   composed_of :tag_group, class_name: 'Tag::Group'
   composed_of :tag2_group, class_name: 'Tag::Group'
 
-  attribute_accessor :substitutions, :direction, :walking_by, :initial_tag, :tags_per_well
+  attribute_accessor :substitutions, :direction, :walking_by, :initial_tag,
+                     :tags_per_well, :enforce_uniqueness
 end
