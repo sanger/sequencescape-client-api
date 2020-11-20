@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = ''
   s.summary     = 'Gem for the client side of the Sequencescape API'
   s.description = 'Provides all of the necessary code for interacting with the Sequencescape API'
+  s.required_ruby_version = '> 2.4'
 
   s.rubyforge_project = 'sequencescape-client-api'
 
@@ -27,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rake')
   s.add_development_dependency('redcarpet')
   s.add_development_dependency('rspec', '~> 2.11.0')
-  s.add_development_dependency('rubocop', '~> 0.84.0')
+  s.add_development_dependency('rubocop', '~> 1.3.1')
   s.add_development_dependency('webmock')
   s.add_development_dependency('yard')
 end

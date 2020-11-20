@@ -82,10 +82,8 @@ end
 class Sequencescape::Api::PageOfResults
   include Enumerable
 
-  attr_reader :api, :actions
+  attr_reader :api, :actions, :size
   private :api, :actions
-
-  attr_reader :size
 
   def initialize(api, json, &block)
     @api = api

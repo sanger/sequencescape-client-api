@@ -22,23 +22,29 @@ Naming/FileName:
     - 'lib/sequencescape-api.rb'
 
 # Pending Cops
-Layout/EmptyLinesAroundAttributeAccessor:
+Lint/DuplicateBranch: # (new in 1.3)
   Enabled: true
-Layout/SpaceAroundMethodCallOperator:
+Lint/DuplicateRegexpCharacterClassElement: # (new in 1.1)
   Enabled: true
-Lint/DeprecatedOpenSSLConstant:
+Lint/EmptyBlock: # (new in 1.1)
   Enabled: true
-Lint/RaiseException:
+Lint/EmptyClass: # (new in 1.3)
   Enabled: true
-Lint/StructNewOverride:
+Lint/NoReturnInBeginEndBlocks: # (new in 1.2)
   Enabled: true
-Style/ExponentialNotation:
+Lint/ToEnumArguments: # (new in 1.1)
   Enabled: true
-Style/HashEachMethods:
+Lint/UnmodifiedReduceAccumulator: # (new in 1.1)
   Enabled: true
-Style/HashTransformKeys:
+Style/ArgumentsForwarding: # (new in 1.1)
   Enabled: true
-Style/HashTransformValues:
+Style/CollectionCompact: # (new in 1.2)
   Enabled: true
-Style/SlicingWithRange:
+Style/DocumentDynamicEvalDefinition: # (new in 1.1)
+  Enabled: true
+Style/NegatedIfElseCondition: # (new in 1.2)
+  Enabled: true
+Style/NilLambda: # (new in 1.3)
+  Enabled: true
+Style/SwapValues: # (new in 1.1)
   Enabled: true

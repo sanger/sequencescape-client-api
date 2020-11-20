@@ -48,7 +48,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
 
   # rubocop:todo Metrics/MethodLength
-  def create(url, body, handler) # rubocop:todo Metrics/CyclomaticComplexity
+  def create(url, body, handler)
     perform(:post, url, jsonify(body, action: :create)) do |response|
       case response
       when Net::HTTPCreated             then handler.success(parse_json_from(response))
@@ -64,7 +64,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   # rubocop:enable Metrics/MethodLength
 
   # rubocop:todo Metrics/MethodLength
-  def create_from_file(url, file, filename, content_type, handler) # rubocop:todo Metrics/CyclomaticComplexity
+  def create_from_file(url, file, filename, content_type, handler)
     perform_for_file(:post, url, file, filename, content_type) do |response|
       case response
       when Net::HTTPCreated             then handler.success(parse_json_from(response))
