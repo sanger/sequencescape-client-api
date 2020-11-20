@@ -9,5 +9,6 @@ class Sequencescape::Order < ::Sequencescape::Api::Resource
   # It does, but we don't care for now.
   # has_many :request_types
 
-  attr_accessor :request_options
+  attribute_accessor :request_options
+  attribute_writer :autodetect_studies_projects
 end
