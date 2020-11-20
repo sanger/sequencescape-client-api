@@ -10,8 +10,9 @@ Version Guides
 - 0.2.x Supports older versions of Rails.
 - 0.3.x Supports Rails 3.2.x to 5.1.x
 - 0.4.x Supports Rails 5.0 and up
+- 0.5.x Supports Rails 5.0 and up, drops yajl in favour of multi-json
 
-- master currently corresponds to 0.4.x
+- master currently corresponds to 0.5.x
 
 Rails 6 appears to be supported judging by Specs, but haven't used it in anger
 yet.

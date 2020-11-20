@@ -35,7 +35,7 @@ module ContractHelper
         @url = "http://localhost:3000#{match[:path]}"
         @conditions = {}
         @conditions[:headers] = Hash[*match[:headers].split(/\r?\n/).map { |l| l.split(':') }.flatten.map(&:strip)]
-        @conditions[:body] = Yajl::Encoder.encode(Yajl::Parser.parse(match[:body])) unless match[:body].blank?
+        @conditions[:body] = MultiJson.dump(MultiJson.load(match[:body])) unless match[:body].blank?
       end
     end
 

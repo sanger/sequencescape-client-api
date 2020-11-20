@@ -19,10 +19,19 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = ['lib']
 
+  s.post_install_message = <<~POST_INSTALL
+    sequencescape-client-api has dropped 'yajl-ruby' in favour of 'multi_json',
+    https://rubygems.org/gems/multi_json. This will automatically pick the
+    fastest json encoder in your Gemfile, falling back to the default encoder.
+
+    For best performance you are strongly encouraged to add a custom json
+    encoder to your project. eg. bundle install oj.
+  POST_INSTALL
+
   s.add_dependency('activemodel', '>= 5.0.0')
   s.add_dependency('activesupport', '>= 5.0.0')
   s.add_dependency('i18n')
-  s.add_dependency('yajl-ruby', '>= 1.4.1')
+  s.add_dependency('multi_json')
 
   s.add_development_dependency('pry')
   s.add_development_dependency('rake')
@@ -31,4 +40,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rubocop', '~> 1.3.1')
   s.add_development_dependency('webmock')
   s.add_development_dependency('yard')
+  # Add a json encoder for development
+  s.add_development_dependency('oj')
 end
