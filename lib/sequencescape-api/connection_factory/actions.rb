@@ -1,5 +1,5 @@
 require 'net/http'
-require 'yajl'
+require 'multi_json'
 
 # PINCHED FROM https://gist.github.com/736721
 BEGIN {
@@ -48,7 +48,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   end
 
   # rubocop:todo Metrics/MethodLength
-  def create(url, body, handler) # rubocop:todo Metrics/CyclomaticComplexity
+  def create(url, body, handler)
     perform(:post, url, jsonify(body, action: :create)) do |response|
       case response
       when Net::HTTPCreated             then handler.success(parse_json_from(response))
@@ -64,7 +64,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   # rubocop:enable Metrics/MethodLength
 
   # rubocop:todo Metrics/MethodLength
-  def create_from_file(url, file, filename, content_type, handler) # rubocop:todo Metrics/CyclomaticComplexity
+  def create_from_file(url, file, filename, content_type, handler)
     perform_for_file(:post, url, file, filename, content_type) do |response|
       case response
       when Net::HTTPCreated             then handler.success(parse_json_from(response))
@@ -113,7 +113,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
       unless body.nil?
         request.content_type = 'application/json'
         # request.body         = body.to_json
-        request.body         = Yajl::Encoder.encode(body)
+        request.body         = MultiJson.dump(body)
       end
       yield(connection.request(request))
     end
@@ -146,7 +146,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   def parse_json_from(response)
     raise ServerError, 'server returned non-JSON content' unless response.content_type == 'application/json'
 
-    Yajl::Parser.parse(StringIO.new(response.body))
+    MultiJson.load(StringIO.new(response.body))
   end
   private :parse_json_from
 
