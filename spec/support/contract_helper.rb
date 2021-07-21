@@ -96,7 +96,7 @@ module ContractHelper
       end
       let(:api) do
         Sequencescape::Api.new(
-          url: 'http://localhost:3000/', cookie: 'single-sign-on-cookie',
+          url: 'http://localhost:3000/', user_api_key: 'single-sign-on-cookie',
           namespace: Unauthorised
         )
       end
@@ -107,7 +107,7 @@ module ContractHelper
 
       let(:api) do
         Sequencescape::Api.new(
-          url: 'http://localhost:3000/', cookie: 'single-sign-on-cookie',
+          url: 'http://localhost:3000/', user_api_key: 'single-sign-on-cookie',
           authorisation: 'authorised!', namespace: Authenticated
         )
       end

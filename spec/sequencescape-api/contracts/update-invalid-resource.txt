@@ -1,7 +1,7 @@
 PUT /UUID HTTP/1.1
 Accept: application/json
 Content-Type: application/json
-Cookie: WTSISignOn=single-sign-on-cookie
+Cookie: api_key=single-sign-on-cookie
 
 {
   "model_c": {

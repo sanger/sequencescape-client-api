@@ -1,7 +1,6 @@
 module Sequencescape::Api::Rails
   # Including this module into your Rails ApplicationController adds a before filter that will
-  # provide a user (based on the WTSISignOn cookie) specific Sequencescape::Api instance to
-  # use, accessible through `api`.
+  # provide a Sequencescape::Api instance to use, accessible through `api`.
   module ApplicationController
     def self.included(base) # rubocop:todo Metrics/MethodLength
       base.class_eval do
@@ -26,7 +25,7 @@ module Sequencescape::Api::Rails
     private :api_class
 
     def configure_api
-      @api = api_class.new({ cookie: cookies['WTSISignOn'] }.merge(api_connection_options))
+      @api = api_class.new(api_connection_options)
     end
     private :configure_api
 
