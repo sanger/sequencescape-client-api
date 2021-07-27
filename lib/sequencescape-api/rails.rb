@@ -1,7 +1,6 @@
 module Sequencescape::Api::Rails
   # Including this module into your Rails ApplicationController adds a before filter that will
-  # provide a user (based on the WTSISignOn cookie) specific Sequencescape::Api instance to
-  # use, accessible through `api`.
+  # provide a Sequencescape::Api instance to use, accessible through `api`.
   module ApplicationController
     def self.included(base) # rubocop:todo Metrics/MethodLength
       base.class_eval do
@@ -20,32 +19,29 @@ module Sequencescape::Api::Rails
       end
     end
 
+    private
+
     def api_class
       ::Sequencescape::Api
     end
-    private :api_class
 
     def configure_api
-      @api = api_class.new({ cookie: cookies['WTSISignOn'] }.merge(api_connection_options))
+      @api = api_class.new(api_connection_options)
     end
-    private :configure_api
 
     def api_connection_options
-      {}
+      raise Sequencescape::Api::Error, "api_connection_options not implemented for #{self.class}"
     end
-    private :api_connection_options
 
     def sequencescape_api_error_handler(exception)
       Rails.logger.error "#{exception}, #{exception.backtrace}"
       raise StandardError, "There is an issue with the API connection to Sequencescape (#{exception.message})"
     end
-    private :sequencescape_api_error_handler
 
     def sequencescape_api_unauthenticated_handler(exception)
       Rails.logger.error "#{exception}, #{exception.backtrace}"
       raise StandardError, 'You are not authenticated; please visit the WTSI login page'
     end
-    private :sequencescape_api_unauthenticated_handler
   end
 
   # Including this module into your Rails model indicates that the model is associated with

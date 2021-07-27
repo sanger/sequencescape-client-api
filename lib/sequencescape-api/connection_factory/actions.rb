@@ -151,7 +151,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
   private :parse_json_from
 
   def headers
-    { 'Accept' => 'application/json', 'Cookie' => "WTSISignOn=#{cookie}" }.tap do |standard|
+    { 'Accept' => 'application/json', 'Cookie' => "api_key=#{user_api_key}" }.tap do |standard|
       standard.merge!('X-Sequencescape-Client-ID' => @authorisation) unless @authorisation.blank?
     end
   end

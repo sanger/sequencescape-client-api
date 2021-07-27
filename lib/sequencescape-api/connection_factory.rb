@@ -7,8 +7,8 @@ class Sequencescape::Api::ConnectionFactory
 
   def self.create(options)
     required_options = []
-    required_options.push(:cookie) if options[:authorisation].blank?
-    required_options.push(:url)    if default_url.blank?
+    required_options.push(:user_api_key) if options[:authorisation].blank?
+    required_options.push(:url) if default_url.blank?
 
     required_options.push(allow_blank: false)
     options.required!(*required_options) do |missing|
@@ -19,12 +19,12 @@ class Sequencescape::Api::ConnectionFactory
     new(options)
   end
 
-  attr_reader :url, :cookie, :read_timeout
-  private :url, :cookie, :read_timeout
+  attr_reader :url, :user_api_key, :read_timeout
+  private :url, :user_api_key, :read_timeout
 
   def initialize(options)
     @url = options[:url]
-    @cookie = options[:cookie]
+    @user_api_key = options[:user_api_key]
     @authorisation = options[:authorisation]
     @read_timeout = options[:read_timeout] || 120
   end

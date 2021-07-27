@@ -5,7 +5,7 @@ require 'spec_helper'
 describe 'Handling authentication issues' do
   stub_request_from('retrieve-root-with-an-unauthorised-client') { response('client-fails-authentication') }
 
-  subject { Sequencescape::Api.new(url: 'http://localhost:3000/', cookie: 'single-sign-on-cookie') }
+  subject { Sequencescape::Api.new(url: 'http://localhost:3000/', user_api_key: 'single-sign-on-cookie') }
 
   it 'raises an exception' do
     -> { subject }.should raise_error(Sequencescape::Api::UnauthenticatedError)
@@ -17,7 +17,7 @@ describe 'Retrieving the root URL' do
     is_working_as_an_unauthorised_client
 
     context 'with no namespace' do
-      subject { Sequencescape::Api.new(url: 'http://localhost:3000/', cookie: 'single-sign-on-cookie') }
+      subject { Sequencescape::Api.new(url: 'http://localhost:3000/', user_api_key: 'single-sign-on-cookie') }
 
       Unauthorised::MODELS_THROUGH_API.each do |model|
         it "provides the #{model} through the API instance" do
