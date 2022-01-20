@@ -32,7 +32,7 @@ module ContractHelper
         raise StandardError, "Invalidly formatted request in #{contract_name.inspect}" if match.nil?
 
         @http_verb = match[:verb].downcase.to_sym
-        @url = "http://localhost:3000#{match[:path]}"
+        @url = "https://localhost:3000#{match[:path]}"
         @conditions = {}
         @conditions[:headers] = Hash[*match[:headers].split(/\r?\n/).map { |l| l.split(':') }.flatten.map(&:strip)]
         @conditions[:body] = MultiJson.dump(MultiJson.load(match[:body])) unless match[:body].blank?
@@ -96,7 +96,7 @@ module ContractHelper
       end
       let(:api) do
         Sequencescape::Api.new(
-          url: 'http://localhost:3000/', user_api_key: 'single-sign-on-cookie',
+          url: 'https://localhost:3000/', user_api_key: 'single-sign-on-cookie',
           namespace: Unauthorised
         )
       end
@@ -107,7 +107,7 @@ module ContractHelper
 
       let(:api) do
         Sequencescape::Api.new(
-          url: 'http://localhost:3000/', user_api_key: 'single-sign-on-cookie',
+          url: 'https://localhost:3000/', user_api_key: 'single-sign-on-cookie',
           authorisation: 'authorised!', namespace: Authenticated
         )
       end
