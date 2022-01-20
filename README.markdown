@@ -23,7 +23,7 @@ yet.
 
 1. Update the version number in `lib/sequencescape-api/version.rb`
 2. For pre-releases the version number should be in the format:
-   major.minor.point-rcx
+   major.minor.point-rcx (increment x to prevent burning though version numbers when testing release candidates)
 3. For release version the version number should be in the format:
    major.minor.point
 4. Ensure everything is committed, and for non-pre-releases, make sure you are
