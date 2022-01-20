@@ -12,6 +12,7 @@ Documentation can be found [on the wiki](https://github.com/sanger/sequencescape
 - 0.6.x Removes usage of WTSISignOn cookie. Replaces with user specific api key,
   can be provided to Sequencescape::Api.new as user_api_key: or via
   `api_connection_options` in the controller.
+- 0.8.x Enables HTTPS
 
 - master currently corresponds to 0.6.x
 
