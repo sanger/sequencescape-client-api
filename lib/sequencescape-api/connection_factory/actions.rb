@@ -105,7 +105,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
     rescue URI::InvalidURIError => e
       raise URI::InvalidURIError, "#{http_verb} failed: #{url.inspect} is not a valid uri"
     end
-    Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |connection|
+    Net::HTTP.start(uri.host, uri.port, use_ssl: uri.instance_of?(URI::HTTPS)) do |connection|
       connection.read_timeout = read_timeout
       request_headers = headers
       request_headers.merge!('Accept' => accepts) unless accepts.nil?
