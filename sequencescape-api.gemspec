@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   POST_INSTALL
 
   s.add_dependency('activemodel', '>= 5.0.0')
-  s.add_dependency('activesupport', '>= 5.0.0', '< 7.0.0')
+  s.add_dependency('activesupport', '>= 5.0.0', '< 6.1.0')
   s.add_dependency('i18n')
   s.add_dependency('multi_json')
 
