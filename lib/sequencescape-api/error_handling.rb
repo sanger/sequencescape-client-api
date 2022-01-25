@@ -5,6 +5,7 @@ require 'active_model/translation'
 require 'active_model/errors'
 
 # Uh, ok, so why do I have to include these when I've kind of said I want everything!?!!
+require 'active_support/core_ext/module/deprecation'
 require 'active_model/validator'
 require 'active_model/validations'
 require 'active_model/callbacks'
