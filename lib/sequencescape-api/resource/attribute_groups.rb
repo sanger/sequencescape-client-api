@@ -28,19 +28,17 @@ module Sequencescape::Api::Resource::Groups
   end
 
   module Json
-    def as_json_for_update(options) # rubocop:todo Metrics/MethodLength
+    def as_json_for_update(options)
       super.tap do |json|
-        begin
-          if options[:root]
-            json.fetch(json_root).merge!(attribute_group_json(options))
-          else
-            json.merge!(attribute_group_json(options))
-          end
-        rescue KeyError => e
-          # If we get a key error, append the json to out exception to assist diagnosing issues
-          e.message << " in #{json.to_json}"
-          raise e
+        if options[:root]
+          json.fetch(json_root).merge!(attribute_group_json(options))
+        else
+          json.merge!(attribute_group_json(options))
         end
+      rescue KeyError => e
+        # If we get a key error, append the json to out exception to assist diagnosing issues
+        e.message << " in #{json.to_json}"
+        raise e
       end
     end
     private :as_json_for_update

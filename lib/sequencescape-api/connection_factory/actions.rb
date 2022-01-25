@@ -8,8 +8,8 @@ BEGIN {
   Net::HTTP.module_eval do
     alias_method '__initialize__', 'initialize'
 
-    def initialize(*args, &block)
-      __initialize__(*args, &block)
+    def initialize(...)
+      __initialize__(...)
     ensure
       @debug_output = $stderr if ENV['HTTP_DEBUG']
     end
@@ -105,7 +105,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
     rescue URI::InvalidURIError => e
       raise URI::InvalidURIError, "#{http_verb} failed: #{url.inspect} is not a valid uri"
     end
-    Net::HTTP.start(uri.host, uri.port) do |connection|
+    Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |connection|
       connection.read_timeout = read_timeout
       request_headers = headers
       request_headers.merge!('Accept' => accepts) unless accepts.nil?
@@ -122,7 +122,7 @@ module Sequencescape::Api::ConnectionFactory::Actions
 
   def perform_for_file(http_verb, url, file, filename, content_type)
     uri = URI.parse(url)
-    Net::HTTP.start(uri.host, uri.port) do |connection|
+    Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |connection|
       connection.read_timeout = read_timeout
       file_headers = headers.merge!({ 'Content-Disposition' => "form-data; filename=\"#{filename}\"" })
       request = Net::HTTP.const_get(http_verb.to_s.classify).new(uri.request_uri, file_headers)

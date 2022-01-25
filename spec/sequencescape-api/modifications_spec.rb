@@ -11,11 +11,9 @@ shared_examples_for 'errors on both client and server' do |action, request_contr
     end
 
     it 'includes the error on the field' do
-      begin
-        target.__send__(action, attribute_validated_at_client: 'please error')
-      rescue Sequencescape::Api::ResourceInvalid => e
-        e.resource.errors[:attribute_validated_at_client].should == ['cannot be set']
-      end
+      target.__send__(action, attribute_validated_at_client: 'please error')
+    rescue Sequencescape::Api::ResourceInvalid => e
+      e.resource.errors[:attribute_validated_at_client].should == ['cannot be set']
     end
   end
 
@@ -29,11 +27,9 @@ shared_examples_for 'errors on both client and server' do |action, request_contr
     end
 
     it 'includes the error on the field' do
-      begin
-        target.__send__(action, attribute_validated_at_server: 'please error')
-      rescue Sequencescape::Api::ResourceInvalid => e
-        e.resource.errors[:attribute_validated_at_server].should == ['cannot be set']
-      end
+      target.__send__(action, attribute_validated_at_server: 'please error')
+    rescue Sequencescape::Api::ResourceInvalid => e
+      e.resource.errors[:attribute_validated_at_server].should == ['cannot be set']
     end
   end
 end
