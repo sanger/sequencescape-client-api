@@ -31,7 +31,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0
+          ruby-version: "3.0"
           bundler-cache:
             true # Runs bundle install and caches gems. See the ruby_test.yml
             # example if you need more control over bundler.
