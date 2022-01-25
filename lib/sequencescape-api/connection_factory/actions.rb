@@ -8,8 +8,8 @@ BEGIN {
   Net::HTTP.module_eval do
     alias_method '__initialize__', 'initialize'
 
-    def initialize(*args, &block)
-      __initialize__(*args, &block)
+    def initialize(...)
+      __initialize__(...)
     ensure
       @debug_output = $stderr if ENV['HTTP_DEBUG']
     end
