@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = ''
   s.summary     = 'Gem for the client side of the Sequencescape API'
   s.description = 'Provides all of the necessary code for interacting with the Sequencescape API'
-  s.required_ruby_version = '> 2.4'
+  s.required_ruby_version = '>= 2.7'
 
   s.rubyforge_project = 'sequencescape-client-api'
 

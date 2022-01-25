@@ -13,8 +13,9 @@ Documentation can be found [on the wiki](https://github.com/sanger/sequencescape
   can be provided to Sequencescape::Api.new as user_api_key: or via
   `api_connection_options` in the controller.
 - 1.0.x Enables HTTPS
+- 2.0.x Drops support for versions less than Ruby 2.7
 
-- master currently corresponds to 0.6.x
+- master currently corresponds to 2.x
 
 Rails 6 appears to be supported judging by Specs, but haven't used it in anger
 yet.
